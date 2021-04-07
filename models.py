@@ -17,19 +17,30 @@ class Element:
         self.percent = percent
 
     def draw(self):
-        polygon_coors_1 = self.get_polygon_coords(self.start_point, horizontal=True)
-        polygon_coors_2 = (45, 155)
+        # self.start_point = (100, 100)
+        x = self.start_point[0]
+        y = self.start_point[1]
+        coof = self.width/20
+
+        polygon_coors_1 = self.get_polygon_coords((x, y), horizontal=True)
+        # polygon_coors_2 = (45, 155) # (50 +- 5)
+        polygon_coors_2 = (x - coof*11, y + coof*11)
         polygon_coors_2 = self.get_polygon_coords(polygon_coors_2)
         polygon_coors_3 = (455, 155)
+        polygon_coors_3 = (x + self.height - coof*9, y + coof*11)
         polygon_coors_3 = self.get_polygon_coords(polygon_coors_3)
         polygon_coors_4 = (510, 100)
+        polygon_coors_4 = (x + self.height + coof*2, 100)
         polygon_coors_4 = self.get_polygon_coords(polygon_coors_4, horizontal=True)
 
         polygon_coors_6 = (45, 565)
+        polygon_coors_6 = (x - coof*11, y + self.height + coof*13)
         polygon_coors_6 = self.get_polygon_coords(polygon_coors_6)
         polygon_coors_7 = (455, 565)
+        polygon_coors_7 = (x + self.height - coof*9, y + self.height + coof*13)
         polygon_coors_7 = self.get_polygon_coords(polygon_coors_7)
         polygon_coors_8 = (920, 100)
+        polygon_coors_8 = (x + self.height*2 + coof*4, y)
         polygon_coors_8 = self.get_polygon_coords(polygon_coors_8, horizontal=True)
 
 

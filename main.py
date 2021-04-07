@@ -45,7 +45,7 @@ pygame.draw.circle(screen, BLACK, (100, 200), 30, 10)
 running = True
 
 
-poligon = Element(screen=screen,start_point=(100, 100), width=100, height=400, percent=0.25)
+poligon = Element(screen=screen,start_point=(100, 100), width=50, height=200, percent=0.25)
 while running:
 
     # Держим цикл на правильной скорости
