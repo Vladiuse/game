@@ -17,20 +17,43 @@ class Element:
         self.percent = percent
 
     def draw(self):
-        poligon_coors = self.get_poligon_coords(self.start_point)
-        # new = []
-        # for i in poligon_coors:
-        #     rez = (i[1], i[0])
-        #     new.append(rez)
+        polygon_coors_1 = self.get_polygon_coords(self.start_point, horizontal=True)
+        polygon_coors_2 = (45, 155)
+        polygon_coors_2 = self.get_polygon_coords(polygon_coors_2)
+        polygon_coors_3 = (455, 155)
+        polygon_coors_3 = self.get_polygon_coords(polygon_coors_3)
+        polygon_coors_4 = (510, 100)
+        polygon_coors_4 = self.get_polygon_coords(polygon_coors_4, horizontal=True)
 
-        pygame.draw.polygon(self.screen, WHITE,
-                            poligon_coors)
+        polygon_coors_6 = (45, 565)
+        polygon_coors_6 = self.get_polygon_coords(polygon_coors_6)
+        polygon_coors_7 = (455, 565)
+        polygon_coors_7 = self.get_polygon_coords(polygon_coors_7)
+        polygon_coors_8 = (920, 100)
+        polygon_coors_8 = self.get_polygon_coords(polygon_coors_8, horizontal=True)
 
-    def get_poligon_coords(self, start_point):
+
+
+        pygame.draw.polygon(self.screen, WHITE,polygon_coors_1)
+        pygame.draw.polygon(self.screen, WHITE,polygon_coors_2)
+        pygame.draw.polygon(self.screen, WHITE,polygon_coors_3)
+        pygame.draw.polygon(self.screen, WHITE,polygon_coors_4)
+
+        pygame.draw.polygon(self.screen, WHITE,polygon_coors_6)
+        pygame.draw.polygon(self.screen, WHITE,polygon_coors_7)
+        pygame.draw.polygon(self.screen, WHITE,polygon_coors_8)
+
+
+    def get_polygon_coords(self, start_point, horizontal=False):
         x = start_point[0]
         y = start_point[1]
         percent = self.height * self.percent / 2
-        poligon_coors = ((x, y + percent), (x + self.width / 2, y), (x + self.width, y + percent),
+        polygon_coors = ((x, y + percent), (x + self.width / 2, y), (x + self.width, y + percent),
                          (x + self.width, y + self.height - percent), (x + self.width / 2, y + self.height),
                          (x, y + self.height - percent))
-        return poligon_coors
+        if horizontal:
+            new = []
+            for (x,y) in polygon_coors:
+                new.append((y, x))
+            return new
+        return polygon_coors

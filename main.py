@@ -1,7 +1,7 @@
 import pygame
 from models import Element
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 1200
+HEIGHT = 800
 FPS = 30
 
 
@@ -21,23 +21,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += 5
         if self.rect.x > WIDTH:
             self.rect.x = 0
-
-
-class Figure:
-
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def update(self):
-        pygame.draw.circle(screen, GREEN, (self.x, self.y), 20)
-        self.x += 5
-        if self.x > WIDTH:
-            self.x = 0
-            self.y += 50
-        if self.y > HEIGHT:
-            self.y = 0
-
 
 
 
@@ -61,8 +44,8 @@ pygame.draw.circle(screen, BLACK, (100, 200), 30, 10)
 # Цикл игры
 running = True
 
-fig = Figure(100, 100)
-poligon = Element(screen=screen,start_point=(100, 100), width=20, height=80, percent=0.25)
+
+poligon = Element(screen=screen,start_point=(100, 100), width=100, height=400, percent=0.25)
 while running:
 
     # Держим цикл на правильной скорости
