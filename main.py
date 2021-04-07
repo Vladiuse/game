@@ -45,7 +45,8 @@ pygame.draw.circle(screen, BLACK, (100, 200), 30, 10)
 running = True
 
 
-poligon = Element(screen=screen,start_point=(100, 100), width=50, height=200, percent=0.25)
+
+new_poligon = Element(screen=screen,start_point=(300, 100), width=50,)
 while running:
 
     # Держим цикл на правильной скорости
@@ -59,7 +60,8 @@ while running:
     # all_sprites.update()
     # Рендеринг
     screen.fill(BLACK)
-    poligon.draw()
+    # poligon.draw()
+    new_poligon.draw()
     # all_sprites.draw(screen)
     # После отрисовки всего, переворачиваем экран
     pygame.display.flip()
