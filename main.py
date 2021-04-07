@@ -45,8 +45,16 @@ pygame.draw.circle(screen, BLACK, (100, 200), 30, 10)
 running = True
 
 
+li = []
+x = 1
+y = 1
+for width in range(5, 50, 10):
+    polygon = Element(screen=screen,start_point=(x, y), width=width,)
+    li.append(polygon)
+    x += 100
+    x *= 1.2
+    y += 50
 
-new_poligon = Element(screen=screen,start_point=(300, 100), width=50,)
 while running:
 
     # Держим цикл на правильной скорости
@@ -60,8 +68,11 @@ while running:
     # all_sprites.update()
     # Рендеринг
     screen.fill(BLACK)
+
     # poligon.draw()
-    new_poligon.draw()
+    for polygon in li:
+        polygon.draw()
+
     # all_sprites.draw(screen)
     # После отрисовки всего, переворачиваем экран
     pygame.display.flip()

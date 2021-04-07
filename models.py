@@ -16,6 +16,8 @@ class Element:
         self.height = self.width * 4
         self.percent = 0.25
 
+
+
     def draw(self):
         x = self.start_point[0]
         y = self.start_point[1]
@@ -35,10 +37,7 @@ class Element:
             polygon_coords = self.get_polygon_coords((x, y), horizontal=horizontal)
             pygame.draw.polygon(self.screen, color, polygon_coords)
 
-
     def get_polygon_coords(self, start_point, horizontal=False):
-        x = start_point[0]
-        y = start_point[1]
         percent = self.height * self.percent / 2
         polygon_coors = ([0, percent], [self.width / 2, 0], [self.width, percent],
                          [self.width, self.height - percent], [self.width / 2, self.height],
@@ -47,6 +46,8 @@ class Element:
             for point in polygon_coors:
                 point[0], point[1] = point[1], point[0]
 
+        x = start_point[0]
+        y = start_point[1]
         for point in polygon_coors:
             point[0] += x
             point[1] += y
