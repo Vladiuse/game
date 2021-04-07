@@ -1,5 +1,5 @@
 import pygame
-
+from models import Element
 WIDTH = 800
 HEIGHT = 600
 FPS = 30
@@ -39,22 +39,7 @@ class Figure:
             self.y = 0
 
 
-class Element:
 
-    def __init__(self, start_point, width, height, percent):
-        self.start_point = start_point
-        self.width = width
-        self.height = height
-        self.percent = percent
-
-    def update(self):
-        x = self.start_point[0]
-        y = self.start_point[1]
-        percent = self.height * self.percent / 2
-        pygame.draw.polygon(screen, WHITE,
-                            [(x, y + percent), (self.width / 2, y), (self.width, y + percent),
-                             (self.width, self.height - percent), (self.width / 2, self.height),
-                             (x, self.height - percent)])
 
 
 pygame.init()
@@ -77,7 +62,7 @@ pygame.draw.circle(screen, BLACK, (100, 200), 30, 10)
 running = True
 
 fig = Figure(100, 100)
-poligon = Element(start_point=(0, 0), width=100, height=400, percent=0.25)
+poligon = Element(screen=screen,start_point=(100, 100), width=20, height=80, percent=0.25)
 while running:
 
     # Держим цикл на правильной скорости
@@ -91,7 +76,7 @@ while running:
     # all_sprites.update()
     # Рендеринг
     screen.fill(BLACK)
-    poligon.update()
+    poligon.draw()
     # all_sprites.draw(screen)
     # После отрисовки всего, переворачиваем экран
     pygame.display.flip()
