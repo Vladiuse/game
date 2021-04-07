@@ -1,10 +1,9 @@
 import pygame
-import random as r
-import time
 
-WIDTH = 480
-HEIGHT = 360
+WIDTH = 800
+HEIGHT = 600
 FPS = 30
+
 
 class Player(pygame.sprite.Sprite):
 
@@ -14,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill(GREEN)
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH/2, HEIGHT/2)
+        self.rect.center = (WIDTH / 2, HEIGHT / 2)
 
     def update(self):
         pygame.draw.ellipse(screen, GREEN,
@@ -22,10 +21,40 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += 5
         if self.rect.x > WIDTH:
             self.rect.x = 0
-#
-# class Figure:
-#
-#     def __init__(self):
+
+
+class Figure:
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def update(self):
+        pygame.draw.circle(screen, GREEN, (self.x, self.y), 20)
+        self.x += 5
+        if self.x > WIDTH:
+            self.x = 0
+            self.y += 50
+        if self.y > HEIGHT:
+            self.y = 0
+
+
+class Element:
+
+    def __init__(self, start_point, width, height, percent):
+        self.start_point = start_point
+        self.width = width
+        self.height = height
+        self.percent = percent
+
+    def update(self):
+        x = self.start_point[0]
+        y = self.start_point[1]
+        percent = self.height * self.percent / 2
+        pygame.draw.polygon(screen, WHITE,
+                            [(x, y + percent), (self.width / 2, y), (self.width, y + percent),
+                             (self.width, self.height - percent), (self.width / 2, self.height),
+                             (x, self.height - percent)])
 
 
 pygame.init()
@@ -41,22 +70,14 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-
-
-
-
-
-
 player = Player()
 all_sprites.add(player)
-pygame.draw.circle(screen, BLACK, (100, 200), 30,10)
+pygame.draw.circle(screen, BLACK, (100, 200), 30, 10)
 # Цикл игры
 running = True
 
-x = 100
-y = 100
-start = time.time()
-count = 0
+fig = Figure(100, 100)
+poligon = Element(start_point=(0, 0), width=100, height=400, percent=0.25)
 while running:
 
     # Держим цикл на правильной скорости
@@ -67,22 +88,10 @@ while running:
         if event.type == pygame.QUIT:
             running = False
     # Обновление
-
     # all_sprites.update()
-
-
     # Рендеринг
-    count += 1
-    # end = time.time()
-    # print(f'count is {count}, time is {round(end-start)}')
-    screen.fill(WHITE)
-    pygame.draw.circle(screen, GREEN,(x, y), 20)
-
-    x += 5
-    if x > 300:
-        x = 50
-        y += 50
-
+    screen.fill(BLACK)
+    poligon.update()
     # all_sprites.draw(screen)
     # После отрисовки всего, переворачиваем экран
     pygame.display.flip()
