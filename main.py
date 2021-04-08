@@ -1,7 +1,9 @@
-import pygame
-from models import Element, Clock, Pixel
 import time
-import sys
+
+import pygame
+
+from models import Clock, Pixel
+
 WIDTH = 1200
 HEIGHT = 800
 FPS = 30
@@ -42,8 +44,6 @@ class Player(pygame.sprite.Sprite):
         if self.direction == 'DOWN':
             self.rect.y += self.speed
 
-
-
     def last_key(self, key):
         if key == pygame.K_LEFT:
             self.direction = 'LEFT'
@@ -53,10 +53,6 @@ class Player(pygame.sprite.Sprite):
             self.direction = 'UP'
         if key == pygame.K_DOWN:
             self.direction = 'DOWN'
-
-
-
-
 
 
 pygame.init()
@@ -78,19 +74,19 @@ BLUE = (0, 0, 255)
 # Цикл игры
 running = True
 x = 250
-y = 50
-pixel_size = 30
-between = 1.13
-# pixel_line = [Pixel(screen=screen, start_point=(x + step * 1.1,y), size=pixel_size) for step in range(0, pixel_size * 10, pixel_size)]
+y = 25
+pixel_size = 33
+between = 1.12
 pixel_group = []
-for step_y in range(0, pixel_size*20, pixel_size):
-    pixel_line = [Pixel(screen=screen, start_point=(x + step_x * between, y + step_y*between), size=pixel_size) for step_x in
+for step_y in range(0, pixel_size * 20, pixel_size):
+    pixel_line = [Pixel(screen=screen, start_point=(x + step_x * between, y + step_y * between), size=pixel_size) for
+                  step_x in
                   range(0, pixel_size * 10, pixel_size)]
     pixel_group.append(pixel_line)
 
 # pixel = Pixel(screen=screen, start_point=(1,1), size=200)
 
-my_clock = Clock(screen=screen, start_time=time.time(), mili_secs=True,start_point=(900, 100), width=20)
+my_clock = Clock(screen=screen, start_time=time.time(), mili_secs=False, start_point=(650, 40), width=20)
 while running:
 
     # Держим цикл на правильной скорости
@@ -113,7 +109,6 @@ while running:
     for line in pixel_group:
         for pixel in line:
             pixel.draw()
-
 
     # all_sprites.draw(screen)
     # После отрисовки всего, переворачиваем экран

@@ -10,7 +10,25 @@ BLUE = (0, 0, 255)
 MY_GRAY = (50, 50, 50)
 
 
-class Element:
+class BaseElement:
+
+    off_color = MY_GRAY
+    on_color = GREEN
+
+    def __init__(self, screen, start_point):
+        self.screen = screen
+        self.start_point = start_point
+        self.work = False
+
+    def on(self):
+        self.work = True
+
+    def off(self):
+        self.work = False
+
+
+
+class NumberBlock:
     number_code = {'0': [1, 1, 1, 0, 1, 1, 1],
                    '1': [0, 0, 1, 0, 0, 1, 0],
                    '2': [1, 0, 1, 1, 1, 0, 1],
@@ -45,7 +63,7 @@ class Element:
             (x + self.height - coof * 9, y + self.height + coof * 13),
             (x, y + self.height * 2 + coof * 4)
         )
-        colors = [Element.on_color if x == 1 else Element.off_color for x in Element.number_code[number]]
+        colors = [NumberBlock.on_color if x == 1 else NumberBlock.off_color for x in NumberBlock.number_code[number]]
         is_horizontals = (True, False, False, True, False, False, True)
         for (x, y), horizontal, color in zip(coord_coofs, is_horizontals, colors):
             polygon_coords = self.get_polygon_coords((x, y), horizontal=horizontal)
@@ -72,10 +90,10 @@ class Clock:
 
     def __init__(self, screen, start_time, start_point, width, mili_secs=False):
         self.screen = screen
+        self.start_point = start_point
         self.count_numbers = 4
         self.start_time = start_time
         self.mili_secs = mili_secs
-        self.start_point = start_point
         self.width = width
 
     def show(self):
@@ -87,7 +105,7 @@ class Clock:
         numbers = []
         current_time = self.get_current_time()
         for _ in range(self.count_numbers):
-            number = Element(screen=self.screen, start_point=(x, y), width=width)
+            number = NumberBlock(screen=self.screen, start_point=(x, y), width=width)
             numbers.append(number)
             x += width * 1.2
             if _ == 1 or (_ == 3 and self.mili_secs is True):
@@ -129,10 +147,10 @@ class Pixel:
     def draw(self):
         pygame.draw.rect(self.screen, color=MY_GRAY,
                          rect=(self.x, self.y, self.size, self.size), width=0)
+
         new_size = self.size *0.9
         inside_x = int(self.x + self.size/20)
         inside_y = int(self.y + self.size/20)
-        inside_black = int(self.size)
         pygame.draw.rect(self.screen, color=BLACK,
                          rect=(inside_x, inside_y, new_size, new_size), width=0)
 
