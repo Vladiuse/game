@@ -82,28 +82,34 @@ class DoubleCrop:
 
 class Clock:
 
-    def __init__(self, count_numbers, start_time):
-        self.count_numbers = count_numbers
+    def __init__(self, screen, start_time, start_point, width, mili_secs=False):
+        self.screen = screen
+        self.count_numbers = 4
         self.start_time = start_time
+        self.mili_secs = mili_secs
+        self.start_point = start_point
+        self.width = width
 
-    def show(self, screen, start_point, width=50):
-        x = start_point[0]
-        y = start_point[1]
-
+    def show(self):
+        width = self.width
+        if self.mili_secs:
+            self.count_numbers += 1
+        x = self.start_point[0]
+        y = self.start_point[1]
         numbers = []
         current_time = self.get_current_time()
         for _ in range(self.count_numbers):
-            number = Element(screen=screen, start_point=(x, y), width=width)
+            number = Element(screen=self.screen, start_point=(x, y), width=width)
             numbers.append(number)
             x += width * 1.2
-            if _ == 1 or _ == 3:
+            if _ == 1 or (_ == 3 and self.mili_secs is True):
                 x += width / 4
                 cpor_color = GREEN
                 if int(current_time[-2]) % 2 == 0:
                     cpor_color = MY_GRAY
-                crop_coofs = ((-width / 3.5, width * 0.7), (-width / 3.5, width * 1.2))
+                crop_coofs = [(-width / 3.5, width * 0.7), (-width / 3.5, width * 1.2)]
                 for coof_x, coof_y in crop_coofs:
-                    crops = DoubleCrop(screen=screen, start_point=(x + coof_x, y + coof_y))
+                    crops = DoubleCrop(screen=self.screen, start_point=(x + coof_x, y + coof_y))
                     crops.show(color=cpor_color)
         for elem, number in zip(numbers, current_time):
             elem.draw(number)

@@ -47,8 +47,7 @@ running = True
 
 
 
-my_clock = Clock(5, start_time=time.time())
-elem = Element(screen=screen, start_point=(300,300), width=50)
+my_clock = Clock(screen=screen, start_time=time.time(), mili_secs=True,start_point=(300, 300), width=80)
 while running:
 
     # Держим цикл на правильной скорости
@@ -63,7 +62,7 @@ while running:
     # all_sprites.update()
     # Рендеринг
     screen.fill(BLACK)
-    my_clock.show(screen=screen, start_point=(300, 300), width=80)
+    my_clock.show()
 
 
     # poligon.draw()
