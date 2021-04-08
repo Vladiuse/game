@@ -1,5 +1,6 @@
 import pygame
-from models import Element
+from models import Element, Clock
+import time
 WIDTH = 1200
 HEIGHT = 800
 FPS = 30
@@ -40,21 +41,14 @@ BLUE = (0, 0, 255)
 
 player = Player()
 all_sprites.add(player)
-pygame.draw.circle(screen, BLACK, (100, 200), 30, 10)
+
 # Цикл игры
 running = True
 
 
-li = []
-x = 1
-y = 1
-for width in range(5, 50, 10):
-    polygon = Element(screen=screen,start_point=(x, y), width=width,)
-    li.append(polygon)
-    x += 100
-    x *= 1.2
-    y += 50
 
+my_clock = Clock(4, start_time=time.time())
+elem = Element(screen=screen, start_point=(300,300), width=50)
 while running:
 
     # Держим цикл на правильной скорости
@@ -65,13 +59,15 @@ while running:
         if event.type == pygame.QUIT:
             running = False
     # Обновление
+
     # all_sprites.update()
     # Рендеринг
     screen.fill(BLACK)
+    my_clock.show(screen=screen, start_point=(100, 100))
+
 
     # poligon.draw()
-    for polygon in li:
-        polygon.draw()
+
 
     # all_sprites.draw(screen)
     # После отрисовки всего, переворачиваем экран
