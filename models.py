@@ -1,12 +1,13 @@
-import pygame
 import time
+
+import pygame
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-MY_GRAY = (50,50,50)
+MY_GRAY = (50, 50, 50)
 
 
 class Element:
@@ -30,7 +31,6 @@ class Element:
         self.width = width / 5
         self.height = self.width * 4
         self.percent = 0.25
-
 
     def draw(self, number):
         x = self.start_point[0]
@@ -68,22 +68,56 @@ class Element:
         return polygon_coors
 
 
+class DoubleCrop:
+
+    def __init__(self, screen, start_point):
+        self.screen = screen
+        self.start_point = start_point
+
+    def show(self, color):
+        x = self.start_point[0]
+        y = self.start_point[1]
+        pygame.draw.circle(self.screen, color=color, center=(x, y), radius=4)
+
+
 class Clock:
 
-    def __init__(self,count_numbers, start_time):
+    def __init__(self, count_numbers, start_time):
         self.count_numbers = count_numbers
         self.start_time = start_time
 
-    def show(self, screen, start_point, width=50, ):
+    def show(self, screen, start_point, width=50):
         x = start_point[0]
         y = start_point[1]
+
         numbers = []
-        current_time = str(int(time.time() - self.start_time))[-4:]
-        current_time = (self.count_numbers - len(current_time)) * '0' + current_time
-        for number in range(self.count_numbers):
-            number = Element(screen=screen, start_point=(x,y), width=width)
+        current_time = self.get_current_time()
+        for _ in range(self.count_numbers):
+            number = Element(screen=screen, start_point=(x, y), width=width)
             numbers.append(number)
-            x += width *1.2
+            x += width * 1.2
+            if _ == 1 or _ == 3:
+                x += width / 4
+                cpor_color = GREEN
+                if int(current_time[-2]) % 2 == 0:
+                    cpor_color = MY_GRAY
+                crop_coofs = ((-width / 3.5, width * 0.7), (-width / 3.5, width * 1.2))
+                for coof_x, coof_y in crop_coofs:
+                    crops = DoubleCrop(screen=screen, start_point=(x + coof_x, y + coof_y))
+                    crops.show(color=cpor_color)
         for elem, number in zip(numbers, current_time):
             elem.draw(number)
 
+    def get_current_time(self):
+        current = round(time.time() - self.start_time, 1)
+        minutes = int(current / 60)
+        seconds = int(current - minutes * 60)
+        mili_secs = current - int(current)
+        show_time = ''
+        for i in [minutes, seconds]:
+            i = str(i)
+            if len(i) != 2:
+                i = '0' + i
+            show_time += i
+        show_time += str(mili_secs)[-1]
+        return show_time
