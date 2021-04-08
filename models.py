@@ -5,7 +5,7 @@ import pygame
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
-GREEN = (10, 235, 10)
+GREEN = (20, 215, 20)
 BLUE = (0, 0, 255)
 MY_GRAY = (50, 50, 50)
 
@@ -18,17 +18,36 @@ class BaseElement:
     def __init__(self, screen, start_point):
         self.screen = screen
         self.start_point = start_point
-        self.work = False
+        self.x = start_point[0]
+        self.y = start_point[1]
+        self.color = MY_GRAY
 
     def on(self):
-        self.work = True
+        self.color = BaseElement.on_color
 
     def off(self):
-        self.work = False
+        self.color = BaseElement.off_color
+
+# class NumberElement(BaseElement):
+#
+#     number_code = {'0': [1, 1, 1, 0, 1, 1, 1],
+#                    '1': [0, 0, 1, 0, 0, 1, 0],
+#                    '2': [1, 0, 1, 1, 1, 0, 1],
+#                    '3': [1, 0, 1, 1, 0, 1, 1],
+#                    '4': [0, 1, 1, 1, 0, 1, 0],
+#                    '5': [1, 1, 0, 1, 0, 1, 1],
+#                    '6': [1, 1, 0, 1, 1, 1, 1],
+#                    '7': [1, 0, 1, 0, 0, 1, 0],
+#                    '8': [1, 1, 1, 1, 1, 1, 1],
+#                    '9': [1, 1, 1, 1, 0, 1, 1],
+#                    }
+#
+#     def __init__(self):
 
 
 
-class NumberBlock:
+class NumberBlock(BaseElement):
+
     number_code = {'0': [1, 1, 1, 0, 1, 1, 1],
                    '1': [0, 0, 1, 0, 0, 1, 0],
                    '2': [1, 0, 1, 1, 1, 0, 1],
@@ -40,19 +59,20 @@ class NumberBlock:
                    '8': [1, 1, 1, 1, 1, 1, 1],
                    '9': [1, 1, 1, 1, 0, 1, 1],
                    }
-    off_color = MY_GRAY
-    on_color = GREEN
+    # off_color = MY_GRAY
+    # on_color = GREEN
 
     def __init__(self, screen, start_point, width):
-        self.screen = screen
-        self.start_point = start_point
+        super().__init__(screen=screen, start_point=start_point)
+        # self.screen = screen
+        # self.start_point = start_point
         self.width = width / 5
         self.height = self.width * 4
         self.percent = 0.25
 
-    def draw(self, number):
-        x = self.start_point[0]
-        y = self.start_point[1]
+    def draw_number_block(self, number):
+        x = self.x
+        y = self.y
         coof = self.width / 20
         coord_coofs = (
             (x, y),
@@ -119,7 +139,7 @@ class Clock:
                                        radius=width / 10)
 
         for elem, number in zip(numbers, current_time):
-            elem.draw(number)
+            elem.draw_number_block(number)
 
     def get_current_time(self):
         current = round(time.time() - self.start_time, 1)
@@ -136,16 +156,17 @@ class Clock:
         return show_time
 
 
-class Pixel:
+class Pixel(BaseElement):
 
     def __init__(self, screen, start_point, size):
-        self.screen = screen
-        self.x = start_point[0]
-        self.y = start_point[1]
+        super().__init__(screen=screen, start_point=start_point)
+        # self.screen = screen
+        # self.x = start_point[0]
+        # self.y = start_point[1]
         self.size = size
 
     def draw(self):
-        pygame.draw.rect(self.screen, color=MY_GRAY,
+        pygame.draw.rect(self.screen, color=self.color,
                          rect=(self.x, self.y, self.size, self.size), width=0)
 
         new_size = self.size *0.9
@@ -157,5 +178,5 @@ class Pixel:
         center = self.size *0.7
         center_x = int(self.x + self.size*0.15)
         center_y = int(self.y + self.size*0.15)
-        pygame.draw.rect(self.screen, color=MY_GRAY,
+        pygame.draw.rect(self.screen, color=self.color,
                          rect=(center_x, center_y, center, center), width=0)
