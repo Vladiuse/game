@@ -1,10 +1,11 @@
 import time
+
 import pygame
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
-GREEN = (0, 255, 0)
+GREEN = (10, 235, 10)
 BLUE = (0, 0, 255)
 MY_GRAY = (50, 50, 50)
 
@@ -96,7 +97,8 @@ class Clock:
                     cpor_color = MY_GRAY
                 crop_coofs = [(-width / 3.5, width * 0.7), (-width / 3.5, width * 1.2)]
                 for coof_x, coof_y in crop_coofs:
-                    pygame.draw.circle(self.screen, color=cpor_color, center=(x + coof_x, y + coof_y), radius=4)
+                    pygame.draw.circle(self.screen, color=cpor_color, center=(x + coof_x, y + coof_y),
+                                       radius=width / 10)
 
         for elem, number in zip(numbers, current_time):
             elem.draw(number)
@@ -114,3 +116,28 @@ class Clock:
             show_time += i
         show_time += str(mili_secs)[-1]
         return show_time
+
+
+class Pixel:
+
+    def __init__(self, screen, start_point, size):
+        self.screen = screen
+        self.x = start_point[0]
+        self.y = start_point[1]
+        self.size = size
+
+    def draw(self):
+        pygame.draw.rect(self.screen, color=MY_GRAY,
+                         rect=(self.x, self.y, self.size, self.size), width=0)
+        new_size = self.size *0.9
+        inside_x = int(self.x + self.size/20)
+        inside_y = int(self.y + self.size/20)
+        inside_black = int(self.size)
+        pygame.draw.rect(self.screen, color=BLACK,
+                         rect=(inside_x, inside_y, new_size, new_size), width=0)
+
+        center = self.size *0.7
+        center_x = int(self.x + self.size*0.15)
+        center_y = int(self.y + self.size*0.15)
+        pygame.draw.rect(self.screen, color=MY_GRAY,
+                         rect=(center_x, center_y, center, center), width=0)

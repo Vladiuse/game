@@ -1,5 +1,5 @@
 import pygame
-from models import Element, Clock
+from models import Element, Clock, Pixel
 import time
 import sys
 WIDTH = 1200
@@ -72,15 +72,25 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-player = Player()
-all_sprites.add(player)
+# player = Player()
+# all_sprites.add(player)
 
 # Цикл игры
 running = True
+x = 250
+y = 50
+pixel_size = 30
+between = 1.13
+# pixel_line = [Pixel(screen=screen, start_point=(x + step * 1.1,y), size=pixel_size) for step in range(0, pixel_size * 10, pixel_size)]
+pixel_group = []
+for step_y in range(0, pixel_size*20, pixel_size):
+    pixel_line = [Pixel(screen=screen, start_point=(x + step_x * between, y + step_y*between), size=pixel_size) for step_x in
+                  range(0, pixel_size * 10, pixel_size)]
+    pixel_group.append(pixel_line)
 
+# pixel = Pixel(screen=screen, start_point=(1,1), size=200)
 
-
-my_clock = Clock(screen=screen, start_time=time.time(), mili_secs=True,start_point=(300, 300), width=80)
+my_clock = Clock(screen=screen, start_time=time.time(), mili_secs=True,start_point=(900, 100), width=20)
 while running:
 
     # Держим цикл на правильной скорости
@@ -90,25 +100,22 @@ while running:
         # check for closing window
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN:
-            print('DOWN')
-            player.last_key(event.key)
-            # if event.key == pygame.K_LEFT:
-            #     player.last_key(event.key)
-            # elif event.key == pygame.K_RIGHT:
-            #     print('Right')
+        # elif event.type == pygame.KEYDOWN:
+        #     print('DOWN')
+        #     player.last_key(event.key)
+
     # Обновление
 
-    all_sprites.update()
+    # all_sprites.update()
     # Рендеринг
     screen.fill(BLACK)
     my_clock.show()
+    for line in pixel_group:
+        for pixel in line:
+            pixel.draw()
 
 
-
-
-
-    all_sprites.draw(screen)
+    # all_sprites.draw(screen)
     # После отрисовки всего, переворачиваем экран
     pygame.display.flip()
 
