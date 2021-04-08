@@ -1,5 +1,4 @@
 import time
-
 import pygame
 
 WHITE = (255, 255, 255)
@@ -68,18 +67,6 @@ class Element:
         return polygon_coors
 
 
-class DoubleCrop:
-
-    def __init__(self, screen, start_point):
-        self.screen = screen
-        self.start_point = start_point
-
-    def show(self, color):
-        x = self.start_point[0]
-        y = self.start_point[1]
-        pygame.draw.circle(self.screen, color=color, center=(x, y), radius=4)
-
-
 class Clock:
 
     def __init__(self, screen, start_time, start_point, width, mili_secs=False):
@@ -109,8 +96,8 @@ class Clock:
                     cpor_color = MY_GRAY
                 crop_coofs = [(-width / 3.5, width * 0.7), (-width / 3.5, width * 1.2)]
                 for coof_x, coof_y in crop_coofs:
-                    crops = DoubleCrop(screen=self.screen, start_point=(x + coof_x, y + coof_y))
-                    crops.show(color=cpor_color)
+                    pygame.draw.circle(self.screen, color=cpor_color, center=(x + coof_x, y + coof_y), radius=4)
+
         for elem, number in zip(numbers, current_time):
             elem.draw(number)
 

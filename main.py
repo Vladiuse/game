@@ -1,6 +1,7 @@
 import pygame
 from models import Element, Clock
 import time
+import sys
 WIDTH = 1200
 HEIGHT = 800
 FPS = 30
@@ -15,13 +16,45 @@ class Player(pygame.sprite.Sprite):
         self.image.fill(GREEN)
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
+        self.direction = None
+        self.speed = 10
 
     def update(self):
+
         pygame.draw.ellipse(screen, GREEN,
                             (10, 50, 280, 100))
-        self.rect.x += 5
+        if self.rect.x < 0:
+            self.rect.x = WIDTH
         if self.rect.x > WIDTH:
             self.rect.x = 0
+        if self.rect.y < 0:
+            self.rect.y = HEIGHT
+        if self.rect.y > HEIGHT:
+            self.rect.y = 0
+        if self.direction is None:
+            pass
+        if self.direction == 'LEFT':
+            self.rect.x -= self.speed
+        if self.direction == 'RIGHT':
+            self.rect.x += self.speed
+        if self.direction == 'UP':
+            self.rect.y -= self.speed
+        if self.direction == 'DOWN':
+            self.rect.y += self.speed
+
+
+
+    def last_key(self, key):
+        if key == pygame.K_LEFT:
+            self.direction = 'LEFT'
+        if key == pygame.K_RIGHT:
+            self.direction = 'RIGHT'
+        if key == pygame.K_UP:
+            self.direction = 'UP'
+        if key == pygame.K_DOWN:
+            self.direction = 'DOWN'
+
+
 
 
 
@@ -57,18 +90,25 @@ while running:
         # check for closing window
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            print('DOWN')
+            player.last_key(event.key)
+            # if event.key == pygame.K_LEFT:
+            #     player.last_key(event.key)
+            # elif event.key == pygame.K_RIGHT:
+            #     print('Right')
     # Обновление
 
-    # all_sprites.update()
+    all_sprites.update()
     # Рендеринг
     screen.fill(BLACK)
     my_clock.show()
 
 
-    # poligon.draw()
 
 
-    # all_sprites.draw(screen)
+
+    all_sprites.draw(screen)
     # После отрисовки всего, переворачиваем экран
     pygame.display.flip()
 
