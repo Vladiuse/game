@@ -1,71 +1,22 @@
 import time
+
 import pygame
-from settings import Colors, GameSettings
+
 from screen_elements import PixelScreen, Clock
-
-
-
-class Player(pygame.sprite.Sprite):
-
-    def __init__(self):
-        # pygame.sprite.Sprite.__init__(self)
-        super().__init__()
-        self.image = pygame.Surface((50, 50))
-        self.image.fill(Colors.GREEN)
-        self.rect = self.image.get_rect()
-        self.rect.center = (GameSettings.SCREEN_WIDTH / 2, GameSettings.SCREEN_HEIGHT / 2)
-        self.direction = None
-        self.speed = 10
-
-    def update(self):
-
-        pygame.draw.ellipse(screen, Colors.GREEN,
-                            (10, 50, 280, 100))
-        if self.rect.x < 0:
-            self.rect.x = GameSettings.SCREEN_WIDTH
-        if self.rect.x > GameSettings.SCREEN_WIDTH:
-            self.rect.x = 0
-        if self.rect.y < 0:
-            self.rect.y = GameSettings.SCREEN_HEIGHT
-        if self.rect.y > GameSettings.SCREEN_HEIGHT:
-            self.rect.y = 0
-        if self.direction is None:
-            pass
-        if self.direction == 'LEFT':
-            self.rect.x -= self.speed
-        if self.direction == 'RIGHT':
-            self.rect.x += self.speed
-        if self.direction == 'UP':
-            self.rect.y -= self.speed
-        if self.direction == 'DOWN':
-            self.rect.y += self.speed
-
-    def last_key(self, key):
-        if key == pygame.K_LEFT:
-            self.direction = 'LEFT'
-        if key == pygame.K_RIGHT:
-            self.direction = 'RIGHT'
-        if key == pygame.K_UP:
-            self.direction = 'UP'
-        if key == pygame.K_DOWN:
-            self.direction = 'DOWN'
-
+from settings import GameSettings
 
 pygame.init()
 pygame.mixer.init()  # для звука
-screen = pygame.display.set_mode((GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT))
+screen = GameSettings.my_screen
 pygame.display.set_caption(GameSettings.GAME_CAPTION)
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
-
 
 # player = Player()
 # all_sprites.add(player)
 
 # Цикл игры
 running = True
-
-
 
 
 def get_screen_pic(to_line, to_col):
@@ -78,10 +29,10 @@ def get_screen_pic(to_line, to_col):
     pixels_screen[to_line][to_col] = 1
     return pixels_screen
 
-to_show = get_screen_pic(5,8)
+
+to_show = get_screen_pic(5, 8)
 pixel_screen = PixelScreen(screen=screen, start_point=(250, 25), pixel_size=33, pixel_between=1.12, controller=to_show)
 my_clock = Clock(screen=screen, start_time=time.time(), mili_secs=False, start_point=(650, 40), width=20)
-
 
 while running:
 

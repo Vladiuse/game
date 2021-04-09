@@ -1,3 +1,5 @@
+import pygame
+
 class Colors:
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
@@ -15,6 +17,7 @@ class GameSettings:
     SCREEN_HEIGHT = 800
     FPS = 30
     GAME_CAPTION = 'Tetris'
+    my_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 
 
