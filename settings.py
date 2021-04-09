@@ -20,6 +20,12 @@ class GameSettings:
     my_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     running = True
 
+class GameError(BaseException):
+
+    def __init__(self, txt='no description'):
+        self.arg = 'GameError'
+        self.txt = txt
+
 
 
 

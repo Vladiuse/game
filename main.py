@@ -4,7 +4,7 @@ import pygame
 
 from screen_elements import PixelScreen, Clock
 from settings import GameSettings
-from game_01 import Player, GameController, PixelMove
+from game_01 import Player, GameController, PixelWalk
 
 pygame.init()
 pygame.mixer.init()  # для звука
@@ -16,24 +16,8 @@ all_sprites = pygame.sprite.Group()
 # player = Player()
 # all_sprites.add(player)
 
-
-
-
-
-
-def get_screen_pic(to_line, to_col):
-    pixels_screen = []
-    for _ in range(0, 20):
-        line = []
-        for pixel in range(0, 10):
-            line.append(0)
-        pixels_screen.append(line)
-    pixels_screen[to_line][to_col] = 1
-    return pixels_screen
-
-
 # to_show = get_screen_pic(5, 8)
-main_game = PixelMove(start_point=(5,8))
+main_game = PixelWalk(start_point=(5, 8), game_mode='step')
 
 
 pixel_screen = PixelScreen(screen=screen, start_point=(250, 25), pixel_size=33, pixel_between=1.12,
