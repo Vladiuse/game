@@ -1,12 +1,11 @@
 import pygame
-
+import random as r
 from settings import Colors, GameSettings, GameError
 
 screen = GameSettings.my_screen
 
 
 class GameController:
-
     """Отслеживает нажимаемые клаиши
      - передает их в игру"""
 
@@ -30,18 +29,29 @@ class PixelWalk:
         self.y = start_point[1]
         self.game_mode = game_mode
         self.direction = 'UP'
+        self.game_condition = []
+        self.start_game()
+
+
+    def start_game(self):
+        line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        while len(self.game_condition) != 20:
+            self.game_condition.append(line.copy())
+        if self.game_mode == 'step':
+            self.game_condition[self.y][self.x] = 1
+
+    def run(self):
+        """Изменение состояние игры"""
+        if r.randint(0,29) == 0:
+            line = r.randint(0,19)
+            col = r.randint(0,9)
+            self.game_condition[line][col] = 1
+        pass
 
     def get_screen_pic(self):
         """Передает экрану (она запрашивает эту функцию)
         состояние игры"""
-        pixels_screen = []
-        for _ in range(0, 20):
-            line = []
-            for pixel in range(0, 10):
-                line.append(0)
-            pixels_screen.append(line)
-        pixels_screen[self.y][self.x] = 1
-        return pixels_screen
+        return self.game_condition
 
     def game_key_controller(self, key):
         if self.game_mode == 'step':
@@ -51,11 +61,11 @@ class PixelWalk:
         else:
             raise GameError('неверный игровой мод')
 
-
     def traffic_mode_move(self):
         pass
 
     def step_mode_move(self, key):
+
         if key == pygame.K_LEFT:
             self.x -= 1
             if self.x == -1:
@@ -74,7 +84,13 @@ class PixelWalk:
             self.y += 1
             if self.y == 20:
                 self.y = 0
-
+        self.game_condition.clear()
+        for _ in range(0, 20):
+            line = []
+            for pixel in range(0, 10):
+                line.append(0)
+            self.game_condition.append(line)
+        self.game_condition[self.y][self.x] = 1
 
 
 class Player(pygame.sprite.Sprite):

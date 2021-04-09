@@ -39,6 +39,7 @@ while GameSettings.running:
     # Рендеринг
     screen.fill(GameSettings.background_color)
     my_clock.show()
+    main_game.run()
     pixel_screen.draw()
     # all_sprites.draw(screen)
     # После отрисовки всего, переворачиваем экран
