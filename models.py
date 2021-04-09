@@ -14,12 +14,12 @@ class BaseElement:
     off_color = MY_GRAY
     on_color = GREEN
 
-    def __init__(self, screen, start_point):
+    def __init__(self, screen, start_point, work):
         self.screen = screen
         self.start_point = start_point
         self.x = start_point[0]
         self.y = start_point[1]
-        self.color = MY_GRAY
+        self.color = self.work(work)
 
     def on(self):
         self.color = BaseElement.on_color
@@ -35,8 +35,8 @@ class BaseElement:
 
 class NumberElement(BaseElement):
 
-    def __init__(self, screen, start_point, width):
-        super().__init__(screen=screen, start_point=start_point)
+    def __init__(self, screen, start_point, width, work):
+        super().__init__(screen=screen, start_point=start_point, work=work)
         self.width = width / 5
         self.height = self.width * 4
         self.percent = 0.25
@@ -120,7 +120,7 @@ class Clock:
         numbers = []
         current_time = self.get_current_time()
         for between_number in range(self.count_numbers):
-            number = NumberBlock(screen=self.screen, start_point=(x, y), width=width)
+            number = NumberBlock(screen=self.screen, start_point=(x, y), width=width, work=0)
             numbers.append(number)
             x += width * 1.2
             if between_number == 1 or (between_number == 3 and self.mili_secs is True):
@@ -153,8 +153,8 @@ class Clock:
 
 class Pixel(BaseElement):
 
-    def __init__(self, screen, start_point, size):
-        super().__init__(screen=screen, start_point=start_point)
+    def __init__(self, screen, start_point, size, work):
+        super().__init__(screen=screen, start_point=start_point, work=work)
         self.size = size
 
     def draw(self):
@@ -172,3 +172,40 @@ class Pixel(BaseElement):
         center_y = int(self.y + self.size * 0.15)
         pygame.draw.rect(self.screen, color=self.color,
                          rect=(center_x, center_y, center, center), width=0)
+
+
+class PixelScreen:
+
+    def __init__(self,screen, start_point, pixel_size, pixel_between, controller):
+        self.screen = screen
+        self.x = start_point[0]
+        self.y = start_point[1]
+        self.pixel_size = pixel_size
+        self.pixel_between = pixel_between
+        self.pixels = []
+        self.controller = controller
+
+    def fill_screen(self):
+        self.pixels.clear()
+        for step_y in range(0, self.pixel_size * 20, self.pixel_size):
+            pixel_line = [
+                Pixel(screen=self.screen, start_point=(self.x + step_x * self.pixel_between,
+                                                  self.y + step_y * self.pixel_between), size=self.pixel_size, work=0)
+                for step_x in range(0, self.pixel_size * 10, self.pixel_size)]
+            self.pixels.append(pixel_line)
+
+    def make_picture(self):
+        for line_id, line in enumerate(self.controller):
+            for pixel_id, signal in enumerate(line):
+                pixel = self.pixels[line_id][pixel_id]
+                if signal == 1:
+                    pixel.on()
+
+
+
+    def draw(self):
+        self.fill_screen()
+        self.make_picture()
+        for line in self.pixels:
+            for pixel in line:
+                pixel.draw()

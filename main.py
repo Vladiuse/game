@@ -2,7 +2,7 @@ import time
 
 import pygame
 
-from models import Clock, Pixel
+from models import Clock, Pixel, PixelScreen
 
 WIDTH = 1200
 HEIGHT = 800
@@ -73,20 +73,25 @@ BLUE = (0, 0, 255)
 
 # Цикл игры
 running = True
-x = 250
-y = 25
-pixel_size = 33
-between = 1.12
-pixel_group = []
-for step_y in range(0, pixel_size * 20, pixel_size):
-    pixel_line = [Pixel(screen=screen, start_point=(x + step_x * between, y + step_y * between), size=pixel_size) for
-                  step_x in
-                  range(0, pixel_size * 10, pixel_size)]
-    pixel_group.append(pixel_line)
 
-# pixel = Pixel(screen=screen, start_point=(1,1), size=200)
 
+
+
+def get_screen_pic(to_line, to_col):
+    pixels_screen = []
+    for _ in range(0, 20):
+        line = []
+        for pixel in range(0, 10):
+            line.append(0)
+        pixels_screen.append(line)
+    pixels_screen[to_line][to_col] = 1
+    return pixels_screen
+
+to_show = get_screen_pic(5,8)
+pixel_screen = PixelScreen(screen=screen, start_point=(250, 25), pixel_size=33, pixel_between=1.12, controller=to_show)
 my_clock = Clock(screen=screen, start_time=time.time(), mili_secs=False, start_point=(650, 40), width=20)
+
+
 while running:
 
     # Держим цикл на правильной скорости
@@ -106,11 +111,9 @@ while running:
     # Рендеринг
     screen.fill(BLACK)
     my_clock.show()
-    for line in pixel_group:
-        for pixel in line:
-            pixel.draw()
 
     # all_sprites.draw(screen)
+    pixel_screen.draw()
     # После отрисовки всего, переворачиваем экран
     pygame.display.flip()
 
