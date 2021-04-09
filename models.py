@@ -1,18 +1,12 @@
 import time
-
 import pygame
+from settings import Colors, GameSettings
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (20, 215, 20)
-BLUE = (0, 0, 255)
-MY_GRAY = (50, 50, 50)
 
 
 class BaseElement:
-    off_color = MY_GRAY
-    on_color = GREEN
+    off_color = Colors.MY_GRAY
+    on_color = Colors.GREEN
 
     def __init__(self, screen, start_point, work):
         self.screen = screen
@@ -125,9 +119,9 @@ class Clock:
             x += width * 1.2
             if between_number == 1 or (between_number == 3 and self.mili_secs is True):
                 x += width / 4
-                cpor_color = GREEN
+                cpor_color = Colors.GREEN
                 if int(current_time[-2]) % 2 == 0:
-                    cpor_color = MY_GRAY
+                    cpor_color = Colors.MY_GRAY
                 crop_coofs = [(-width / 3.5, width * 0.7), (-width / 3.5, width * 1.2)]
                 for coof_x, coof_y in crop_coofs:
                     pygame.draw.circle(self.screen, color=cpor_color, center=(x + coof_x, y + coof_y),
@@ -164,7 +158,7 @@ class Pixel(BaseElement):
         new_size = self.size * 0.9
         inside_x = int(self.x + self.size / 20)
         inside_y = int(self.y + self.size / 20)
-        pygame.draw.rect(self.screen, color=BLACK,
+        pygame.draw.rect(self.screen, color=GameSettings.background_color,
                          rect=(inside_x, inside_y, new_size, new_size), width=0)
 
         center = self.size * 0.7
