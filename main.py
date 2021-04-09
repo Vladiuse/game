@@ -1,7 +1,7 @@
 import time
 import pygame
-from models import Clock, Pixel, PixelScreen
 from settings import Colors, GameSettings
+from screen_elements import PixelScreen, Clock
 
 
 
