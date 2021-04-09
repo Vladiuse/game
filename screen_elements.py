@@ -54,14 +54,14 @@ class Clock:
 
 class PixelScreen:
 
-    def __init__(self, screen, start_point, pixel_size, pixel_between, controller):
+    def __init__(self, screen, start_point, pixel_size, pixel_between, game):
         self.screen = screen
         self.x = start_point[0]
         self.y = start_point[1]
         self.pixel_size = pixel_size
         self.pixel_between = pixel_between
         self.pixels = []
-        self.controller = controller
+        self.game = game
 
     def fill_screen(self):
         self.pixels.clear()
@@ -74,7 +74,8 @@ class PixelScreen:
             self.pixels.append(pixel_line)
 
     def make_picture(self):
-        for line_id, line in enumerate(self.controller):
+        screen = self.game.get_screen_pic()
+        for line_id, line in enumerate(screen):
             for pixel_id, signal in enumerate(line):
                 pixel = self.pixels[line_id][pixel_id]
                 if signal == 1:

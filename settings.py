@@ -18,6 +18,7 @@ class GameSettings:
     FPS = 30
     GAME_CAPTION = 'Tetris'
     my_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    running = True
 
 
 

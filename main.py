@@ -4,6 +4,7 @@ import pygame
 
 from screen_elements import PixelScreen, Clock
 from settings import GameSettings
+from game_01 import Player, GameController, PixelMove
 
 pygame.init()
 pygame.mixer.init()  # для звука
@@ -15,8 +16,9 @@ all_sprites = pygame.sprite.Group()
 # player = Player()
 # all_sprites.add(player)
 
-# Цикл игры
-running = True
+
+
+
 
 
 def get_screen_pic(to_line, to_col):
@@ -30,32 +32,31 @@ def get_screen_pic(to_line, to_col):
     return pixels_screen
 
 
-to_show = get_screen_pic(5, 8)
-pixel_screen = PixelScreen(screen=screen, start_point=(250, 25), pixel_size=33, pixel_between=1.12, controller=to_show)
-my_clock = Clock(screen=screen, start_time=time.time(), mili_secs=False, start_point=(650, 40), width=20)
+# to_show = get_screen_pic(5, 8)
+main_game = PixelMove(start_point=(5,8))
 
-while running:
+
+pixel_screen = PixelScreen(screen=screen, start_point=(250, 25), pixel_size=33, pixel_between=1.12,
+                           game=main_game)
+my_clock = Clock(screen=screen, start_time=time.time(), mili_secs=False, start_point=(650, 40), width=20)
+controller = GameController(main_game)
+# Цикл игры
+while GameSettings.running:
 
     # Держим цикл на правильной скорости
     clock.tick(GameSettings.FPS)
     # Ввод процесса (события)
-    for event in pygame.event.get():
-        # check for closing window
-        if event.type == pygame.QUIT:
-            running = False
-        # elif event.type == pygame.KEYDOWN:
-        #     print('DOWN')
-        #     player.last_key(event.key)
+    # controller.run(player)
+    controller.run()
 
     # Обновление
 
-    # all_sprites.update()
+    all_sprites.update()
     # Рендеринг
     screen.fill(GameSettings.background_color)
     my_clock.show()
-
-    # all_sprites.draw(screen)
     pixel_screen.draw()
+    # all_sprites.draw(screen)
     # После отрисовки всего, переворачиваем экран
     pygame.display.flip()
 

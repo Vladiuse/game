@@ -1,6 +1,67 @@
 import pygame
+
 from settings import Colors, GameSettings
+
 screen = GameSettings.my_screen
+
+
+class GameController:
+
+    def __init__(self, game):
+        self.game = game
+
+    def run(self):
+        for event in pygame.event.get():
+            # check for closing window
+            if event.type == pygame.QUIT:
+                GameSettings.running = False
+            elif event.type == pygame.KEYDOWN:
+                print('DOWN')
+                self.game.move(event.key)
+
+
+class PixelMove:
+
+    def __init__(self, start_point):
+
+        self.x = start_point[0]
+        self.y = start_point[1]
+
+    def get_screen_pic(self):
+        pixels_screen = []
+        for _ in range(0, 20):
+            line = []
+            for pixel in range(0, 10):
+                line.append(0)
+            pixels_screen.append(line)
+        print(self.y, self.x)
+        pixels_screen[self.y][self.x] = 1
+        return pixels_screen
+
+    def move(self, key):
+        if key == pygame.K_LEFT:
+            print('left')
+            self.x -= 1
+            if self.x == -1:
+                self.x = 9
+        elif key == pygame.K_RIGHT:
+            print('rr')
+            self.x += 1
+            if self.x == 10:
+                self.x = 0
+
+        elif key == pygame.K_UP:
+            print('up')
+            self.y -= 1
+            if self.y == -1:
+                self.y = 19
+
+        elif key == pygame.K_DOWN:
+            print('down')
+            self.y += 1
+            if self.y == 20:
+                self.y = 0
+
 
 class Player(pygame.sprite.Sprite):
 
@@ -10,14 +71,12 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill(Colors.GREEN)
         self.rect = self.image.get_rect()
-        self.rect.center = (GameSettings.SCREEN_WIDTH / 2, GameSettings.SCREEN_HEIGHT / 2)
+        self.rect.center = (800, 500)
         self.direction = None
         self.speed = 10
 
     def update(self):
 
-        pygame.draw.ellipse(screen, Colors.GREEN,
-                            (10, 50, 280, 100))
         if self.rect.x < 0:
             self.rect.x = GameSettings.SCREEN_WIDTH
         if self.rect.x > GameSettings.SCREEN_WIDTH:
