@@ -1,5 +1,7 @@
-import pygame
 import random as r
+
+import pygame
+
 from settings import Colors, GameSettings
 
 screen = GameSettings.my_screen
@@ -21,23 +23,45 @@ class GameController:
                 self.game.game_key_controller(event.key)
 
 
+class GameOver:
+
+    def __init__(self, game):
+        self.game = game
+        self.pause = 15
+        self.flag = 1
+        self.blink = 4
+
+    def end_game(self):
+        self.pause -= 1
+        if self.blink == 0:
+            self.game.restart_game()
+        if self.pause == 0:
+            self.pause = 15
+            if self.flag == 1:
+                self.blink -= 1
+                self.flag *= -1
+                self.game.clear_screen()
+            else:
+                self.flag *= -1
+                self.game.draw_snake()
+
+
 class PixelWalk:
 
     def __init__(self, *, game_mode):
 
-        # self.x = 4
-        # self.y = 9
         self.game_mode = game_mode
         self.direction = None
         self.game_condition = []
-        # self.snake = [[4,9], [4,10], [4,11], [4,12], [4,13]]
-        self.snake = [[4,9],[4,10]]
+        self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13]]
+        # self.snake = [[4,9],[4,10]]
         self.snake_food = None
         self.start_game()
         self.game_speed = 6
         self.fps = 30
         self.speed_counter = self.fps / self.game_speed
-
+        self.game_status = True
+        self.game_over = GameOver(game=self)
 
     def draw_snake(self):
         for pixel in self.snake:
@@ -45,12 +69,24 @@ class PixelWalk:
             x = pixel[0]
             self.game_condition[y][x] = 1
 
+    def clear_screen(self):
+        self.game_condition.clear()
+        line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        while len(self.game_condition) != 20:
+            self.game_condition.append(line.copy())
+
+    def restart_game(self):
+        self.snake = [[4, 9], [4, 10]]
+        self.snake_food = None
+        self.game_status = True
+        self.game_condition = []
+        self.start_game()
+
     def start_game(self):
         """Иницилизация стартового состояния игры"""
         line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         while len(self.game_condition) != 20:
             self.game_condition.append(line.copy())
-        # self.game_condition[self.y][self.x] = 1
         self.draw_snake()
         self.make_snake_food()
 
@@ -61,9 +97,9 @@ class PixelWalk:
         snake_head = self.snake[0]
         y = snake_head[1]
         x = snake_head[0]
-        while [x,y] in self.snake:
-            x = r.randint(0,9)
-            y = r.randint(0,19)
+        while [x, y] in self.snake:
+            x = r.randint(0, 9)
+            y = r.randint(0, 19)
         self.snake_food = [x, y]
         self.game_condition[y][x] = 1
 
@@ -79,10 +115,13 @@ class PixelWalk:
                 self.snake_move()
                 self.direction = None
 
-        self.make_new_screen()
+        if self.game_status:
+            self.make_new_screen()
+        else:
+            self.game_over.end_game()
 
     def snake_move(self):
-        #[y][x]
+        # [y][x]
         snake_head = self.snake[0].copy()
         y = snake_head[1]
         x = snake_head[0]
@@ -102,14 +141,16 @@ class PixelWalk:
             y = 19
         if y == 20:
             y = 0
-        new_snake_head = [x,y]
-        if not new_snake_head == self.snake_food:
-            print('FOOOOD')
-        # print(f'new snake head is {new_snake_head}')
-            snake_end = self.snake[-1]
-        # удаление хваста змеи
-            self.game_condition[snake_end[1]][snake_end[0]] = 0
-            self.snake.pop()
+        new_snake_head = [x, y]
+        if not new_snake_head == self.snake_food:  # не нашли ли мы еду
+            if not new_snake_head in self.snake:  # не движемся ли сами в себя
+                snake_end = self.snake[-1]
+                # удаление хваста змеи
+                self.game_condition[snake_end[1]][snake_end[0]] = 0
+                self.snake.pop()
+            else:
+                self.game_status = False
+                print('Snake CRASH')
         else:
             self.make_snake_food()
         # отрисовка и добовление новой головы змейки
@@ -122,7 +163,8 @@ class PixelWalk:
         return self.game_condition
 
     def game_key_controller(self, key):
-        """Меняет флаг направление движения"""
+        """Меняет флаг направление движения -
+        изменение на противоположное не проходит"""
         if key == pygame.K_LEFT:
             if self.direction != 'RIGHT':
                 self.direction = 'LEFT'
@@ -135,7 +177,6 @@ class PixelWalk:
         elif key == pygame.K_DOWN:
             if self.direction != 'UP':
                 self.direction = 'DOWN'
-        print(self.direction)
 
     def make_new_screen(self):
         """Проверка выхода за границы игрового поля и
