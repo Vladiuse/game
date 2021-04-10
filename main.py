@@ -17,7 +17,7 @@ all_sprites = pygame.sprite.Group()
 # all_sprites.add(player)
 
 # to_show = get_screen_pic(5, 8)
-main_game = PixelWalk(start_point=(5, 8), game_mode='traffic')
+main_game = PixelWalk(game_mode='step')
 
 
 pixel_screen = PixelScreen(screen=screen, start_point=(250, 25), pixel_size=33, pixel_between=1.12,

@@ -23,24 +23,33 @@ class GameController:
 
 class PixelWalk:
 
-    def __init__(self, start_point, *, game_mode):
+    def __init__(self, *, game_mode):
 
-        self.x = start_point[0]
-        self.y = start_point[1]
+        # self.x = 4
+        # self.y = 9
         self.game_mode = game_mode
         self.direction = None
         self.game_condition = []
+        self.snake = [[4,9], [4,10]]
         self.start_game()
         self.game_speed = 6
         self.fps = 30
         self.speed_counter = self.fps / self.game_speed
+
+
+    def draw_snake(self):
+        for pixel in self.snake:
+            y = pixel[1]
+            x = pixel[0]
+            self.game_condition[y][x] = 1
 
     def start_game(self):
         """Иницилизация стартового состояния игры"""
         line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         while len(self.game_condition) != 20:
             self.game_condition.append(line.copy())
-        self.game_condition[self.y][self.x] = 1
+        # self.game_condition[self.y][self.x] = 1
+        self.draw_snake()
 
         if self.game_mode == 'traffic':
             self.direction = 'UP'
@@ -50,24 +59,45 @@ class PixelWalk:
         if self.game_mode == 'traffic':
             self.speed_counter -= 1
             if self.speed_counter == 0:
-                self.move()
+                self.snake_move()
                 self.speed_counter = self.fps / self.game_speed
         if self.game_mode == 'step':
             if self.direction is not None:
-                self.move()
+                self.snake_move()
                 self.direction = None
 
         self.make_new_screen()
 
-    def move(self):
+    def snake_move(self):
+        #[y][x]
+        snake_head = self.snake[0].copy()
+        y = snake_head[1]
+        x = snake_head[0]
         if self.direction == 'UP':
-            self.y -= 1
+            print('y UP')
+            y -= 1
         elif self.direction == 'DOWN':
-            self.y += 1
+            y += 1
         elif self.direction == 'LEFT':
-            self.x -= 1
+            x -= 1
         elif self.direction == 'RIGHT':
-            self.x += 1
+            x += 1
+        if x == -1:
+            x = 9
+        if x == 10:
+            x = 0
+        if y == -1:
+            y = 19
+        if y == 20:
+            y = 0
+        new_snake_head = [x,y]
+        # print(f'new snake head is {new_snake_head}')
+        snake_end = self.snake[-1]
+        # удаление хваста змеи
+        self.game_condition[snake_end[1]][snake_end[0]] = 0
+        self.snake.pop()
+        self.snake.insert(0, new_snake_head)
+        self.game_condition[new_snake_head[1]][new_snake_head[0]] = 1
 
     def get_screen_pic(self):
         """Передает экрану (он запрашивает эту функцию)
@@ -86,46 +116,26 @@ class PixelWalk:
             self.direction = 'DOWN'
         print(self.direction)
 
-    # def traffic_mode_move(self, key):
-    #     if key == pygame.K_LEFT:
-    #         self.direction = 'LEFT'
-    #     elif key == pygame.K_RIGHT:
-    #         self.direction = 'RIGHT'
-    #     elif key == pygame.K_UP:
-    #         self.direction = 'UP'
-    #     elif key == pygame.K_DOWN:
-    #         self.direction = 'DOWN'
-    #     print(self.direction)
-
-    # def step_mode_move(self, key):
-    #     if key == pygame.K_LEFT:
-    #         self.x -= 1
-    #     elif key == pygame.K_RIGHT:
-    #         self.x += 1
-    #     elif key == pygame.K_UP:
-    #         self.y -= 1
-    #     elif key == pygame.K_DOWN:
-    #         self.y += 1
-    #     # self.make_new_screen()
-
     def make_new_screen(self):
         """Проверка выхода за границы игрового поля и
         формирования масива для экрана"""
-        if self.x == -1:
-            self.x = 9
-        if self.x == 10:
-            self.x = 0
-        if self.y == -1:
-            self.y = 19
-        if self.y == 20:
-            self.y = 0
-        self.game_condition.clear()
-        for _ in range(0, 20):
-            line = []
-            for pixel in range(0, 10):
-                line.append(0)
-            self.game_condition.append(line)
-        self.game_condition[self.y][self.x] = 1
+        # self.draw_snake()
+        pass
+        # if self.x == -1:
+        #     self.x = 9
+        # if self.x == 10:
+        #     self.x = 0
+        # if self.y == -1:
+        #     self.y = 19
+        # if self.y == 20:
+        #     self.y = 0
+        # self.game_condition.clear()
+        # for _ in range(0, 20):
+        #     line = []
+        #     for pixel in range(0, 10):
+        #         line.append(0)
+        #     self.game_condition.append(line)
+        # self.game_condition[self.y][self.x] = 1
 
 
 class Player(pygame.sprite.Sprite):
