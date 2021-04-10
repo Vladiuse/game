@@ -89,3 +89,33 @@ class PixelScreen:
         for line in self.pixels:
             for pixel in line:
                 pixel.draw()
+
+
+class Score:
+
+    def __init__(self, start_point, width):
+        self.count_numbers = 4
+        self.score = 0
+        self.start_point = start_point
+        self.width = width
+
+
+    def show(self, numbers_code):
+        x = self.start_point[0]
+        y = self.start_point[1]
+        for i in range(self.count_numbers):
+            print('we in show_score', i, numbers_code)
+            elem = NumberBlock(screen=screen,start_point=(x,y), width=self.width, work=0)
+            x += self.width * 1.3
+            elem.draw_number_block(numbers_code[i])
+
+
+    def get_score(self, score):
+        pass
+
+    def show_score(self, score):
+        score = list(str(score))
+        while len(score) != self.count_numbers:
+            score.insert(0, 'null')
+        self.show(score)
+

@@ -11,10 +11,14 @@ class GameController:
     """Отслеживает нажимаемые клаиши
      - передает их в игру"""
 
-    def __init__(self, game):
+    def __init__(self, game, score_controller):
         self.game = game
+        self.score_controller = score_controller
 
     def run(self):
+        score = self.game.score
+        print(score)
+        self.score_controller.show_score(score)
         for event in pygame.event.get():
             # check for closing window
             if event.type == pygame.QUIT:
@@ -60,8 +64,8 @@ class PixelWalk:
         self.direction = None
         self.last_direction = None
         self.game_condition = []
-        self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15]]
-        # self.snake = [[4,9],[4,10]]
+        # self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15]]
+        self.snake = [[4,9],[4,10]]
         self.snake_food = None
         self.start_game()
         self.game_speed = 3
@@ -69,6 +73,7 @@ class PixelWalk:
         self.speed_counter = self.fps / self.game_speed
         self.game_status = True
         self.game_over = GameOver(game=self)
+        self.score = 0
 
     def draw_snake(self):
         for pixel in self.snake:
@@ -83,11 +88,12 @@ class PixelWalk:
             self.game_condition.append(line.copy())
 
     def restart_game(self):
-        self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15]]
+        self.snake = [[4,9],[4,10]]
         self.snake_food = None
         self.game_status = True
         self.game_condition = []
         self.start_game()
+        self.score = 0
 
     def start_game(self):
         """Иницилизация стартового состояния игры"""
@@ -160,8 +166,10 @@ class PixelWalk:
                 self.game_status = False
                 print('Snake CRASH')
         else:
+            # нашли еду
             self.make_snake_food()
             self.last_direction = self.direction
+            self.score += 1
         # отрисовка и добовление новой головы змейки
         self.snake.insert(0, new_snake_head)
         self.game_condition[new_snake_head[1]][new_snake_head[0]] = 1
@@ -189,45 +197,45 @@ class PixelWalk:
                 self.direction = 'DOWN'
 
 
-class Player(pygame.sprite.Sprite):
-
-    def __init__(self):
-        # pygame.sprite.Sprite.__init__(self)
-        super().__init__()
-        self.image = pygame.Surface((50, 50))
-        self.image.fill(Colors.GREEN)
-        self.rect = self.image.get_rect()
-        self.rect.center = (800, 500)
-        self.direction = None
-        self.speed = 10
-
-    def update(self):
-
-        if self.rect.x < 0:
-            self.rect.x = GameSettings.SCREEN_WIDTH
-        if self.rect.x > GameSettings.SCREEN_WIDTH:
-            self.rect.x = 0
-        if self.rect.y < 0:
-            self.rect.y = GameSettings.SCREEN_HEIGHT
-        if self.rect.y > GameSettings.SCREEN_HEIGHT:
-            self.rect.y = 0
-        if self.direction is None:
-            pass
-        if self.direction == 'LEFT':
-            self.rect.x -= self.speed
-        if self.direction == 'RIGHT':
-            self.rect.x += self.speed
-        if self.direction == 'UP':
-            self.rect.y -= self.speed
-        if self.direction == 'DOWN':
-            self.rect.y += self.speed
-
-    def last_key(self, key):
-        if key == pygame.K_LEFT:
-            self.direction = 'LEFT'
-        if key == pygame.K_RIGHT:
-            self.direction = 'RIGHT'
-        if key == pygame.K_UP:
-            self.direction = 'UP'
-        if key == pygame.K_DOWN:
-            self.direction = 'DOWN'
+# class Player(pygame.sprite.Sprite):
+#
+#     def __init__(self):
+#         # pygame.sprite.Sprite.__init__(self)
+#         super().__init__()
+#         self.image = pygame.Surface((50, 50))
+#         self.image.fill(Colors.GREEN)
+#         self.rect = self.image.get_rect()
+#         self.rect.center = (800, 500)
+#         self.direction = None
+#         self.speed = 10
+#
+#     def update(self):
+#
+#         if self.rect.x < 0:
+#             self.rect.x = GameSettings.SCREEN_WIDTH
+#         if self.rect.x > GameSettings.SCREEN_WIDTH:
+#             self.rect.x = 0
+#         if self.rect.y < 0:
+#             self.rect.y = GameSettings.SCREEN_HEIGHT
+#         if self.rect.y > GameSettings.SCREEN_HEIGHT:
+#             self.rect.y = 0
+#         if self.direction is None:
+#             pass
+#         if self.direction == 'LEFT':
+#             self.rect.x -= self.speed
+#         if self.direction == 'RIGHT':
+#             self.rect.x += self.speed
+#         if self.direction == 'UP':
+#             self.rect.y -= self.speed
+#         if self.direction == 'DOWN':
+#             self.rect.y += self.speed
+#
+#     def last_key(self, key):
+#         if key == pygame.K_LEFT:
+#             self.direction = 'LEFT'
+#         if key == pygame.K_RIGHT:
+#             self.direction = 'RIGHT'
+#         if key == pygame.K_UP:
+#             self.direction = 'UP'
+#         if key == pygame.K_DOWN:
+#             self.direction = 'DOWN'

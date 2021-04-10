@@ -2,9 +2,9 @@ import time
 
 import pygame
 
-from screen_elements import PixelScreen, Clock
+from screen_elements import PixelScreen, Clock, Score
 from settings import GameSettings
-from game_01 import Player, GameController, PixelWalk
+from game_01 import GameController, PixelWalk
 
 pygame.init()
 pygame.mixer.init()  # для звука
@@ -17,12 +17,14 @@ all_sprites = pygame.sprite.Group()
 # all_sprites.add(player)
 
 
-main_game = PixelWalk(game_mode='step')
+main_game = PixelWalk(game_mode='traffic')
 
 
 pixel_screen = PixelScreen(game=main_game)
 my_clock = Clock(start_time=time.time(), mili_secs=False, start_point=(650, 40), width=20)
-controller = GameController(main_game)
+game_score_controller = Score((650, 120), width=20)
+controller = GameController(game=main_game, score_controller=game_score_controller)
+
 # Цикл игры
 while GameSettings.running:
 
@@ -30,13 +32,14 @@ while GameSettings.running:
     clock.tick(GameSettings.FPS)
     # Ввод процесса (события)
     # controller.run(player)
-    controller.run()
+
 
     # Обновление
 
     all_sprites.update()
     # Рендеринг
     screen.fill(GameSettings.background_color)
+    controller.run()
     my_clock.show()
     main_game.run()
     pixel_screen.draw()

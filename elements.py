@@ -58,7 +58,8 @@ class NumberElement(BaseElement):
 
 
 class NumberBlock(NumberElement):
-    number_code = {'0': [1, 1, 1, 0, 1, 1, 1],
+    number_code = {'null': [0, 0, 0, 0, 0, 0, 0],
+                   '0': [1, 1, 1, 0, 1, 1, 1],
                    '1': [0, 0, 1, 0, 0, 1, 0],
                    '2': [1, 0, 1, 1, 1, 0, 1],
                    '3': [1, 0, 1, 1, 0, 1, 1],
