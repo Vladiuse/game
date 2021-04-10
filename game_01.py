@@ -87,7 +87,6 @@ class PixelWalk:
         y = snake_head[1]
         x = snake_head[0]
         if self.direction == 'UP':
-            print('y UP')
             y -= 1
         elif self.direction == 'DOWN':
             y += 1
@@ -125,13 +124,17 @@ class PixelWalk:
     def game_key_controller(self, key):
         """Меняет флаг направление движения"""
         if key == pygame.K_LEFT:
-            self.direction = 'LEFT'
+            if self.direction != 'RIGHT':
+                self.direction = 'LEFT'
         elif key == pygame.K_RIGHT:
-            self.direction = 'RIGHT'
+            if self.direction != 'LEFT':
+                self.direction = 'RIGHT'
         elif key == pygame.K_UP:
-            self.direction = 'UP'
+            if self.direction != 'DOWN':
+                self.direction = 'UP'
         elif key == pygame.K_DOWN:
-            self.direction = 'DOWN'
+            if self.direction != 'UP':
+                self.direction = 'DOWN'
         print(self.direction)
 
     def make_new_screen(self):
