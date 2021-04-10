@@ -1,6 +1,6 @@
 import pygame
-import random as r
-from settings import Colors, GameSettings, GameError
+
+from settings import Colors, GameSettings
 
 screen = GameSettings.my_screen
 
@@ -33,17 +33,16 @@ class PixelWalk:
         self.start_game()
         self.game_speed = 6
         self.fps = 30
-        self.speed_counter = self.fps/self.game_speed
-
+        self.speed_counter = self.fps / self.game_speed
 
     def start_game(self):
+        """Иницилизация стартового состояния игры"""
         line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         while len(self.game_condition) != 20:
             self.game_condition.append(line.copy())
-        if self.game_mode == 'step':
-            self.game_condition[self.y][self.x] = 1
-        elif self.game_mode == 'traffic':
-            self.game_condition[self.y][self.x] = 1
+        self.game_condition[self.y][self.x] = 1
+
+        if self.game_mode == 'traffic':
             self.direction = 'UP'
 
     def run(self):
@@ -51,28 +50,24 @@ class PixelWalk:
         if self.game_mode == 'traffic':
             self.speed_counter -= 1
             if self.speed_counter == 0:
-                if self.direction == 'UP':
-                    self.y -= 1
-                elif self.direction == 'DOWN':
-                    self.y += 1
-                elif self.direction == 'LEFT':
-                    self.x -= 1
-                elif self.direction == 'RIGHT':
-                    self.x += 1
-                self.speed_counter = self.fps/self.game_speed
+                self.move()
+                self.speed_counter = self.fps / self.game_speed
         if self.game_mode == 'step':
             if self.direction is not None:
-                if self.direction == 'UP':
-                    self.y -= 1
-                elif self.direction == 'DOWN':
-                    self.y += 1
-                elif self.direction == 'LEFT':
-                    self.x -= 1
-                elif self.direction == 'RIGHT':
-                    self.x += 1
+                self.move()
                 self.direction = None
 
         self.make_new_screen()
+
+    def move(self):
+        if self.direction == 'UP':
+            self.y -= 1
+        elif self.direction == 'DOWN':
+            self.y += 1
+        elif self.direction == 'LEFT':
+            self.x -= 1
+        elif self.direction == 'RIGHT':
+            self.x += 1
 
     def get_screen_pic(self):
         """Передает экрану (он запрашивает эту функцию)
@@ -80,6 +75,7 @@ class PixelWalk:
         return self.game_condition
 
     def game_key_controller(self, key):
+        """Меняет флаг направление движения"""
         if key == pygame.K_LEFT:
             self.direction = 'LEFT'
         elif key == pygame.K_RIGHT:
