@@ -58,8 +58,9 @@ class PixelWalk:
 
         self.game_mode = game_mode
         self.direction = None
+        self.last_direction = None
         self.game_condition = []
-        self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13]]
+        self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15]]
         # self.snake = [[4,9],[4,10]]
         self.snake_food = None
         self.start_game()
@@ -82,7 +83,7 @@ class PixelWalk:
             self.game_condition.append(line.copy())
 
     def restart_game(self):
-        self.snake = [[4, 9], [4, 10]]
+        self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15]]
         self.snake_food = None
         self.game_status = True
         self.game_condition = []
@@ -98,6 +99,7 @@ class PixelWalk:
 
         if self.game_mode == 'traffic':
             self.direction = 'UP'
+            self.last_direction = 'UP'
 
     def make_snake_food(self):
         snake_head = self.snake[0]
@@ -121,7 +123,6 @@ class PixelWalk:
                 if self.direction is not None:
                     self.snake_move()
                     self.direction = None
-            # self.make_new_screen()
         else:
             self.direction = None
             self.game_over.end_game()
@@ -129,6 +130,7 @@ class PixelWalk:
     def snake_move(self):
         # [y][x]
         snake_head = self.snake[0].copy()
+        print(snake_head, self.snake)
         y = snake_head[1]
         x = snake_head[0]
         if self.direction == 'UP':
@@ -154,14 +156,17 @@ class PixelWalk:
                 # удаление хваста змеи
                 self.game_condition[snake_end[1]][snake_end[0]] = 0
                 self.snake.pop()
+                self.last_direction = self.direction
             else:
                 self.game_status = False
                 print('Snake CRASH')
         else:
             self.make_snake_food()
+            self.last_direction = self.direction
         # отрисовка и добовление новой головы змейки
         self.snake.insert(0, new_snake_head)
         self.game_condition[new_snake_head[1]][new_snake_head[0]] = 1
+        self.last_direction = self.direction
 
     def get_screen_pic(self):
         """Передает экрану (он запрашивает эту функцию)
@@ -172,38 +177,17 @@ class PixelWalk:
         """Меняет флаг направление движения -
         изменение на противоположное не проходит"""
         if key == pygame.K_LEFT:
-            if self.direction != 'RIGHT':
+            if self.last_direction != 'RIGHT':
                 self.direction = 'LEFT'
         elif key == pygame.K_RIGHT:
-            if self.direction != 'LEFT':
+            if self.last_direction != 'LEFT':
                 self.direction = 'RIGHT'
         elif key == pygame.K_UP:
-            if self.direction != 'DOWN':
+            if self.last_direction != 'DOWN':
                 self.direction = 'UP'
         elif key == pygame.K_DOWN:
-            if self.direction != 'UP':
+            if self.last_direction != 'UP':
                 self.direction = 'DOWN'
-
-    def make_new_screen(self):
-        """Проверка выхода за границы игрового поля и
-        формирования масива для экрана"""
-        # self.draw_snake()
-        pass
-        # if self.x == -1:
-        #     self.x = 9
-        # if self.x == 10:
-        #     self.x = 0
-        # if self.y == -1:
-        #     self.y = 19
-        # if self.y == 20:
-        #     self.y = 0
-        # self.game_condition.clear()
-        # for _ in range(0, 20):
-        #     line = []
-        #     for pixel in range(0, 10):
-        #         line.append(0)
-        #     self.game_condition.append(line)
-        # self.game_condition[self.y][self.x] = 1
 
 
 class Player(pygame.sprite.Sprite):
