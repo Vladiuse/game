@@ -34,6 +34,7 @@ class GameOver:
     def end_game(self):
         self.pause -= 1
         if self.blink == 0:
+            self.game_over_param_to_default()
             self.game.restart_game()
         if self.pause == 0:
             self.pause = 15
@@ -44,6 +45,11 @@ class GameOver:
             else:
                 self.flag *= -1
                 self.game.draw_snake()
+
+    def game_over_param_to_default(self):
+        self.pause = 15
+        self.flag = 1
+        self.blink = 4
 
 
 class PixelWalk:
@@ -57,7 +63,7 @@ class PixelWalk:
         # self.snake = [[4,9],[4,10]]
         self.snake_food = None
         self.start_game()
-        self.game_speed = 6
+        self.game_speed = 3
         self.fps = 30
         self.speed_counter = self.fps / self.game_speed
         self.game_status = True
@@ -105,19 +111,19 @@ class PixelWalk:
 
     def run(self):
         """Изменение состояние игры"""
-        if self.game_mode == 'traffic':
-            self.speed_counter -= 1
-            if self.speed_counter == 0:
-                self.snake_move()
-                self.speed_counter = self.fps / self.game_speed
-        if self.game_mode == 'step':
-            if self.direction is not None:
-                self.snake_move()
-                self.direction = None
-
         if self.game_status:
-            self.make_new_screen()
+            if self.game_mode == 'traffic':
+                self.speed_counter -= 1
+                if self.speed_counter == 0:
+                    self.snake_move()
+                    self.speed_counter = self.fps / self.game_speed
+            if self.game_mode == 'step':
+                if self.direction is not None:
+                    self.snake_move()
+                    self.direction = None
+            # self.make_new_screen()
         else:
+            self.direction = None
             self.game_over.end_game()
 
     def snake_move(self):
