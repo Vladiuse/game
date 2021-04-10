@@ -31,7 +31,7 @@ class PixelWalk:
         self.direction = None
         self.game_condition = []
         self.start_game()
-        self.game_speed = 5
+        self.game_speed = 6
         self.fps = 30
         self.speed_counter = self.fps/self.game_speed
 
@@ -48,7 +48,7 @@ class PixelWalk:
 
     def run(self):
         """Изменение состояние игры"""
-        if self.direction is not None:
+        if self.game_mode == 'traffic':
             self.speed_counter -= 1
             if self.speed_counter == 0:
                 if self.direction == 'UP':
@@ -59,33 +59,27 @@ class PixelWalk:
                     self.x -= 1
                 elif self.direction == 'RIGHT':
                     self.x += 1
-                    # if self.y == -1:
-                    #     self.y = 19
                 self.speed_counter = self.fps/self.game_speed
+        if self.game_mode == 'step':
+            if self.direction is not None:
+                if self.direction == 'UP':
+                    self.y -= 1
+                elif self.direction == 'DOWN':
+                    self.y += 1
+                elif self.direction == 'LEFT':
+                    self.x -= 1
+                elif self.direction == 'RIGHT':
+                    self.x += 1
+                self.direction = None
 
-            self.make_new_screen()
-
-
-        # if r.randint(0,29) == 0:
-        #     line = r.randint(0,19)
-        #     col = r.randint(0,9)
-        #     self.game_condition[line][col] = 1
-        pass
+        self.make_new_screen()
 
     def get_screen_pic(self):
-        """Передает экрану (она запрашивает эту функцию)
+        """Передает экрану (он запрашивает эту функцию)
         состояние игры"""
         return self.game_condition
 
     def game_key_controller(self, key):
-        if self.game_mode == 'step':
-            self.step_mode_move(key)
-        elif self.game_mode == 'traffic':
-            self.traffic_mode_move(key)
-        else:
-            raise GameError('неверный игровой мод')
-
-    def traffic_mode_move(self, key):
         if key == pygame.K_LEFT:
             self.direction = 'LEFT'
         elif key == pygame.K_RIGHT:
@@ -96,28 +90,31 @@ class PixelWalk:
             self.direction = 'DOWN'
         print(self.direction)
 
+    # def traffic_mode_move(self, key):
+    #     if key == pygame.K_LEFT:
+    #         self.direction = 'LEFT'
+    #     elif key == pygame.K_RIGHT:
+    #         self.direction = 'RIGHT'
+    #     elif key == pygame.K_UP:
+    #         self.direction = 'UP'
+    #     elif key == pygame.K_DOWN:
+    #         self.direction = 'DOWN'
+    #     print(self.direction)
 
-
-    def step_mode_move(self, key):
-        if key == pygame.K_LEFT:
-            self.x -= 1
-            # if self.x == -1:
-            #     self.x = 9
-        elif key == pygame.K_RIGHT:
-            self.x += 1
-            # if self.x == 10:
-            #     self.x = 0
-        elif key == pygame.K_UP:
-            self.y -= 1
-            # if self.y == -1:
-            #     self.y = 19
-        elif key == pygame.K_DOWN:
-            self.y += 1
-            # if self.y == 20:
-            #     self.y = 0
-        self.make_new_screen()
+    # def step_mode_move(self, key):
+    #     if key == pygame.K_LEFT:
+    #         self.x -= 1
+    #     elif key == pygame.K_RIGHT:
+    #         self.x += 1
+    #     elif key == pygame.K_UP:
+    #         self.y -= 1
+    #     elif key == pygame.K_DOWN:
+    #         self.y += 1
+    #     # self.make_new_screen()
 
     def make_new_screen(self):
+        """Проверка выхода за границы игрового поля и
+        формирования масива для экрана"""
         if self.x == -1:
             self.x = 9
         if self.x == 10:
