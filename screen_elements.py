@@ -1,11 +1,13 @@
 import pygame
 import time
 from elements import Pixel, NumberBlock
-from settings import Colors
+from settings import Colors, GameSettings
+screen = GameSettings.my_screen
+
 
 class Clock:
 
-    def __init__(self, screen, start_time, start_point, width, mili_secs=False):
+    def __init__(self,start_time, start_point, width, mili_secs=False):
         self.screen = screen
         self.start_point = start_point
         self.count_numbers = 4
@@ -54,12 +56,12 @@ class Clock:
 
 class PixelScreen:
 
-    def __init__(self, screen, start_point, pixel_size, pixel_between, game):
+    def __init__(self, game):
         self.screen = screen
-        self.x = start_point[0]
-        self.y = start_point[1]
-        self.pixel_size = pixel_size
-        self.pixel_between = pixel_between
+        self.x = 250
+        self.y = 25
+        self.pixel_size = 33
+        self.pixel_between = 1.12
         self.pixels = []
         self.game = game
 

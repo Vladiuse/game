@@ -130,7 +130,6 @@ class PixelWalk:
     def snake_move(self):
         # [y][x]
         snake_head = self.snake[0].copy()
-        print(snake_head, self.snake)
         y = snake_head[1]
         x = snake_head[0]
         if self.direction == 'UP':

@@ -16,13 +16,12 @@ all_sprites = pygame.sprite.Group()
 # player = Player()
 # all_sprites.add(player)
 
-# to_show = get_screen_pic(5, 8)
+
 main_game = PixelWalk(game_mode='step')
 
 
-pixel_screen = PixelScreen(screen=screen, start_point=(250, 25), pixel_size=33, pixel_between=1.12,
-                           game=main_game)
-my_clock = Clock(screen=screen, start_time=time.time(), mili_secs=False, start_point=(650, 40), width=20)
+pixel_screen = PixelScreen(game=main_game)
+my_clock = Clock(start_time=time.time(), mili_secs=False, start_point=(650, 40), width=20)
 controller = GameController(main_game)
 # Цикл игры
 while GameSettings.running:
