@@ -1,5 +1,5 @@
 import pygame
-
+import random as r
 from settings import Colors, GameSettings
 
 screen = GameSettings.my_screen
@@ -30,7 +30,9 @@ class PixelWalk:
         self.game_mode = game_mode
         self.direction = None
         self.game_condition = []
-        self.snake = [[4,9], [4,10]]
+        # self.snake = [[4,9], [4,10], [4,11], [4,12], [4,13]]
+        self.snake = [[4,9],[4,10]]
+        self.snake_food = None
         self.start_game()
         self.game_speed = 6
         self.fps = 30
@@ -50,9 +52,20 @@ class PixelWalk:
             self.game_condition.append(line.copy())
         # self.game_condition[self.y][self.x] = 1
         self.draw_snake()
+        self.make_snake_food()
 
         if self.game_mode == 'traffic':
             self.direction = 'UP'
+
+    def make_snake_food(self):
+        snake_head = self.snake[0]
+        y = snake_head[1]
+        x = snake_head[0]
+        while [x,y] in self.snake:
+            x = r.randint(0,9)
+            y = r.randint(0,19)
+        self.snake_food = [x, y]
+        self.game_condition[y][x] = 1
 
     def run(self):
         """Изменение состояние игры"""
@@ -91,11 +104,16 @@ class PixelWalk:
         if y == 20:
             y = 0
         new_snake_head = [x,y]
+        if not new_snake_head == self.snake_food:
+            print('FOOOOD')
         # print(f'new snake head is {new_snake_head}')
-        snake_end = self.snake[-1]
+            snake_end = self.snake[-1]
         # удаление хваста змеи
-        self.game_condition[snake_end[1]][snake_end[0]] = 0
-        self.snake.pop()
+            self.game_condition[snake_end[1]][snake_end[0]] = 0
+            self.snake.pop()
+        else:
+            self.make_snake_food()
+        # отрисовка и добовление новой головы змейки
         self.snake.insert(0, new_snake_head)
         self.game_condition[new_snake_head[1]][new_snake_head[0]] = 1
 
