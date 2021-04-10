@@ -21,9 +21,9 @@ main_game = PixelWalk(game_mode='traffic')
 
 
 pixel_screen = PixelScreen(game=main_game)
-my_clock = Clock(start_time=time.time(), mili_secs=False, start_point=(650, 40), width=20)
+my_clock = Clock(start_time=time.time(), mili_secs=False)
 game_score_controller = Score((650, 120), width=20)
-controller = GameController(game=main_game, score_controller=game_score_controller)
+controller = GameController(game=main_game, score_controller=game_score_controller, game_clock=my_clock)
 
 # Цикл игры
 while GameSettings.running:
@@ -40,7 +40,7 @@ while GameSettings.running:
     # Рендеринг
     screen.fill(GameSettings.background_color)
     controller.run()
-    my_clock.show()
+    # my_clock.show()
     main_game.run()
     pixel_screen.draw()
     # all_sprites.draw(screen)

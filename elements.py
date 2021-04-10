@@ -4,8 +4,10 @@ from settings import Colors, GameSettings
 
 
 class BaseElement:
-    off_color = Colors.MY_GRAY
-    on_color = Colors.GREEN
+    # off_color = Colors.MY_GRAY
+    # on_color = Colors.GREEN
+    off_color = GameSettings.PIXEL_OFF
+    on_color = GameSettings.PIXEL_ON
 
     def __init__(self, screen, start_point, work):
         self.screen = screen
@@ -93,9 +95,6 @@ class NumberBlock(NumberElement):
         for start_point, horizontal, work in zip(coord_coofs, NumberBlock.is_horizontals, works):
             polygon_coords = self.get_polygon_coords(start_point, horizontal=horizontal)
             self.draw_element(work, polygon_coords)
-
-
-#
 
 
 class Pixel(BaseElement):

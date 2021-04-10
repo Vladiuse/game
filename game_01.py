@@ -1,5 +1,5 @@
 import random as r
-
+import time
 import pygame
 
 from settings import Colors, GameSettings
@@ -11,13 +11,15 @@ class GameController:
     """Отслеживает нажимаемые клаиши
      - передает их в игру"""
 
-    def __init__(self, game, score_controller):
+    def __init__(self, game, score_controller, game_clock):
         self.game = game
         self.score_controller = score_controller
+        self.game_clock = game_clock
 
     def run(self):
+        start_time = self.game.start_time
+        self.game_clock.show(start_time)
         score = self.game.score
-        print(score)
         self.score_controller.show_score(score)
         for event in pygame.event.get():
             # check for closing window
@@ -74,6 +76,7 @@ class PixelWalk:
         self.game_status = True
         self.game_over = GameOver(game=self)
         self.score = 0
+        self.start_time = time.time()
 
     def draw_snake(self):
         for pixel in self.snake:
@@ -88,6 +91,7 @@ class PixelWalk:
             self.game_condition.append(line.copy())
 
     def restart_game(self):
+        self.start_time = time.time()
         self.snake = [[4,9],[4,10]]
         self.snake_food = None
         self.game_status = True
