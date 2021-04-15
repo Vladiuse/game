@@ -67,7 +67,7 @@ class PixelScreen:
         self.screen = screen
         self.x = 250
         self.y = 25
-        self.pixel_size = 33
+        self.pixel_size = 33  # 33 default
         self.pixel_between = 1.12
         self.pixels = []
         self.game = game

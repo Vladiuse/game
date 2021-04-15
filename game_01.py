@@ -33,7 +33,7 @@ class GameOver:
 
     def __init__(self, game):
         self.game = game
-        self.pause = 15
+        self.pause = 10
         self.flag = 1
         self.blink = 4
 
@@ -43,7 +43,7 @@ class GameOver:
             self.game_over_param_to_default()
             self.game.restart_game()
         if self.pause == 0:
-            self.pause = 15
+            self.pause = 10
             if self.flag == 1:
                 self.blink -= 1
                 self.flag *= -1
@@ -58,21 +58,22 @@ class GameOver:
         self.blink = 4
 
 
-class PixelWalk:
+class Snake:
 
-    def __init__(self, *, game_mode):
+    def __init__(self, *, game_mode, game_speed=3):
 
         self.game_mode = game_mode
         self.direction = None
         self.last_direction = None
         self.game_condition = []
-        # self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15]]
+        # self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15], [4, 16], [4, 17]]
         self.snake = [[4,9],[4,10]]
         self.snake_food = None
         self.start_game()
-        self.game_speed = 3
+        self.game_speed = game_speed
         self.fps = 30
         self.speed_counter = self.fps / self.game_speed
+        print(self.speed_counter)
         self.game_status = True
         self.game_over = GameOver(game=self)
         self.score = 0
@@ -93,6 +94,7 @@ class PixelWalk:
     def restart_game(self):
         self.start_time = time.time()
         self.snake = [[4,9],[4,10]]
+        # self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15]]
         self.snake_food = None
         self.game_status = True
         self.game_condition = []
@@ -126,7 +128,7 @@ class PixelWalk:
         if self.game_status:
             if self.game_mode == 'traffic':
                 self.speed_counter -= 1
-                if self.speed_counter == 0:
+                if self.speed_counter <= 0:  # orig if self.speed_counter == 0:
                     self.snake_move()
                     self.speed_counter = self.fps / self.game_speed
             if self.game_mode == 'step':
@@ -134,7 +136,7 @@ class PixelWalk:
                     self.snake_move()
                     self.direction = None
         else:
-            self.direction = None
+            # self.direction = None
             self.game_over.end_game()
 
     def snake_move(self):
@@ -152,11 +154,11 @@ class PixelWalk:
             x += 1
         if x == -1:
             x = 9
-        if x == 10:
+        elif x == 10:
             x = 0
-        if y == -1:
+        elif y == -1:
             y = 19
-        if y == 20:
+        elif y == 20:
             y = 0
         new_snake_head = [x, y]
         if not new_snake_head == self.snake_food:  # не нашли ли мы еду
@@ -199,6 +201,8 @@ class PixelWalk:
         elif key == pygame.K_DOWN:
             if self.last_direction != 'UP':
                 self.direction = 'DOWN'
+
+
 
 
 # class Player(pygame.sprite.Sprite):
