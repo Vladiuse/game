@@ -4,6 +4,7 @@ import time
 import pygame
 
 
+
 def render_counter_param(n):
     counter = 0
 
@@ -23,7 +24,9 @@ def render_counter_param(n):
 class PlayerWalk:
     max_bullet_count = 3
 
-    def __init__(self):
+    def __init__(self, controller):
+
+        self.controller = controller
         self.game_status = True
         self.__game_condition = []
         self.score = None
@@ -67,6 +70,8 @@ class PlayerWalk:
     def game_key_controller(self, key):
         if key == pygame.K_UP:
             self.create_bullet()
+        elif key == pygame.K_ESCAPE:
+            self.controller.chose_game('default')
         else:
             self.player.move(key)
 

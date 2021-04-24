@@ -5,7 +5,7 @@ import pygame
 
 from settings import GameSettings
 from game_01 import GameController, Snake
-from games.game_test import PlayerWalk
+from games.draw_line import PlayerWalk
 
 pygame.init()
 pygame.mixer.init()  # для звука
@@ -18,8 +18,8 @@ all_sprites = pygame.sprite.Group()
 # all_sprites.add(player)
 
 
-main_game = Snake(game_mode='traffic', game_speed=5)
-test_game = PlayerWalk()
+# main_game = Snake(game_mode='traffic', game_speed=5)
+# test_game = PlayerWalk()
 
 
 

@@ -32,8 +32,9 @@ class GameOver:
 
 class Snake:
 
-    def __init__(self, *, game_mode='traffic', game_speed=5):
+    def __init__(self,controller, *, game_mode='traffic', game_speed=5):
 
+        self.controller = controller
         self.game_mode = game_mode
         self.direction = None
         self.last_direction = None
@@ -173,3 +174,6 @@ class Snake:
         elif key == pygame.K_DOWN:
             if self.last_direction != 'UP':
                 self.direction = 'DOWN'
+        elif key == pygame.K_ESCAPE:
+            self.controller.chose_game('default')
+

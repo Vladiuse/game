@@ -2,13 +2,25 @@ import time
 
 import pygame
 
+from games.draw_line import PlayerWalk
+from games.snake import Snake
+
 
 class GamePreview:
+
+    """Превью доступных игр"""
+
     games = ['snake', 'walk', 'center']
     games_data = {
-        'snake': [[8, 5], [7, 5], [6, 5], [0, 0]],
-        'walk': [[18, 5], [19, 5], [19, 6], [19, 4]],
-        'center': [[0, 0], [0, 9], [19, 0], [19, 9]]
+        'snake': {
+            'preview': [[8, 5], [7, 5], [6, 5], [0, 0]], 'game': Snake
+        },
+        'walk': {
+            'preview': [[18, 5], [19, 5], [19, 6], [19, 4]], 'game': PlayerWalk
+        },
+        'center': {
+            'preview': [[0, 0], [0, 9], [19, 0], [19, 9]], 'game': None
+        }
     }
 
     def __init__(self, controller):
@@ -43,7 +55,7 @@ class GamePreview:
 
     def draw_game(self):
         game_name = GamePreview.games[self.game_number]
-        game_data = GamePreview.games_data[game_name]
+        game_data = GamePreview.games_data[game_name]['preview']
         for y, x in game_data:
             self.__game_condition[y][x] = 1
 
@@ -63,5 +75,3 @@ class GamePreview:
             print('K_SPACE')
             game = GamePreview.games[self.game_number]
             self.controller.chose_game(game)
-
-

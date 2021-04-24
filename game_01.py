@@ -3,7 +3,7 @@ import time
 
 import pygame
 
-from games.game_test import PlayerWalk
+from games.draw_line import PlayerWalk
 from games.snake import Snake
 from games.game_default import GamePreview
 from screen_elements import Clock, Score, PixelScreen
@@ -26,10 +26,13 @@ class GameController:
     def chose_game(self, game):
         if game == 'default':
             self.game = GamePreview(controller=self)
-        elif game == 'snake':
-            self.game = Snake()
-        elif game == 'walk':
-            self.game = PlayerWalk()
+        else:
+            game = GamePreview.games_data[game]['game']
+            self.game = game(controller=self)
+        # elif game == 'snake':
+        #     self.game = Snake(controller=self)
+        # elif game == 'walk':
+        #     self.game = PlayerWalk(controller=self)
 
     def run(self):
         self.game_clock.show(self.game.start_time)
@@ -40,12 +43,6 @@ class GameController:
                 GameSettings.running = False
             elif event.type == pygame.KEYDOWN:
                 self.game.game_key_controller(event.key)
-                # if event.key == pygame.K_SPACE:
-                #     print('K_SPACE')
-                # if event.key == pygame.K_f:
-                #     self.game = PlayerWalk()
-                # if event.key == pygame.K_w:
-                #     self.game = Snake(game_mode='traffic', game_speed=5)
         self.game.run()
         self.main_screen.draw()
 

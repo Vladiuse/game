@@ -21,7 +21,7 @@ class Clock:
     def freeze_time(self):
         self.start_time = time.time()
 
-    def show(self,start_time):
+    def show(self, start_time):
         width = self.width
         if self.mili_secs:
             self.count_numbers += 1
