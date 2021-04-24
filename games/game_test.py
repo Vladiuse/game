@@ -70,6 +70,7 @@ class PlayerWalk:
         else:
             self.player.move(key)
 
+
     def create_bullet(self):
         if len(self.bullets) != PlayerWalk.max_bullet_count:
             y, x = self.player.get_position()
@@ -155,7 +156,7 @@ class Player:
 class Wall:
     counter_for_new_line = 300
 
-    def __init__(self, start_line_count=0):
+    def __init__(self, start_line_count=3):
         self.obj = []
         self.__init_wall(start_line_count)
         self.counter_for_new_line = Wall.counter_for_new_line

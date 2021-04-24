@@ -2,7 +2,7 @@ import time
 
 import pygame
 
-from screen_elements import PixelScreen, Clock, Score
+
 from settings import GameSettings
 from game_01 import GameController, Snake
 from games.game_test import PlayerWalk
@@ -25,7 +25,7 @@ test_game = PlayerWalk()
 
 
 
-controller = GameController(game=test_game)
+controller = GameController()
 
 # Цикл игры
 while GameSettings.running:
