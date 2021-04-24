@@ -22,11 +22,10 @@ main_game = Snake(game_mode='traffic', game_speed=5)
 test_game = PlayerWalk()
 
 
-# pixel_screen = PixelScreen(game=main_game)
-pixel_screen = PixelScreen(game=test_game)
-my_clock = Clock(start_time=time.time(), mili_secs=False)
-game_score_controller = Score((650, 120), width=20)
-controller = GameController(game=test_game, score_controller=game_score_controller, game_clock=my_clock)
+
+
+
+controller = GameController(game=test_game)
 
 # Цикл игры
 while GameSettings.running:
@@ -39,13 +38,13 @@ while GameSettings.running:
 
     # Обновление
 
-    all_sprites.update()
+    # all_sprites.update()
     # Рендеринг
     screen.fill(GameSettings.background_color)
     controller.run()
     # my_clock.show()
-    test_game.run()
-    pixel_screen.draw()
+    # test_game.run()
+    # pixel_screen.draw()
     # all_sprites.draw(screen)
     # После отрисовки всего, переворачиваем экран
     pygame.display.flip()

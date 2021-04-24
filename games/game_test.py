@@ -153,7 +153,7 @@ class Player:
 
 
 class Wall:
-    counter_for_new_line = 90
+    counter_for_new_line = 300
 
     def __init__(self, start_line_count=0):
         self.obj = []
@@ -192,9 +192,7 @@ class Wall:
 
     def auto_line_adder(self):
         self.counter_for_new_line -= 1
-        print(self.counter_for_new_line)
         if self.counter_for_new_line == 0:
-            print('NEW LINE', self.counter_for_new_line)
             self.counter_for_new_line = Wall.counter_for_new_line
             self.__move_lines(line_y_pos=-1, direction=1)
             self.__add_line(line_y_pos=0)
@@ -248,7 +246,7 @@ class Bullet:
         return f'Bullet: y:{self.y} x:{self.x}'
 
 
-    @render_counter_param(15)
+    # @render_counter_param(15)
     def move(self):
         if self.direction == 'UP':
             self.y -= 1

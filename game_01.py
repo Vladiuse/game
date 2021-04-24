@@ -3,6 +3,7 @@ import time
 import pygame
 
 from settings import Colors, GameSettings
+from screen_elements import Clock, Score,PixelScreen
 
 screen = GameSettings.my_screen
 
@@ -11,10 +12,13 @@ class GameController:
     """Отслеживает нажимаемые клаиши
      - передает их в игру"""
 
-    def __init__(self, game, score_controller, game_clock):
+    def __init__(self, game,  main_screen='1'):
         self.game = game
-        self.score_controller = score_controller
-        self.game_clock = game_clock
+        self.score_controller = Score((650, 120), width=20)
+        self.game_clock = Clock(start_time=time.time(), mili_secs=False)
+        self.main_screen = PixelScreen(game=self)
+        # my_clock = Clock(start_time=time.time(), mili_secs=False)
+        # game_score_controller = Score((650, 120), width=20)
 
     def run(self):
         start_time = self.game.start_time
@@ -27,6 +31,13 @@ class GameController:
                 GameSettings.running = False
             elif event.type == pygame.KEYDOWN:
                 self.game.game_key_controller(event.key)
+        self.game.run()
+        self.main_screen.draw()
+
+    def get_screen_pic(self):
+        return self.game.get_screen_pic()
+
+
 
 
 class GameOver:
