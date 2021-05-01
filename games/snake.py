@@ -32,7 +32,7 @@ class GameOver:
 
 class Snake:
 
-    def __init__(self,controller, *, game_mode='traffic', game_speed=5):
+    def __init__(self,controller, *, game_mode='traffic', game_speed=2):
 
         self.controller = controller
         self.game_mode = game_mode
@@ -51,6 +51,7 @@ class Snake:
         self.game_over = GameOver(self)
         self.score = 0
         self.start_time = time.time()
+        self.food_render = 20
 
     def draw_snake(self):
         for pixel in self.snake:
@@ -96,15 +97,29 @@ class Snake:
         self.snake_food = [x, y]
         self.game_condition[y][x] = 1
 
+    def render_food(self):
+        if self.food_render == 0:
+            self.food_render = 20
+        self.food_render -= 1
+        y = self.snake_food[1]
+        x = self.snake_food[0]
+        if self.food_render < 10:
+            self.game_condition[y][x] = 0
+        else:
+            self.game_condition[y][x] = 1
+
+
     def run(self):
         """Изменение состояние игры"""
         if self.game_status:
             if self.game_mode == 'traffic':
+                self.render_food()
                 self.speed_counter -= 1
                 if self.speed_counter <= 0:  # orig if self.speed_counter == 0:
                     self.snake_move()
                     self.speed_counter = self.fps / self.game_speed
             if self.game_mode == 'step':
+                self.render_food()
                 if self.direction is not None:
                     self.snake_move()
                     self.direction = None

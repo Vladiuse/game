@@ -24,7 +24,7 @@ def render_counter_param(n):
 class PlayerWalk:
     max_bullet_count = 3
 
-    def __init__(self, controller):
+    def __init__(self, controller, game_mode='build'):
 
         self.controller = controller
         self.game_status = True
@@ -35,7 +35,7 @@ class PlayerWalk:
         self.bullets = None
         self.wall = None
         self.start_game()
-        self.game_mode = 'build'
+        self.game_mode = game_mode
 
     def get_screen_pic(self):
         """Передает экрану (он запрашивает эту функцию)
