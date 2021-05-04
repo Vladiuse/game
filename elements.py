@@ -1,6 +1,6 @@
 import pygame
 
-from settings import Colors, GameSettings
+from settings import GameSettings
 
 
 class BaseElement:

@@ -7,7 +7,6 @@ from games.snake import Snake
 
 
 class GamePreview:
-
     """Превью доступных игр"""
 
     games = ['snake', 'walk', 'center']
@@ -72,6 +71,8 @@ class GamePreview:
             self.game_number = len(GamePreview.games) - 1
         self.game_number %= len(GamePreview.games)
         if key == pygame.K_SPACE:
-            print('K_SPACE')
             game = GamePreview.games[self.game_number]
-            self.controller.chose_game(game)
+            if game != 'center':  # игра заглушка
+                self.controller.chose_game(game)
+            else:
+                'Выбранная игра пока не доступна!!!'

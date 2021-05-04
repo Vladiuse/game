@@ -1,11 +1,7 @@
-import time
-
 import pygame
 
-
+from game_01 import GameController
 from settings import GameSettings
-from game_01 import GameController, Snake
-from games.draw_line import PlayerWalk
 
 pygame.init()
 pygame.mixer.init()  # для звука
@@ -22,19 +18,14 @@ all_sprites = pygame.sprite.Group()
 # test_game = PlayerWalk()
 
 
-
-
-
 controller = GameController()
 
 # Цикл игры
 while GameSettings.running:
-
     # Держим цикл на правильной скорости
     clock.tick(GameSettings.FPS)
     # Ввод процесса (события)
     # controller.run(player)
-
 
     # Обновление
 
