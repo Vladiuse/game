@@ -4,7 +4,7 @@ from copy import deepcopy
 import pygame
 
 from games.draw_line import PlayerWalk
-from games.snake import Snake
+from games.snake import Snake, SnakeCopy
 
 letter_B = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
             [6, 4], [2, 4], [4, 4],
@@ -40,7 +40,7 @@ class GamePreview:
             'preview': letter_C, 'game': None
         },
         'game_d': {
-            'preview': letter_D, 'game': None
+            'preview': letter_D, 'game': SnakeCopy
         },
     }
 
@@ -105,7 +105,7 @@ class GamePreview:
         self.game_number %= len(GamePreview.games)
         if key == pygame.K_SPACE:
             game = GamePreview.games[self.game_number]
-            if game != 'center' and game != 'game_d':  # игра заглушка
+            if game != 'center':  # игра заглушка
                 self.controller.chose_game(game)
             else:
                 print('Выбранная игра пока не доступна!!!')

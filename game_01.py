@@ -2,7 +2,7 @@ import time
 from copy import deepcopy
 
 import pygame
-
+from games.default_game_class import Game
 from games.game_default import GamePreview
 from games.snake import Snake
 from screen_elements import Clock, Score, PixelScreen
