@@ -113,6 +113,10 @@ class PlayerWalk:
             if y == -1:
                 self.bullets.pop(bullet_id)
 
+    def draw_wall(self):
+        for y, x in self.wall.get_obj():
+            self.__game_condition[y][x] = 1
+
     def collision(self):
         if self.bullets:
             for bullet_id, bullet in enumerate(self.bullets):
@@ -128,9 +132,7 @@ class PlayerWalk:
                     if self.game_mode == 'build':
                         self.wall.add_brick((y + 1, x))
 
-    def draw_wall(self):
-        for y, x in self.wall.get_obj():
-            self.__game_condition[y][x] = 1
+
 
 
 class Player:
