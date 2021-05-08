@@ -35,18 +35,21 @@ class GameOver:
 
 class Snake:
 
-    def __init__(self, controller, *, game_mode='traffic', game_speed=2):
+    """
+    game_modes: traffic, step
+    """
+
+    def __init__(self, controller):
 
         self.controller = controller
-        self.game_mode = game_mode
+        self.game_mode = 'traffic'
         self.direction = None
         self.last_direction = None
         self.game_condition = []
-        # self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15], [4, 16], [4, 17]]
         self.snake = [[5, 17], [5, 18]]
         self.snake_food = None
         self.start_game()
-        self.game_speed = game_speed
+        self.game_speed = 5
         self.fps = 30
         self.speed_counter = self.fps / self.game_speed
         print(self.speed_counter)
@@ -84,7 +87,9 @@ class Snake:
         while len(self.game_condition) != 20:
             self.game_condition.append(line.copy())
         self.draw_snake()
-        self.make_snake_food((2, 15))
+        # self.make_snake_food((2, 15))
+        self.make_snake_food()
+
 
         if self.game_mode == 'traffic':
             self.direction = 'UP'
@@ -166,7 +171,7 @@ class Snake:
                 print('Snake CRASH')
         else:
             # нашли еду
-            self.make_snake_food((6, 13))
+            self.make_snake_food()
             self.last_direction = self.direction
             self.score += 1
         # отрисовка и добовление новой головы змейки

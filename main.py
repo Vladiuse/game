@@ -20,25 +20,25 @@ all_sprites = pygame.sprite.Group()
 
 controller = GameController()
 
+if __name__ == '__main__':
+    # Цикл игры
+    while GameSettings.running:
+        # Держим цикл на правильной скорости
+        clock.tick(GameSettings.FPS)
+        # Ввод процесса (события)
+        # controller.run(player)
 
-# Цикл игры
-while GameSettings.running:
-    # Держим цикл на правильной скорости
-    clock.tick(GameSettings.FPS)
-    # Ввод процесса (события)
-    # controller.run(player)
+        # Обновление
 
-    # Обновление
+        # all_sprites.update()
+        # Рендеринг
+        screen.fill(GameSettings.background_color)
+        controller.run()
+        # my_clock.show()
+        # test_game.run()
+        # pixel_screen.draw()
+        # all_sprites.draw(screen)
+        # После отрисовки всего, переворачиваем экран
+        pygame.display.flip()
 
-    # all_sprites.update()
-    # Рендеринг
-    screen.fill(GameSettings.background_color)
-    controller.run()
-    # my_clock.show()
-    # test_game.run()
-    # pixel_screen.draw()
-    # all_sprites.draw(screen)
-    # После отрисовки всего, переворачиваем экран
-    pygame.display.flip()
-
-pygame.quit()
+    pygame.quit()

@@ -1,11 +1,10 @@
 import time
-import time
 from copy import deepcopy
+
 import pygame
 
-from games.draw_line import PlayerWalk
-from games.snake import Snake
 from games.game_default import GamePreview
+from games.snake import Snake
 from screen_elements import Clock, Score, PixelScreen
 from settings import GameSettings
 
@@ -17,11 +16,12 @@ class GameController:
      - передает их в игру"""
 
     def __init__(self):
-        self.game = GamePreview(controller=self)
-        # self.chose_game(game)
+        # Screen elements
         self.score_controller = Score((650, 120), width=20)
         self.game_clock = Clock(start_time=time.time(), mili_secs=False)
         self.main_screen = PixelScreen(controller=self)
+        # game modules
+        self.game = GamePreview(controller=self)
         self.recorder = Recorder(controller=self)
 
     def chose_game(self, game):
@@ -30,10 +30,6 @@ class GameController:
         else:
             game = GamePreview.games_data[game]['game']
             self.game = game(controller=self)
-        # elif game == 'snake':
-        #     self.game = Snake(controller=self)
-        # elif game == 'walk':
-        #     self.game = PlayerWalk(controller=self)
 
     def run(self):
         self.game_clock.show(self.game.start_time)
@@ -51,6 +47,7 @@ class GameController:
         self.main_screen.draw()
 
     def get_screen_pic(self):
+        """For Recorder"""
         if isinstance(self.game, Snake):
             screen = self.game.get_screen_pic()
             screen = deepcopy(screen)
@@ -73,15 +70,30 @@ class Recorder:
         print(len(self.record))
         self.write_record()
 
-    def write_record(self):
-        with open('snake_prew.txt', 'w') as file:
+    def write_record(self, mock_frames=None):
+        letter_A = [[6, 3], [5, 3], [4, 3], [3, 3],
+                  [4, 4], [2, 4],
+                  [4, 5], [2, 5],
+                  [6, 6], [5, 6], [4, 6], [3, 6],
+                  ]
+        letter_D = [[6, 3], [5, 3], [4, 3], [3, 3],
+                  [4, 4], [2, 4],
+                  [4, 2], [2, 5],
+                  [6, 6], [5, 6], [4, 6], [3, 6],
+                  ]
+        if mock_frames:
+            self.record = mock_frames
+        # отрисовка буквы на каждый frame
+        # for frame in self.record:
+        #     for y,x in letter_A:
+        #         frame[y][x] = 1
+        with open('snake_prew_1.txt', 'w') as file:
             for frame in self.record:
                 frame_to_write = ''
                 for line in frame:
                     line = list(map(lambda x: str(x), line))
                     frame_to_write += ''.join(line)
                 frame_to_write += '\n'
-
                 file.write(frame_to_write)
             print('Write!!!')
 
@@ -98,17 +110,11 @@ class Recorder:
                         frame.append(deepcopy(frame_line))
                         frame_line.clear()
                 frames.append(deepcopy(frame))
+        return frames
         # print(frames)
         # print(len(frames))
 
 # rec = Recorder(controller='1')
+# snake_frames = rec.read_prew()
+# rec.write_record(mock_frames=snake_frames)
 # rec.read_prew()
-
-
-
-
-
-
-
-
-

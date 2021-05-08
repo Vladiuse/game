@@ -1,26 +1,47 @@
 import time
 from copy import deepcopy
+
 import pygame
 
 from games.draw_line import PlayerWalk
 from games.snake import Snake
 
+letter_B = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
+            [6, 4], [2, 4], [4, 4],
+            [6, 5], [2, 5], [4, 5],
+            [5, 6], [3, 6],
+            )
+
+letter_C = ([5, 3], [4, 3], [3, 3],
+            [6, 4], [6, 5], [6, 6],
+            [2, 4], [2, 5], [2, 6],
+            )
+
+letter_D = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
+            [6, 4], [2, 4],
+            [6, 5], [2, 5],
+            [5, 6], [4, 6], [3, 6],
+            )
+
 
 class GamePreview:
     """Превью доступных игр"""
 
-    games = ['snake', 'walk', 'center']
+    games = ['snake', 'walk', 'center', 'game_d']
     games_data = {
         'snake': {
             #  'preview': [[8, 5], [7, 5], [6, 5], [0, 0]], 'game': Snake
-            'preview': 'snake_prew.txt', 'game': Snake
+            'preview': 'snake_prew_1.txt', 'game': Snake
         },
         'walk': {
-            'preview': ([18, 5], [19, 5], [19, 6], [19, 4]), 'game': PlayerWalk
+            'preview': letter_B, 'game': PlayerWalk
         },
         'center': {
-            'preview': ([0, 0], [0, 9], [19, 0], [19, 9]), 'game': None
-        }
+            'preview': letter_C, 'game': None
+        },
+        'game_d': {
+            'preview': letter_D, 'game': None
+        },
     }
 
     def __init__(self, controller):
@@ -32,6 +53,7 @@ class GamePreview:
         self.frames = None
         self.frame_count = 0
         self.start_game()
+        self.game_status = True
 
     def start_game(self):
         """Иницилизация стартового состояния игры"""
@@ -44,7 +66,6 @@ class GamePreview:
         """Передает экрану (он запрашивает эту функцию)
         состояние игры"""
         return self.__game_condition
-
 
     def clear_screen(self):
         self.__game_condition.clear()
@@ -84,11 +105,10 @@ class GamePreview:
         self.game_number %= len(GamePreview.games)
         if key == pygame.K_SPACE:
             game = GamePreview.games[self.game_number]
-            if game != 'center':  # игра заглушка
+            if game != 'center' and game != 'game_d':  # игра заглушка
                 self.controller.chose_game(game)
             else:
                 print('Выбранная игра пока не доступна!!!')
-
 
     def read_snake_prew(self, file_name):
         with open(file_name) as snake_file:
@@ -106,4 +126,3 @@ class GamePreview:
         return frames
         # print(frames)
         # print(len(frames))
-
