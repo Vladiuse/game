@@ -159,7 +159,7 @@ class Player:
 
 
 class Wall:
-    counter_for_new_line = 300
+    counter_for_new_line = 30 * 5
 
     def __init__(self, start_line_count=3):
         self.obj = []

@@ -1,6 +1,8 @@
-import pygame
-import time
 import random as r
+import time
+
+import pygame
+
 
 class GameOver:
 
@@ -30,9 +32,10 @@ class GameOver:
         self.flag = 1
         self.blink = 4
 
+
 class Snake:
 
-    def __init__(self,controller, *, game_mode='traffic', game_speed=2):
+    def __init__(self, controller, *, game_mode='traffic', game_speed=2):
 
         self.controller = controller
         self.game_mode = game_mode
@@ -40,7 +43,7 @@ class Snake:
         self.last_direction = None
         self.game_condition = []
         # self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15], [4, 16], [4, 17]]
-        self.snake = [[4,9],[4,10]]
+        self.snake = [[5, 17], [5, 18]]
         self.snake_food = None
         self.start_game()
         self.game_speed = game_speed
@@ -67,7 +70,7 @@ class Snake:
 
     def restart_game(self):
         self.start_time = time.time()
-        self.snake = [[4,9],[4,10]]
+        self.snake = [[4, 17], [4, 18]]
         # self.snake = [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15]]
         self.snake_food = None
         self.game_status = True
@@ -81,19 +84,22 @@ class Snake:
         while len(self.game_condition) != 20:
             self.game_condition.append(line.copy())
         self.draw_snake()
-        self.make_snake_food()
+        self.make_snake_food((2, 15))
 
         if self.game_mode == 'traffic':
             self.direction = 'UP'
             self.last_direction = 'UP'
 
-    def make_snake_food(self):
+    def make_snake_food(self, food_coor=None):
         snake_head = self.snake[0]
         y = snake_head[1]
         x = snake_head[0]
         while [x, y] in self.snake:
             x = r.randint(0, 9)
             y = r.randint(0, 19)
+        if food_coor:
+            y = food_coor[1]
+            x = food_coor[0]
         self.snake_food = [x, y]
         self.game_condition[y][x] = 1
 
@@ -107,7 +113,6 @@ class Snake:
             self.game_condition[y][x] = 0
         else:
             self.game_condition[y][x] = 1
-
 
     def run(self):
         """Изменение состояние игры"""
@@ -161,7 +166,7 @@ class Snake:
                 print('Snake CRASH')
         else:
             # нашли еду
-            self.make_snake_food()
+            self.make_snake_food((6, 13))
             self.last_direction = self.direction
             self.score += 1
         # отрисовка и добовление новой головы змейки
@@ -191,4 +196,3 @@ class Snake:
                 self.direction = 'DOWN'
         elif key == pygame.K_ESCAPE:
             self.controller.chose_game('default')
-

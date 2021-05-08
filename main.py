@@ -1,6 +1,6 @@
 import pygame
 
-from game_01 import GameController
+from game_01 import GameController, Recorder
 from settings import GameSettings
 
 pygame.init()
@@ -19,6 +19,7 @@ all_sprites = pygame.sprite.Group()
 
 
 controller = GameController()
+
 
 # Цикл игры
 while GameSettings.running:
