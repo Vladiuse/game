@@ -43,6 +43,7 @@ class Game:
         self.game_status = False
 
     def render(self, *args):
+        self.get_null_screen()
         for obj in args:
             for y, x in obj.get_obj():
                 self.game_condition[y][x] = 1

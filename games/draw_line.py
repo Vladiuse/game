@@ -20,6 +20,16 @@ def render_counter_param(n):
 
     return render_counter
 
+#
+# def render_counter(func):
+#     def surrogate(*args, **kwargs):
+#         if counter:
+#             counter = 0
+#             return func(*args, **kwargs)
+#
+#     return surrogate
+
+
 
 class PlayerWalk:
     max_bullet_count = 3

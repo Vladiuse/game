@@ -67,7 +67,7 @@ class Snake:
             x = pixel[0]
             self.game_condition[y][x] = 1
 
-    def clear_screen(self):
+    def get_null_screen(self):
         self.game_condition.clear()
         line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         while len(self.game_condition) != 20:
@@ -204,17 +204,19 @@ class Snake:
             self.controller.chose_game('default')
 
 
+
 class SnakeCopy(Game):
     """game_modes: traffic, step"""
 
-    def __init__(self, controller, game_mode='traffic'):
+    def __init__(self, controller, game_mode='step'):
         super().__init__(controller=controller, game_mode=game_mode)
         self.snake = SnakeObj()
-        self.snake_food = SnakeFood((2,2))
+        self.snake_food = SnakeFood(self.snake)
         self.game_over = GameOver(self)
         self.food_render = 20
         self.speed_counter = self.fps / self.game_speed
         self.game_objects = [self.snake, self.snake_food]
+        self.frame_counter = 0
         self.start_game()
 
     def start_game(self):
@@ -233,21 +235,32 @@ class SnakeCopy(Game):
         """Изменение состояние игры"""
         if self.game_status:
             if self.game_mode == 'traffic':
-                self.render(*self.game_objects)
-                self.blink_elems(self.snake_food.obj, [self.snake.pos])
-                # self.blink_food()
-                # self.speed_counter -= 1
-                # if self.speed_counter <= 0:
-                #     self.snake_move()
-                #     self.speed_counter = self.fps / self.game_speed
+                self.frame_counter += 1
+                if self.frame_counter > self.speed_counter:
+                    self.collision()
+                    self.snake.move()
+                    self.frame_counter = 0
             if self.game_mode == 'step':
-                pass
+                # game_mode == 'step'
+                self.collision()
+                self.snake.move()
+                self.snake.direction = None
+            self.render(*self.game_objects)
+            self.blink_elems(self.snake_food.obj,)
                 # self.blink_food()
                 # if self.direction is not None:
                 #     self.snake_move()
                 #     self.direction = None
         else:
             self.game_over.end_game()
+
+    def collision(self):
+        if self.snake.get_pos() in self.snake.get_obj()[1:]:
+            self.game_status = False
+        if self.snake.get_pos() == self.snake_food.get_pos():
+            self.snake_food.new_food(self.snake)
+            self.snake.eat()
+
 
     # def restart_game(self):
     #     self.start_time = time.time()

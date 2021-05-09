@@ -14,8 +14,7 @@ all_sprites = pygame.sprite.Group()
 # all_sprites.add(player)
 
 
-# main_game = Snake(game_mode='traffic', game_speed=5)
-# test_game = PlayerWalk()
+
 
 
 controller = GameController()
