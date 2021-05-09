@@ -17,7 +17,7 @@ class GameController:
 
     def __init__(self):
         # Screen elements
-        self.score_controller = Score((650, 120), width=20)
+        self.score_controller = Score((700, 120), width=20)
         self.game_clock = Clock(start_time=time.time(), mili_secs=False)
         self.main_screen = PixelScreen(controller=self)
         # game modules
@@ -71,23 +71,14 @@ class Recorder:
         self.write_record()
 
     def write_record(self, mock_frames=None):
-        letter_A = [[6, 3], [5, 3], [4, 3], [3, 3],
-                  [4, 4], [2, 4],
-                  [4, 5], [2, 5],
-                  [6, 6], [5, 6], [4, 6], [3, 6],
-                  ]
-        letter_D = [[6, 3], [5, 3], [4, 3], [3, 3],
-                  [4, 4], [2, 4],
-                  [4, 2], [2, 5],
-                  [6, 6], [5, 6], [4, 6], [3, 6],
-                  ]
+
         if mock_frames:
             self.record = mock_frames
         # отрисовка буквы на каждый frame
         # for frame in self.record:
         #     for y,x in letter_A:
         #         frame[y][x] = 1
-        with open('snake_prew_1.txt', 'w') as file:
+        with open('snake_prev_1.txt', 'w') as file:
             for frame in self.record:
                 frame_to_write = ''
                 for line in frame:
@@ -98,7 +89,7 @@ class Recorder:
             print('Write!!!')
 
     def read_prew(self):
-        with open('snake_prew.txt') as snake_file:
+        with open('snake_prev.txt') as snake_file:
             frames = []
             for file_line in snake_file:
                 file_line = file_line[:-1]

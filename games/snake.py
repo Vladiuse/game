@@ -52,7 +52,7 @@ class Snake:
         self.snake = [[5, 17], [5, 18]]
         self.snake_food = None
         self.start_game()
-        self.game_speed = 5
+        self.game_speed = 10
         self.fps = 30
         self.speed_counter = self.fps / self.game_speed
         self.game_status = True
@@ -234,6 +234,7 @@ class SnakeCopy(Game):
         if self.game_status:
             if self.game_mode == 'traffic':
                 self.render(*self.game_objects)
+                self.blink_elems(self.snake_food.obj, [self.snake.pos])
                 # self.blink_food()
                 # self.speed_counter -= 1
                 # if self.speed_counter <= 0:

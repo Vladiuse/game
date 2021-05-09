@@ -2,7 +2,7 @@ import time
 
 import pygame
 
-from elements import Pixel, NumberBlock
+from .elements import Pixel, NumberBlock
 from settings import GameSettings
 
 screen = GameSettings.my_screen
@@ -12,7 +12,7 @@ class Clock:
 
     def __init__(self, start_time, mili_secs=False):
         self.screen = screen
-        self.start_point = (650, 40)
+        self.start_point = (700, 40)
         self.count_numbers = 4
         # self.start_time = start_time
         self.mili_secs = mili_secs
@@ -65,7 +65,7 @@ class PixelScreen:
 
     def __init__(self, controller):
         self.screen = screen
-        self.x = 250
+        self.x = 300
         self.y = 25
         self.pixel_size = 33  # 33 default
         self.pixel_between = 1.12
@@ -99,8 +99,8 @@ class PixelScreen:
                 pixel.draw()
 
     def edging(self):
-        x1 = 242
-        x2 = 622
+        x1 = 292
+        x2 = 672
         y1 = 15
         y2 = 768
         corners = [((x1, y1), (x2, y1)),

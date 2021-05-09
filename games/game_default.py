@@ -6,6 +6,12 @@ import pygame
 from games.draw_line import PlayerWalk
 from games.snake import Snake, SnakeCopy
 
+letter_A = [[6, 3], [5, 3], [4, 3], [3, 3],
+            [4, 4], [2, 4],
+            [4, 5], [2, 5],
+            [6, 6], [5, 6], [4, 6], [3, 6],
+            ]
+
 letter_B = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
             [6, 4], [2, 4], [4, 4],
             [6, 5], [2, 5], [4, 5],
@@ -31,7 +37,7 @@ class GamePreview:
     games_data = {
         'snake': {
             #  'preview': [[8, 5], [7, 5], [6, 5], [0, 0]], 'game': Snake
-            'preview': 'snake_prew_1.txt', 'game': Snake
+            'preview': 'game_previews/snake_prev_1.txt', 'game': Snake
         },
         'walk': {
             'preview': letter_B, 'game': PlayerWalk
@@ -52,8 +58,11 @@ class GamePreview:
         self.controller = controller
         self.frames = None
         self.frame_count = 0
-        self.start_game()
+        # self.game_speed = 1
+        # self.game_level = 1
         self.game_status = True
+        self.start_game()
+
 
     def start_game(self):
         """Иницилизация стартового состояния игры"""
@@ -84,7 +93,7 @@ class GamePreview:
             for y, x in game_data:
                 self.__game_condition[y][x] = 1
         else:
-            self.frames = self.read_snake_prew(game_data)
+            self.frames = self.read_snake_prev(game_data)
             frame = self.frames[self.frame_count]
             self.frame_count += 1
             if self.frame_count > len(self.frames) - 1:
@@ -110,7 +119,7 @@ class GamePreview:
             else:
                 print('Выбранная игра пока не доступна!!!')
 
-    def read_snake_prew(self, file_name):
+    def read_snake_prev(self, file_name):
         with open(file_name) as snake_file:
             frames = []
             for file_line in snake_file:

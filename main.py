@@ -1,6 +1,6 @@
 import pygame
 
-from game_01 import GameController, Recorder
+from game_controller import GameController, Recorder
 from settings import GameSettings
 
 pygame.init()
