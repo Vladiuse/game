@@ -1,6 +1,6 @@
 import random as r
 import time
-
+from .default_game_class import Game
 import pygame
 
 
@@ -31,12 +31,12 @@ def render_counter_param(n):
 
 
 
-class PlayerWalk:
+class PlayerWalk(Game):
     max_bullet_count = 3
 
     def __init__(self, controller, game_mode='build'):
-
-        self.controller = controller
+        super().__init__(controller=controller)
+        # self.controller = controller
         self.game_status = True
         self.__game_condition = []
         self.score = None
@@ -53,6 +53,7 @@ class PlayerWalk:
         return self.__game_condition
 
     def start_game(self):
+        super().start_game()
         """Иницилизация стартового состояния игры"""
         line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         while len(self.__game_condition) != 20:

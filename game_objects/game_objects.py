@@ -36,7 +36,7 @@ class SnakeObj(GameObject):
 
     def __init__(self):
         super().__init__()
-        self.obj = [[9, 3], [10, 3]]
+        self.obj = [[9, 3], [10, 3],[11, 3], [12, 3],[13, 3], [14, 3],]
         # self.pos = self.obj[0].copy()
         self.direction = None
         self.last_direction = None
