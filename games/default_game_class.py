@@ -10,6 +10,7 @@ class Game:
         self.game_condition = []
         self.small_screen_condition = []
         self.game_status = True
+        self.game_objects = []
         self.start_time = time.time()
         self.score = 0
         self.game_speed = 5
@@ -18,6 +19,7 @@ class Game:
         self.game_mode = game_mode
         self.blink_count = 6
         self.y_clean_pic = 19
+        self.pause = False
 
     def start_game(self):
         """Иницилизация стартового состояния игры"""
@@ -44,12 +46,26 @@ class Game:
         pass
 
     def end_game(self):
+        self.bang_effect(self.player.get_pos())
         if self.lives == 0:
             self.controller.chose_game('default')
         else:
-            self.curtain_clean_effect()
+            self.restart_game()
 
-    def curtain_clean_effect(self, in_end=None):
+    def pause_game(self):
+        if not self.pause:
+            for obj in self.game_objects:
+                obj.freeze()
+            self.pause = True
+        else:
+            for obj in self.game_objects:
+                obj.un_freeze()
+            self.pause = False
+
+
+
+
+    def curtain_clean_effect(self, in_end_func=None):
         if self.y_clean_pic != -21:
             if self.y_clean_pic >= 0:
                 self.game_condition[self.y_clean_pic] = [1] * 10
@@ -58,13 +74,15 @@ class Game:
             self.y_clean_pic -= 1
         else:
             self.y_clean_pic = 19
-            self.restart_game()
+            if in_end_func:
+                in_end_func()
 
-
-
-
-
-
+    def bang_effect(self, bang_pos):
+        y, x = bang_pos
+        if y > 16:
+            y = 16
+        if x > 6:
+            x = 6
 
     def render(self, *args):
         self.get_null_screen()
@@ -105,7 +123,6 @@ class Game:
             for y, x in dic_lives[self.lives]:
                 small_screen[y][x] = 1
         self.small_screen_condition = small_screen
-
 
     def get_small_screen_pic(self):
         return self.small_screen_condition

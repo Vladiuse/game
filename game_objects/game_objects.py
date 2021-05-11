@@ -15,12 +15,17 @@
 #     return render_counter
 #
 import random as r
+
+
 class GameObject:
 
     def __init__(self, pos=None):
         self.pos = [0, 0] if pos is None else pos
         self.obj = [self.pos]
+        self.freeze_status = False
 
+    def __str__(self):
+        return __class__.__name__
 
     def get_obj(self):
         return self.obj
@@ -31,12 +36,30 @@ class GameObject:
     def move_obj(self):
         pass
 
+    @staticmethod
+    def pos_mirror_effect(y, x):
+        if x == -1:
+            x = 9
+        elif x == 10:
+            x = 0
+        elif y == -1:
+            y = 19
+        elif y == 20:
+            y = 0
+        return y, x
+
+    def freeze(self):
+        self.freeze_status = True
+
+    def un_freeze(self):
+        self.freeze_status = False
+
 
 class SnakeObj(GameObject):
 
     def __init__(self):
         super().__init__()
-        self.obj = [[9, 3], [10, 3],[11, 3], [12, 3],[13, 3], [14, 3],]
+        self.obj = [[9, 3], [10, 3], [11, 3], [12, 3], [13, 3], [14, 3], ]
         # self.pos = self.obj[0].copy()
         self.direction = None
         self.last_direction = None
@@ -44,28 +67,22 @@ class SnakeObj(GameObject):
 
     # @render_counter_param(FRAME_C)
     def move(self, eat=False):
-        if self.direction:  # need for 'step' mode
-            (y, x) = self.get_pos()
-            if self.direction == 'UP':
-                y -= 1
-            elif self.direction == 'DOWN':
-                y += 1
-            elif self.direction == 'LEFT':
-                x -= 1
-            elif self.direction == 'RIGHT':
-                x += 1
-            if x == -1:
-                x = 9
-            elif x == 10:
-                x = 0
-            elif y == -1:
-                y = 19
-            elif y == 20:
-                y = 0
-            self.obj.insert(0, [y, x])
-            if not eat:
-                self.tail = self.obj.pop()
-            self.last_direction = self.direction
+        if not self.freeze_status:
+            if self.direction:  # need for 'step' mode
+                (y, x) = self.get_pos()
+                if self.direction == 'UP':
+                    y -= 1
+                elif self.direction == 'DOWN':
+                    y += 1
+                elif self.direction == 'LEFT':
+                    x -= 1
+                elif self.direction == 'RIGHT':
+                    x += 1
+                y, x = self.pos_mirror_effect(y, x)
+                self.obj.insert(0, [y, x])
+                if not eat:
+                    self.tail = self.obj.pop()
+                self.last_direction = self.direction
 
     def eat(self):
         self.obj.append(self.tail)
@@ -79,9 +96,9 @@ class SnakeFood(GameObject):
         self.pos = self.new_food(snake)
 
     def new_food(self, snake):
-        y,x = snake.get_pos()
+        y, x = snake.get_pos()
         while [y, x] in snake.get_obj():
             x = r.randint(0, 9)
             y = r.randint(0, 19)
-        self.obj = [[y,x]]
+        self.obj = [[y, x]]
         return self.obj

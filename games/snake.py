@@ -214,6 +214,7 @@ class SnakeCopy(Game):
     def __init__(self, controller, game_mode='traffic'):
         super().__init__(controller=controller, game_mode=game_mode)
         self.snake = SnakeObj()
+        self.player = self.snake
         self.speed_counter = self.fps / self.game_speed
         self.snake_food = SnakeFood(self.snake)
         self.game_objects = [self.snake, self.snake_food]
@@ -267,78 +268,14 @@ class SnakeCopy(Game):
             self.score += 1
 
 
-    # def restart_game(self):
-    #     self.start_time = time.time()
-    #     self.snake = [[4, 17], [4, 18]]
-    #     self.snake_food = None
-    #     self.game_status = True
-    #     self.game_condition = []
-    #     self.score = 0
-    #     self.start_game()
-    #
-    # def draw_snake(self):
-    #     for pixel in self.snake:
-    #         y = pixel[1]
-    #         x = pixel[0]
-    #         self.game_condition[y][x] = 1
-
-    # def make_snake_food(self, food_coor=None):
-    #     snake_head = self.snake[0]
-    #     y = snake_head[1]
-    #     x = snake_head[0]
-    #     while [x, y] in self.snake:
-    #         x = r.randint(0, 9)
-    #         y = r.randint(0, 19)
-    #     if food_coor:
-    #         y = food_coor[1]
-    #         x = food_coor[0]
-    #     self.snake_food = [x, y]
-    #     self.game_condition[y][x] = 1
-
-    # def snake_move(self):
-    #     # [y][x]
-    #     snake_head = self.snake[0].copy()
-    #     y = snake_head[1]
-    #     x = snake_head[0]
-    #     if self.direction == 'UP':
-    #         y -= 1
-    #     elif self.direction == 'DOWN':
-    #         y += 1
-    #     elif self.direction == 'LEFT':
-    #         x -= 1
-    #     elif self.direction == 'RIGHT':
-    #         x += 1
-    #     if x == -1:
-    #         x = 9
-    #     elif x == 10:
-    #         x = 0
-    #     elif y == -1:
-    #         y = 19
-    #     elif y == 20:
-    #         y = 0
-    #     new_snake_head = [x, y]
-    #     if not new_snake_head == self.snake_food:  # не нашли ли мы еду
-    #         if new_snake_head not in self.snake:  # не движемся ли сами в себя
-    #             snake_end = self.snake[-1]
-    #             # удаление хваста змеи
-    #             self.game_condition[snake_end[1]][snake_end[0]] = 0
-    #             self.snake.pop()
-    #             self.last_direction = self.direction
-    #         else:
-    #             self.game_status = False
-    #     else:
-    #         # нашли еду
-    #         self.make_snake_food()
-    #         self.last_direction = self.direction
-    #         self.score += 1
-    #     # отрисовка и добовление новой головы змейки
-    #     self.snake.insert(0, new_snake_head)
-    #     self.game_condition[new_snake_head[1]][new_snake_head[0]] = 1
-    #     self.last_direction = self.direction
-
     def game_key_controller(self, key):
         """Меняет флаг направление движения -
         изменение на противоположное не проходит"""
+        if key == pygame.K_ESCAPE:
+            self.controller.chose_game('default')
+        if key == pygame.K_p:
+            self.pause_game()
+
         if key == pygame.K_LEFT:
             if self.snake.last_direction != 'RIGHT':
                 self.snake.direction = 'LEFT'
@@ -351,8 +288,7 @@ class SnakeCopy(Game):
         elif key == pygame.K_DOWN:
             if self.snake.last_direction != 'UP':
                 self.snake.direction = 'DOWN'
-        elif key == pygame.K_ESCAPE:
-            self.controller.chose_game('default')
+
 
     # def blink_food(self):
     #     """Мерцание еды"""

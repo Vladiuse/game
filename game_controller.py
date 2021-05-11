@@ -3,7 +3,7 @@ from copy import deepcopy
 
 import pygame
 
-from games.game_default import GamePreview
+from games.game_preview import GamePreview
 from games.snake import Snake
 from screen_elements import Clock, Score, PixelScreen, SmallScreen
 from settings import GameSettings
