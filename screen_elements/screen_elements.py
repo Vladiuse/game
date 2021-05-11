@@ -100,8 +100,8 @@ class PixelScreen:
 
     def edging(self):
         x1 = 292
-        x2 = 672
         y1 = 15
+        x2 = 672
         y2 = 768
         corners = [((x1, y1), (x2, y1)),
                    ((x1, y1), (x1, y2)),
@@ -110,6 +110,49 @@ class PixelScreen:
 
         for start, end in corners:
             pygame.draw.line(self.screen, color=GameSettings.PIXEL_ON, start_pos=start, end_pos=end, width=3)
+
+
+
+
+
+class SmallScreen:
+
+    def __init__(self, controller):
+        self.screen = screen
+        self.x = 700
+        self.y = 320
+        self.pixel_size = 33  # 33 default
+        self.pixel_between = 1.12
+        self.pixels = []
+        self.controller = controller
+
+    def fill_screen(self):
+        self.pixels.clear()
+        for step_y in range(0, self.pixel_size * 4, self.pixel_size):
+            pixel_line = [
+                Pixel(screen=self.screen, start_point=(self.x + step_x * self.pixel_between,
+                                                       self.y + step_y * self.pixel_between), size=self.pixel_size,
+                      work=0)
+                for step_x in range(0, self.pixel_size * 4, self.pixel_size)]
+            self.pixels.append(pixel_line)
+
+    def make_picture(self):
+        screen = self.controller.get_small_screen_pic()
+        for line_id, line in enumerate(screen):
+            for pixel_id, signal in enumerate(line):
+                pixel = self.pixels[line_id][pixel_id]
+                if signal == 1:
+                    pixel.on()
+
+    def draw(self):
+        # self.edging()
+        self.fill_screen()
+        self.make_picture()
+        for line in self.pixels:
+            for pixel in line:
+                pixel.draw()
+
+
 
 
 class Score:
@@ -133,3 +176,4 @@ class Score:
         while len(score) != self.count_numbers:
             score.insert(0, 'null')
         self.show(score)
+

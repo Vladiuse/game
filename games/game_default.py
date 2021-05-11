@@ -2,7 +2,7 @@ import time
 from copy import deepcopy
 
 import pygame
-
+from .default_game_class import Game
 from games.draw_line import PlayerWalk
 from games.snake import Snake, SnakeCopy
 
@@ -30,7 +30,7 @@ letter_D = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
             )
 
 
-class GamePreview:
+class GamePreview(Game):
     """Превью доступных игр"""
 
     games = ['snake', 'walk', 'center', 'game_d']
@@ -51,16 +51,18 @@ class GamePreview:
     }
 
     def __init__(self, controller):
+        super().__init__(controller=controller)
         self.__game_condition = []
         self.game_number = 0
         self.start_time = time.time()
         self.score = 0
-        self.controller = controller
+        # self.controller = controller
         self.frames = None
         self.frame_count = 0
         # self.game_speed = 1
         # self.game_level = 1
         self.game_status = True
+        self.lives = 1
         self.start_game()
 
 

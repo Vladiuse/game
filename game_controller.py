@@ -2,10 +2,10 @@ import time
 from copy import deepcopy
 
 import pygame
-from games.default_game_class import Game
+
 from games.game_default import GamePreview
 from games.snake import Snake
-from screen_elements import Clock, Score, PixelScreen
+from screen_elements import Clock, Score, PixelScreen, SmallScreen
 from settings import GameSettings
 
 screen = GameSettings.my_screen
@@ -20,6 +20,7 @@ class GameController:
         self.score_controller = Score((700, 120), width=20)
         self.game_clock = Clock(start_time=time.time(), mili_secs=False)
         self.main_screen = PixelScreen(controller=self)
+        self.small_screen = SmallScreen(controller=self)
         # game modules
         self.game = GamePreview(controller=self)
         self.recorder = Recorder(controller=self)
@@ -45,6 +46,7 @@ class GameController:
                 self.game.game_key_controller(event.key)
         self.game.run()
         self.main_screen.draw()
+        self.small_screen.draw()
 
     def get_screen_pic(self):
         """For Recorder"""
@@ -54,6 +56,8 @@ class GameController:
             self.recorder.add_screen_to_data(screen)
         return self.game.get_screen_pic()
 
+    def get_small_screen_pic(self):
+        return self.game.get_small_screen_pic()
 
 class Recorder:
 

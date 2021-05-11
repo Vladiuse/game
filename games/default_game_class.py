@@ -8,20 +8,25 @@ class Game:
     def __init__(self, controller, game_mode=None):
         self.controller = controller
         self.game_condition = []
+        self.small_screen_condition = []
         self.game_status = True
         self.start_time = time.time()
         self.score = 0
         self.game_speed = 5
-        self.lives = 3
+        self.lives = 2
         self.fps = GameSettings.FPS
         self.game_mode = game_mode
-        self.blink_count = 20
+        self.blink_count = 6
 
     def start_game(self):
         """Иницилизация стартового состояния игры"""
-        self.get_null_screen()
+        # self.get_null_screen()
+        print('start_game default')
+        self.draw_small_screen()
+        pass
 
     def restart_game(self):
+        print('restart_game default')
         pass
 
     def get_null_screen(self):
@@ -40,7 +45,12 @@ class Game:
         pass
 
     def end_game(self):
-        self.game_status = False
+        if self.lives == 0:
+            self.controller.chose_game('default')
+        else:
+            self.game_status = True
+            self.lives -= 1
+            self.restart_game()
 
     def render(self, *args):
         self.get_null_screen()
@@ -56,9 +66,48 @@ class Game:
         self.blink_count -= 1
         for elem in args:
             for y, x in elem:
-                if self.blink_count > 10:
+                if self.blink_count > 3:
                     self.game_condition[y][x] = 0
                 else:
                     self.game_condition[y][x] = 1
                 if self.blink_count == 0:
-                    self.blink_count = 20
+                    self.blink_count = 6
+
+    def draw_small_screen(self):
+        small_screen = [
+            [[0, 0], [0, 0], [0, 0], [0, 0]],
+            [[0, 0], [0, 0], [0, 0], [0, 0]],
+            [[0, 0], [0, 0], [0, 0], [0, 0]],
+            [[0, 0], [0, 0], [0, 0], [0, 0]],
+        ]
+        dic_lives = {
+            1: [[3, 0], ],
+            2: [[3, 0], [2, 0], ],
+            3: [[3, 0], [2, 0], [1, 0], ],
+            4: [[3, 0], [2, 0], [1, 0], [0, 0], ],
+        }
+        if self.lives:
+            # print(dic_lives[self.lives])
+            for y, x in dic_lives[self.lives]:
+                small_screen[y][x] = 1
+        self.small_screen_condition = small_screen
+
+
+    def get_small_screen_pic(self):
+        # small_screen = [
+        #     [[0, 0], [0, 0], [0, 0], [0, 0]],
+        #     [[0, 0], [0, 0], [0, 0], [0, 0]],
+        #     [[0, 0], [0, 0], [0, 0], [0, 0]],
+        #     [[0, 0], [0, 0], [0, 0], [0, 0]],
+        # ]
+        # dic_lives = {
+        #     1: [[3,0],],
+        #     2: [[3, 0], [2, 0],],
+        #     3: [[3, 0], [2, 0], [1, 0],],
+        #     4: [[3, 0], [2, 0], [1, 0], [0, 0],],
+        # }
+        # if self.lives:
+        #     # print(dic_lives[self.lives])
+        #     for y,x in dic_lives[self.lives]:
+        #         small_screen[y][x] = 1
+        return self.small_screen_condition
