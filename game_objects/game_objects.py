@@ -1,20 +1,6 @@
-# def render_counter_param(n):
-#     counter = 0
-#
-#     def render_counter(func):
-#         def surrogate(*args, **kwargs):
-#             nonlocal counter
-#             counter += 1
-#             print('DECOR', counter)
-#             if counter == n:
-#                 counter = 0
-#                 return func(*args, **kwargs)
-#
-#         return surrogate
-#
-#     return render_counter
-#
 import random as r
+
+import pygame
 
 
 class GameObject:
@@ -116,13 +102,15 @@ class Bomb(GameObject):
         self.bang_count = 5
         self.bomb_frame_1 = []
         self.bomb_frame_2 = []
+        self.end = True
 
     def activate(self, player):
         self.player = player
         self.get_bobm_with_pos()
+        self.end = False
 
     def bang(self, ):
-        if self.player:
+        if not self.end:
             self.frames -= 1
             if self.frames > 5:
                 self.obj = self.bomb_frame_1
@@ -134,6 +122,7 @@ class Bomb(GameObject):
                 self.frames = 10
                 self.bang_count -= 1
             if not self.bang_count:
+                self.end = True
                 self.set_to_default()
                 return False
             return True
@@ -166,6 +155,7 @@ class Bomb(GameObject):
         self.obj = self.bomb_frame_1
         self.clean_hit_box = self.bomb_frame_2
 
+
 class Curtain(GameObject):
 
     def __init__(self):
@@ -179,11 +169,11 @@ class Curtain(GameObject):
     def clean(self):
         self.obj = []
         for y in range(self.y_line, 20):
-            for x in range(0,10):
+            for x in range(0, 10):
                 self.obj.append([y, x])
         self.clean_hit_box = []
         for y in range(0, self.y_line):
-            for x in range(0,10):
+            for x in range(0, 10):
                 self.clean_hit_box.append([y, x])
         if self.direction == 'UP':
             self.y_line -= 1
@@ -195,17 +185,148 @@ class Curtain(GameObject):
         if self.y_line == 20:
             self.end = True
 
+    def set_to_default(self):
+        self.y_line = 19
+        self.obj = []
+        self.clean_hit_box = []
+        self.direction = 'UP'
+        self.end = False
 
 
+class Player(GameObject):
 
-    #
-    #
-    # def clean(self, in_end_func=None):
-    #     if self.y_clean_pic != -21:
-    #         if self.y_clean_pic >= 0:
-    #             self.game_condition[self.y_clean_pic] = [1] * 10
-    #         else:
-    #             self.game_condition[abs(self.y_clean_pic + 1)] = [0] * 10
-    #         self.y_clean_pic -= 1
-    #     else:
-    #         self.y_clean_pic = 19
+    def __init__(self, start_point):
+        super().__init__()
+        self.x, self.y = start_point
+
+    def __str__(self):
+        return 'Player'
+
+    def get_obj(self):
+        obj = []
+        elements = (self.y, self.x), (self.y + 1, self.x), (self.y + 1, self.x - 1), (self.y + 1, self.x + 1)
+        for y, x in elements:
+            if y in range(0, 20) and x in range(0, 10):
+                obj.append([y, x])
+        return obj
+
+    def move(self, key):
+        if key == pygame.K_LEFT:
+            if self.x != 0:
+                self.x -= 1
+        elif key == pygame.K_RIGHT:
+            if self.x != 9:
+                self.x += 1
+
+    def get_position(self):
+        return self.y, self.x
+
+    def get_pos(self):
+        return self.y, self.x
+
+
+class Wall(GameObject):
+    counter_for_new_line = 30 * 5
+
+    def __init__(self, start_line_count=3):
+        super().__init__()
+        self.obj = []
+        self.__init_wall(start_line_count)
+        self.counter_for_new_line = Wall.counter_for_new_line
+
+    def __str__(self):
+        return 'Wall'
+
+    def __init_wall(self, start_line_count):
+        for y in range(start_line_count):
+            self.__add_line(y)
+
+    def __add_line(self, line_y_pos):
+        y = line_y_pos
+        line = []
+        for x in range(10):
+            pos = (y, x)
+            if r.randint(0, 1):
+                line.append(pos)
+        if len(line) == 10:
+            line.pop(r.randint(0, 9))
+        if line:
+            self.obj.extend(line)
+        else:
+            self.__add_line(line_y_pos)
+
+    def _get_top(self):
+        top = 0
+        for y, x in self.obj:
+            if y > top:
+                top = y
+        return top
+
+    def get_obj(self):
+        self.auto_line_adder()
+        self._check_line()
+        return self.obj
+
+    def auto_line_adder(self):
+        self.counter_for_new_line -= 1
+        if self.counter_for_new_line == 0:
+            self.counter_for_new_line = Wall.counter_for_new_line
+            self.__move_lines(line_y_pos=-1, direction=1)
+            self.__add_line(line_y_pos=0)
+
+    def drop_brick(self, brick_pos):
+        self.obj.remove(brick_pos)
+
+    def add_brick(self, brick_pos):
+        self.obj.append(brick_pos)
+
+    def _check_line(self):
+        """Проверяет нет ли заполненных строк"""
+        lines = set([y for y, x in self.obj])
+        for line in lines:
+            line_counter = 0
+            for y, x in self.obj:
+                if y == line:
+                    line_counter += 1
+            if line_counter == 10:
+                self._del_line_and_down_rest(line)
+
+    def _del_line_and_down_rest(self, line_y_pos):
+        self.obj = list(filter(lambda pos: pos[0] != line_y_pos, self.obj))
+        self.__move_lines(line_y_pos, direction=-1)
+
+    def __move_lines(self, line_y_pos, direction=1):
+        """смещает блоки ниже указаной"""
+        new_obj = []
+        for y, x in self.obj:
+            if y > line_y_pos:
+                new_brick = (y + direction, x)
+                new_obj.append(new_brick)
+            else:
+                new_obj.append((y, x))
+        self.obj = new_obj
+
+
+class Bullet(GameObject):
+
+    def __init__(self, start_point, direction=None):
+        super().__init__()
+        self.x = start_point[1]
+        self.y = start_point[0]
+        self.direction = 'UP' if direction is None else direction
+        self.counter = 0
+        self.counter = 15
+        self.obj = [[self.y, self.x]]
+
+    def __str__(self):
+        return 'Bullet'
+
+    def move(self):
+        if self.direction == 'UP':
+            self.y -= 1
+
+    def get_pos(self):
+        return self.y, self.x
+
+    def get_obj(self):
+        return [[self.y, self.x]]

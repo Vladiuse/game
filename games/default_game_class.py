@@ -56,12 +56,14 @@ class Game:
         self.pause = False if self.pause else True
 
     def end_game(self):
-        if self.bomb.bang():
+        if not self.bomb.end:
+            self.bomb.bang()
             self.render(*self.game_objects)
         else:
             self.curtain.clean()
             self.render(self.curtain)
             if self.curtain.end:
+                self.curtain.set_to_default()
                 if self.lives == 0:
                     self.controller.chose_game('default')
                 else:
