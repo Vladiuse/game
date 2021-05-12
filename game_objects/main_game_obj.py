@@ -1,14 +1,22 @@
 class GameObject:
 
-    def __init__(self, pos=None):
+    def __init__(self, pos=None, frame=10, out_of_screen=False):
         self.pos = [0, 0] if pos is None else pos
         self.obj = [self.pos]
         self.clean_hit_box = None
+        self.frame = frame
+        self.out_of_screen = out_of_screen
 
     def __str__(self):
         return __class__.__name__
 
     def get_obj(self):
+        if self.out_of_screen:
+            in_screen_obj = []
+            for pos in self.obj:
+                if self.is_pos_in_screen(pos):
+                    in_screen_obj.append(pos)
+            return in_screen_obj
         return self.obj
 
     def get_clean_hit_box(self):
@@ -29,14 +37,13 @@ class GameObject:
         elif direction == 'left':
             _x -= step
         new_obj = []
-        for y,x in self.obj:
+        for y, x in self.obj:
             new_obj.append((y + _y, x + _x))
         self.obj = new_obj
 
-
     @staticmethod
     def pos_mirror_effect(pos):
-        y,x = pos
+        y, x = pos
         if x == -1:
             x = 9
         elif x == 10:
@@ -46,3 +53,15 @@ class GameObject:
         elif y == 20:
             y = 0
         return y, x
+
+    def pos_mirror_effect_obj(self):
+        new_obj = []
+        for y, x in self.obj:
+            y, x = self.pos_mirror_effect((y, x))
+            new_obj.append((y, x))
+        self.obj = new_obj
+
+    @staticmethod
+    def is_pos_in_screen(pos):
+        y, x = pos
+        return y in range(0, 20) and x in range(0, 10)

@@ -130,7 +130,6 @@ class Game:
             3: [[3, 0], [2, 0], [1, 0], ],
             4: [[3, 0], [2, 0], [1, 0], [0, 0], ],
         }
-        print(self.lives)
         if self.lives:
             # print(dic_lives[self.lives])
             for y, x in dic_lives[self.lives]:

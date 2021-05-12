@@ -317,8 +317,8 @@ class Car(GameObject):
     left = (16, 2)
     right = (16, 5)
 
-    def __init__(self, pos=(16, 3)):
-        super().__init__()
+    def __init__(self, out_of_screen=False, pos=(16, 3),):
+        super().__init__(out_of_screen=out_of_screen)
         self.pos = pos
         self.obj = None
         self.get_car_with_pos()
@@ -353,7 +353,16 @@ class RoadBorder(GameObject):
               (2, 0), (2, 9), (16, 0), (11, 0), (6, 0),
               (1, 0), (1, 9), (6, 9), (11, 9), (16, 9)]
 
+    def __init__(self):
+        super().__init__()
+        self.obj = RoadBorder.schema
 
+    def move(self):
+        self.frame -= 1
+        if self.frame == 0:
+            self.move_obj(direction='down')
+            self.frame = 10
+            self.pos_mirror_effect_obj()
 
 
 class Cursor(GameObject):
