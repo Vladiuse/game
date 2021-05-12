@@ -20,17 +20,15 @@ class Game:
         self.fps = GameSettings.FPS
         self.game_mode = game_mode
         self.blink_count = 6
-        self.y_clean_pic = 19
         self.pause = False
-        self.player = None
+        self.turret = None
         self.bomb = Bomb()
         self.curtain = Curtain()
-        self.bang_frame_counter = 0
 
 
     def start_game(self):
         """Иницилизация стартового состояния игры"""
-        # self.get_null_screen()
+        self.get_null_screen()
         self.get_small_screen_condition()
 
     def restart_game(self):
@@ -132,6 +130,7 @@ class Game:
             3: [[3, 0], [2, 0], [1, 0], ],
             4: [[3, 0], [2, 0], [1, 0], [0, 0], ],
         }
+        print(self.lives)
         if self.lives:
             # print(dic_lives[self.lives])
             for y, x in dic_lives[self.lives]:

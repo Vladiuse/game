@@ -42,10 +42,9 @@ class Snake(Game):
     game_modes: traffic, step
     """
 
-    def __init__(self, controller):
-        super().__init__(controller=controller)
+    def __init__(self, controller, game_mode='traffic'):
+        super().__init__(controller=controller, game_mode=game_mode)
         # self.controller = controller
-        self.game_mode = 'traffic'
         self.direction = None
         self.last_direction = None
         self.game_condition = []
@@ -226,7 +225,6 @@ class SnakeCopy(Game):
     def start_game(self):
         super().start_game()
         """Иницилизация стартового состояния игры"""
-        self.get_null_screen()
         if self.game_mode == 'traffic':
             self.snake.direction = 'UP'
             self.snake.last_direction = 'UP'

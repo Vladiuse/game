@@ -2,52 +2,40 @@ import time
 
 import pygame
 
-from game_objects import Player, Wall, Bullet
+from game_objects import Turret, Wall, Bullet
 from .default_game_class import Game
 
 
-
-
-
-class PlayerWalk(Game):
+class TurretTetris(Game):
     max_bullet_count = 3
 
     def __init__(self, controller, game_mode='build'):
         super().__init__(controller=controller, game_mode=game_mode)
-        self.player = None
-        self.bullets = None
-        self.wall = None
+        self.start_time = time.time()
+        self.turret = Turret((5, 18))
+        self.player = self.turret
+        self.bullets = []
+        self.wall = Wall()
+        self.game_status = True
+        self.game_objects = [self.turret, self.wall]
         self.start_game()
 
     def start_game(self):
         super().start_game()
         """Иницилизация стартового состояния игры"""
-        self.get_null_screen()
-        self.score = 0
-        self.start_time = time.time()
-        self.player = Player((5, 18))
-        self.bullets = []
-        self.wall = Wall()
-        self.game_status = True
-        self.game_objects = [self.player, self.wall]
 
     def restart_game(self):
-        self.get_null_screen()
         self.lives -= 1
         self.score = 0
         self.start_time = time.time()
-        self.player = Player((5, 18))
+        self.turret = Turret((5, 18))
         self.bullets = []
         self.wall = Wall()
         self.game_status = True
-        self.game_objects = [self.player, self.wall]
-
-    # def end_game_check(self):
-    #     if self.wall._get_top() == self.player.get_position()[0]:
-    #         self.game_status = False
+        self.game_objects = [self.turret, self.wall]
+        self.start_game()
 
     def run(self):
-        # self.end_game_check()
         if self.game_status:
             for bullet in self.bullets:
                 bullet.move()
@@ -56,11 +44,10 @@ class PlayerWalk(Game):
             self.render(*self.game_objects, *self.bullets)
         else:
             self.end_game()
-            # self.start_game()
 
     def create_bullet(self):
-        if len(self.bullets) != PlayerWalk.max_bullet_count:
-            y, x = self.player.get_position()
+        if len(self.bullets) != TurretTetris.max_bullet_count:
+            y, x = self.turret.get_position()
             bullet = Bullet((y - 1, x))
             self.bullets.append(bullet)
 
@@ -73,7 +60,7 @@ class PlayerWalk(Game):
                     self.bullets.pop(bullet_id)
 
     def collision(self):
-        if self.wall._get_top() == self.player.get_position()[0]:
+        if self.wall._get_top() == self.turret.get_position()[0]:
             self.game_status = False
             self.bomb.activate(player=self.player)
             self.game_objects.append(self.bomb)
@@ -100,4 +87,4 @@ class PlayerWalk(Game):
         elif key == pygame.K_ESCAPE:
             self.controller.chose_game('default')
         else:
-            self.player.move(key)
+            self.turret.move(key)

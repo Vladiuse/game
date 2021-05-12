@@ -2,9 +2,10 @@ import time
 from copy import deepcopy
 
 import pygame
-from .default_game_class import Game
-from games.draw_line import PlayerWalk
+
 from games.snake import Snake, SnakeCopy
+from games.turret_tetris import TurretTetris
+from .default_game_class import Game
 
 letter_A = [[6, 3], [5, 3], [4, 3], [3, 3],
             [4, 4], [2, 4],
@@ -29,24 +30,32 @@ letter_D = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
             [5, 6], [4, 6], [3, 6],
             )
 
+letter_E = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
+            [6, 4], [2, 4], [4, 4],
+            [6, 5], [2, 5], [4, 5],
+            [6, 6], [2, 6],
+            )
+
 
 class GamePreview(Game):
     """Превью доступных игр"""
 
-    games = ['snake', 'walk', 'center', 'game_d']
+    games = ['snake', 'turret_tetris', 'turret_tetris_2',  'game_d', 'center',]
     games_data = {
         'snake': {
-            #  'preview': [[8, 5], [7, 5], [6, 5], [0, 0]], 'game': Snake
-            'preview': 'game_previews/snake_prev_1.txt', 'game': Snake
+            'preview': 'game_previews/snake_prev_1.txt', 'game': Snake, 'game_mode': 'traffic',
         },
-        'walk': {
-            'preview': letter_B, 'game': PlayerWalk
+        'turret_tetris': {
+            'preview': letter_B, 'game': TurretTetris, 'game_mode': 'build',
         },
-        'center': {
-            'preview': letter_C, 'game': None
+        'turret_tetris_2': {
+            'preview': letter_C, 'game': TurretTetris, 'game_mode': 'destroy',
         },
         'game_d': {
-            'preview': letter_D, 'game': SnakeCopy
+            'preview': letter_D, 'game': SnakeCopy, 'game_mode': 'traffic',
+        },
+        'center': {
+            'preview': letter_E, 'game': None, 'game_mode': None,
         },
     }
 
@@ -56,15 +65,11 @@ class GamePreview(Game):
         self.game_number = 0
         self.start_time = time.time()
         self.score = 0
-        # self.controller = controller
         self.frames = None
         self.frame_count = 0
-        # self.game_speed = 1
-        # self.game_level = 1
         self.game_status = True
         self.lives = 1
         self.start_game()
-
 
     def start_game(self):
         """Иницилизация стартового состояния игры"""
@@ -135,5 +140,3 @@ class GamePreview(Game):
                         frame_line.clear()
                 frames.append(deepcopy(frame))
         return frames
-        # print(frames)
-        # print(len(frames))

@@ -25,12 +25,13 @@ class GameController:
         self.game = GamePreview(controller=self)
         self.recorder = Recorder(controller=self)
 
-    def chose_game(self, game):
-        if game == 'default':
+    def chose_game(self, game_to_run):
+        if game_to_run == 'default':
             self.game = GamePreview(controller=self)
         else:
-            game = GamePreview.games_data[game]['game']
-            self.game = game(controller=self)
+            game = GamePreview.games_data[game_to_run]['game']
+            game_mode = GamePreview.games_data[game_to_run]['game_mode']
+            self.game = game(controller=self, game_mode=game_mode)
 
     def run(self):
         self.game_clock.show(self.game.start_time)

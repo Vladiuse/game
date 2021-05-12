@@ -193,7 +193,7 @@ class Curtain(GameObject):
         self.end = False
 
 
-class Player(GameObject):
+class Turret(GameObject):
 
     def __init__(self, start_point):
         super().__init__()
@@ -289,7 +289,18 @@ class Wall(GameObject):
                 if y == line:
                     line_counter += 1
             if line_counter == 10:
+                # self._check_line_new(f'start - {line}')
                 self._del_line_and_down_rest(line)
+                # self._check_line_new('end')
+
+    def _check_line_new(self, info):
+        dic = {}
+        for y, x in self.obj:
+            if y not in dic:
+                dic.update({y:1})
+            else:
+                dic[y] += 1
+        print(dic, info)
 
     def _del_line_and_down_rest(self, line_y_pos):
         self.obj = list(filter(lambda pos: pos[0] != line_y_pos, self.obj))
