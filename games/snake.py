@@ -235,6 +235,7 @@ class SnakeCopy(Game):
         self.lives -= 1
         self.snake = SnakeObj()
         self.snake_food = SnakeFood(self.snake)
+        self.player = self.snake
         self.game_status = True
         self.game_objects = [self.snake, self.snake_food]
         self.start_game()
@@ -242,15 +243,16 @@ class SnakeCopy(Game):
     def run(self):
         """Изменение состояние игры"""
         if self.game_status:
-            self.collision()
-            if self.game_mode == 'traffic':
-                self.frame_counter += 1
-                if self.frame_counter > self.speed_counter:
+            if not self.pause:
+                self.collision()
+                if self.game_mode == 'traffic':
+                    self.frame_counter += 1
+                    if self.frame_counter > self.speed_counter:
+                        self.snake.move()
+                        self.frame_counter = 0
+                if self.game_mode == 'step':
                     self.snake.move()
-                    self.frame_counter = 0
-            if self.game_mode == 'step':
-                self.snake.move()
-                self.snake.direction = None
+                    self.snake.direction = None
             self.render(*self.game_objects)
             self.blink_elems(self.snake_food.obj, [self.snake.get_pos()])
         else:
@@ -260,7 +262,8 @@ class SnakeCopy(Game):
         # snake move in self
         if self.snake.get_pos() in self.snake.get_obj()[1:]:
             self.game_status = False
-            print('colision')
+            self.bomb.activate(player=self.player)
+            self.game_objects.append(self.bomb)
         # eat food
         if self.snake.get_pos() == self.snake_food.get_pos():
             self.snake_food.new_food(self.snake)
@@ -271,10 +274,13 @@ class SnakeCopy(Game):
     def game_key_controller(self, key):
         """Меняет флаг направление движения -
         изменение на противоположное не проходит"""
-        if key == pygame.K_ESCAPE:
-            self.controller.chose_game('default')
-        if key == pygame.K_p:
-            self.pause_game()
+        super().game_key_controller(key=key)
+        # if key == pygame.K_ESCAPE:
+        #     self.controller.chose_game('default')
+        # if key == pygame.K_p:
+        #     self.pause_game()
+        # # if key == pygame.K_x:
+        # #     self.game_status = False
 
         if key == pygame.K_LEFT:
             if self.snake.last_direction != 'RIGHT':
@@ -288,16 +294,3 @@ class SnakeCopy(Game):
         elif key == pygame.K_DOWN:
             if self.snake.last_direction != 'UP':
                 self.snake.direction = 'DOWN'
-
-
-    # def blink_food(self):
-    #     """Мерцание еды"""
-    #     if self.food_render == 0:
-    #         self.food_render = 20
-    #     self.food_render -= 1
-    #     y = self.snake_food[1]
-    #     x = self.snake_food[0]
-    #     if self.food_render < 10:
-    #         self.game_condition[y][x] = 0
-    #     else:
-    #         self.game_condition[y][x] = 1

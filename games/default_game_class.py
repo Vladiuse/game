@@ -1,6 +1,8 @@
 import time
-
+import pygame
+from game_objects import Bomb, Curtain
 from settings import GameSettings
+
 
 
 class Game:
@@ -20,6 +22,11 @@ class Game:
         self.blink_count = 6
         self.y_clean_pic = 19
         self.pause = False
+        self.player = None
+        self.bomb = Bomb()
+        self.curtain = Curtain()
+        self.bang_frame_counter = 0
+
 
     def start_game(self):
         """Иницилизация стартового состояния игры"""
@@ -45,24 +52,20 @@ class Game:
         """Основной цикл игры"""
         pass
 
-    def end_game(self):
-        self.bang_effect(self.player.get_pos())
-        if self.lives == 0:
-            self.controller.chose_game('default')
-        else:
-            self.restart_game()
-
     def pause_game(self):
-        if not self.pause:
-            for obj in self.game_objects:
-                obj.freeze()
-            self.pause = True
+        self.pause = False if self.pause else True
+
+    def end_game(self):
+        if self.bomb.bang():
+            self.render(*self.game_objects)
         else:
-            for obj in self.game_objects:
-                obj.un_freeze()
-            self.pause = False
-
-
+            self.curtain.clean()
+            self.render(self.curtain)
+            if self.curtain.end:
+                if self.lives == 0:
+                    self.controller.chose_game('default')
+                else:
+                    self.restart_game()
 
 
     def curtain_clean_effect(self, in_end_func=None):
@@ -77,18 +80,27 @@ class Game:
             if in_end_func:
                 in_end_func()
 
-    def bang_effect(self, bang_pos):
-        y, x = bang_pos
-        if y > 16:
-            y = 16
-        if x > 6:
-            x = 6
-
     def render(self, *args):
         self.get_null_screen()
         for obj in args:
-            for y, x in obj.get_obj():
-                self.game_condition[y][x] = 1
+            if obj.get_clean_hit_box():
+                for y, x in obj.get_clean_hit_box():
+                    self.game_condition[y][x] = 0
+            if obj.get_obj():
+                for y, x in obj.get_obj():
+                    self.game_condition[y][x] = 1
+
+    def game_key_controller(self, key):
+        """Меняет флаг направление движения -
+        изменение на противоположное не проходит"""
+        if key == pygame.K_ESCAPE:
+            self.controller.chose_game('default')
+        if key == pygame.K_p:
+            self.pause_game()
+        # if key == pygame.K_x:
+        #     self.game_status = False
+
+
 
     def collisions(self):
         pass

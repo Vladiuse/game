@@ -1,1 +1,1 @@
-from .game_objects import SnakeObj, SnakeFood
+from .game_objects import SnakeObj, SnakeFood, Bomb, Curtain
