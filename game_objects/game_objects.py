@@ -1,42 +1,6 @@
 import random as r
-
+from .main_game_obj import GameObject
 import pygame
-
-
-class GameObject:
-
-    def __init__(self, pos=None):
-        self.pos = [0, 0] if pos is None else pos
-        self.obj = [self.pos]
-        self.clean_hit_box = None
-
-    def __str__(self):
-        return __class__.__name__
-
-    def get_obj(self):
-        return self.obj
-
-    def get_clean_hit_box(self):
-        return self.clean_hit_box
-
-    def get_pos(self):
-        return list(self.obj[0])
-
-    def move_obj(self):
-        pass
-
-    @staticmethod
-    def pos_mirror_effect(y, x):
-        if x == -1:
-            x = 9
-        elif x == 10:
-            x = 0
-        elif y == -1:
-            y = 19
-        elif y == 20:
-            y = 0
-        return y, x
-
 
 class SnakeObj(GameObject):
 
@@ -297,7 +261,7 @@ class Wall(GameObject):
         dic = {}
         for y, x in self.obj:
             if y not in dic:
-                dic.update({y:1})
+                dic.update({y: 1})
             else:
                 dic[y] += 1
         print(dic, info)
@@ -341,3 +305,40 @@ class Bullet(GameObject):
 
     def get_obj(self):
         return [[self.y, self.x]]
+
+
+class Car(GameObject):
+    car = (0, 1), (1, 0), (1, 1), (1, 2), (2, 1), (3, 0), (3, 1), (3, 2),
+    left = (16, 2)
+    right = (16, 5)
+
+    def __init__(self, pos=(16, 3)):
+        super().__init__()
+        self.pos = pos
+        self.obj = None
+        self.get_car_with_pos()
+        # self.direction = 'Right'
+
+    def get_car_with_pos(self):
+        new_car = []
+        for y, x in Car.car:
+            new_car.append((y + self.pos[0], x + self.pos[1]))
+        self.obj = new_car
+
+    def move(self):
+        self.get_car_with_pos()
+
+
+    def move_to(self, pos):
+        self.pos = pos
+        self.get_car_with_pos()
+
+    def move_right(self):
+        self.pos = (16,5)
+        self.move()
+
+    def move_left(self):
+        self.pos = (16,2)
+        self.move()
+
+

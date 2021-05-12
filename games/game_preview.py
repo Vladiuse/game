@@ -2,9 +2,9 @@ import time
 from copy import deepcopy
 
 import pygame
-
-from games.snake import Snake, SnakeCopy
-from games.turret_tetris import TurretTetris
+from games import Snake, SnakeCopy, TurretTetris, Race
+# from games.snake import SnakeCopy
+# from games.turret_tetris import TurretTetris
 from .default_game_class import Game
 
 letter_A = [[6, 3], [5, 3], [4, 3], [3, 3],
@@ -36,11 +36,17 @@ letter_E = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
             [6, 6], [2, 6],
             )
 
+letter_F = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
+            [2, 4], [4, 4],
+            [2, 5], [4, 5],
+            [2, 6],
+            )
+
 
 class GamePreview(Game):
     """Превью доступных игр"""
 
-    games = ['snake', 'turret_tetris', 'turret_tetris_2',  'game_d', 'center',]
+    games = ['snake', 'turret_tetris', 'turret_tetris_2',  'game_d', 'game_e','game_f',]
     games_data = {
         'snake': {
             'preview': 'game_previews/snake_prev_1.txt', 'game': Snake, 'game_mode': 'traffic',
@@ -54,8 +60,11 @@ class GamePreview(Game):
         'game_d': {
             'preview': letter_D, 'game': SnakeCopy, 'game_mode': 'traffic',
         },
-        'center': {
+        'game_e': {
             'preview': letter_E, 'game': None, 'game_mode': None,
+        },
+        'game_f': {
+            'preview': letter_F, 'game': Race, 'game_mode': 'traffic',
         },
     }
 
@@ -121,6 +130,8 @@ class GamePreview(Game):
         self.game_number %= len(GamePreview.games)
         if key == pygame.K_SPACE:
             game = GamePreview.games[self.game_number]
+            if GamePreview.games_data[game]['game'] is not None:
+                self.controller.chose_game(game)
             if game != 'center':  # игра заглушка
                 self.controller.chose_game(game)
             else:
