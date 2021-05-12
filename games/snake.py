@@ -252,7 +252,7 @@ class SnakeCopy(Game):
                     self.snake.move()
                     self.snake.direction = None
             self.render(*self.game_objects)
-            self.blink_elems(self.snake_food.obj, [self.snake.get_pos()])
+            self.blink_effect(self.snake_food.obj, [self.snake.get_pos()])
         else:
             self.end_game()
 

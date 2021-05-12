@@ -17,11 +17,26 @@ class GameObject:
     def get_pos(self):
         return list(self.obj[0])
 
-    def move_obj(self, direction):
-        pass
+    def move_obj(self, direction, step=1):
+        _y = 0
+        _x = 0
+        if direction == 'up':
+            _y -= step
+        elif direction == 'down':
+            _y += step
+        elif direction == 'right':
+            _x += step
+        elif direction == 'left':
+            _x -= step
+        new_obj = []
+        for y,x in self.obj:
+            new_obj.append((y + _y, x + _x))
+        self.obj = new_obj
+
 
     @staticmethod
-    def pos_mirror_effect(y, x):
+    def pos_mirror_effect(pos):
+        y,x = pos
         if x == -1:
             x = 9
         elif x == 10:

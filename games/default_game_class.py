@@ -105,7 +105,7 @@ class Game:
     def collisions(self):
         pass
 
-    def blink_elems(self, *args):
+    def blink_effect(self, *args):
         """Add blink effect on elements or objects"""
         self.blink_count -= 1
         for elem in args:

@@ -2,7 +2,7 @@ import time
 from copy import deepcopy
 
 import pygame
-from games import Snake, SnakeCopy, TurretTetris, Race
+from games import Snake, SnakeCopy, TurretTetris, Race, DrawObjects
 # from games.snake import SnakeCopy
 # from games.turret_tetris import TurretTetris
 from .default_game_class import Game
@@ -41,6 +41,8 @@ letter_F = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
             [2, 5], [4, 5],
             [2, 6],
             )
+car_schema = [(19, 2), (19, 3), (19, 4), (18, 3), (17, 3), (17, 2), (17, 4), (16, 3)]
+
 
 
 class GamePreview(Game):
@@ -61,10 +63,10 @@ class GamePreview(Game):
             'preview': letter_D, 'game': SnakeCopy, 'game_mode': 'traffic',
         },
         'game_e': {
-            'preview': letter_E, 'game': None, 'game_mode': None,
+            'preview': letter_E, 'game': DrawObjects, 'game_mode': None,
         },
         'game_f': {
-            'preview': letter_F, 'game': Race, 'game_mode': 'traffic',
+            'preview': (*letter_F, *car_schema), 'game': Race, 'game_mode': 'traffic',
         },
     }
 

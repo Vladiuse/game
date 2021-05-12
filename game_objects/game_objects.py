@@ -1,6 +1,9 @@
 import random as r
-from .main_game_obj import GameObject
+
 import pygame
+
+from .main_game_obj import GameObject
+
 
 class SnakeObj(GameObject):
 
@@ -192,14 +195,15 @@ class Turret(GameObject):
 class Wall(GameObject):
     counter_for_new_line = 30 * 5
 
-    def __init__(self, start_line_count=3):
+    def __init__(self, start_line_count=3, auto_line_add=True):
         super().__init__()
         self.obj = []
         self.__init_wall(start_line_count)
         self.counter_for_new_line = Wall.counter_for_new_line
+        self.auto_line_add = auto_line_add
 
     def __str__(self):
-        return 'Wall'
+        return str(self.obj)
 
     def __init_wall(self, start_line_count):
         for y in range(start_line_count):
@@ -227,8 +231,9 @@ class Wall(GameObject):
         return top
 
     def get_obj(self):
-        self.auto_line_adder()
-        self._check_line()
+        if self.auto_line_add:
+            self.auto_line_adder()
+            self._check_line()
         return self.obj
 
     def auto_line_adder(self):
@@ -308,7 +313,7 @@ class Bullet(GameObject):
 
 
 class Car(GameObject):
-    car = (0, 1), (1, 0), (1, 1), (1, 2), (2, 1), (3, 0), (3, 1), (3, 2),
+    schema = (0, 1), (1, 0), (1, 1), (1, 2), (2, 1), (3, 0), (3, 1), (3, 2),
     left = (16, 2)
     right = (16, 5)
 
@@ -317,28 +322,50 @@ class Car(GameObject):
         self.pos = pos
         self.obj = None
         self.get_car_with_pos()
-        # self.direction = 'Right'
+        self.side_position = 'left'
 
     def get_car_with_pos(self):
         new_car = []
-        for y, x in Car.car:
+        for y, x in Car.schema:
             new_car.append((y + self.pos[0], x + self.pos[1]))
         self.obj = new_car
 
-    def move(self):
-        self.get_car_with_pos()
-
-
-    def move_to(self, pos):
-        self.pos = pos
-        self.get_car_with_pos()
+    #
+    # def move_to(self, pos):
+    #     self.pos = pos
+    #     self.get_car_with_pos()
 
     def move_right(self):
-        self.pos = (16,5)
-        self.move()
+        if self.side_position != 'right':
+            self.move_obj('right', step=3)
+            self.side_position = 'right'
 
     def move_left(self):
-        self.pos = (16,2)
-        self.move()
+        if self.side_position != 'left':
+            self.move_obj('left', step=3)
+        self.side_position = 'left'
 
 
+class RoadBorder(GameObject):
+    schema = [(18, 0), (17, 0), (13, 0), (12, 0),
+              (8, 0), (7, 0), (3, 0), (3, 9), (7, 9),
+              (8, 9), (12, 9), (13, 9), (17, 9), (18, 9),
+              (2, 0), (2, 9), (16, 0), (11, 0), (6, 0),
+              (1, 0), (1, 9), (6, 9), (11, 9), (16, 9)]
+
+
+
+
+class Cursor(GameObject):
+
+    def __init__(self, pos):
+        super().__init__()
+        self.obj = [pos]
+        self.pos = self.obj[0]
+
+    def move(self, direction):
+        self.move_obj(direction=direction, )
+        self.obj = [self.pos_mirror_effect(self.obj[0])]
+
+    def get_pos(self):
+        return self.obj[0]
