@@ -28,7 +28,7 @@ class SnakeObj(GameObject):
                 x -= 1
             elif self.direction == 'RIGHT':
                 x += 1
-            y, x = self.pos_mirror_effect(y, x)
+            y, x = self.pos_mirror_effect((y, x))
             self.obj.insert(0, [y, x])
             if not eat:
                 self.tail = self.obj.pop()
@@ -62,6 +62,7 @@ class Bomb(GameObject):
     BOMB_2 = [[0, 1], [0, 2], [1, 0], [1, 3], [2, 0], [2, 3], [3, 1], [3, 2]]
 
     def __init__(self):
+        super().__init__()
         self.player = None
         self.pos = None
         self.obj = None
@@ -319,6 +320,7 @@ class Car(GameObject):
 
     def __init__(self, out_of_screen=False, pos=(16, 3),):
         super().__init__(out_of_screen=out_of_screen)
+        self.frame = 1
         self.pos = pos
         self.obj = None
         self.get_car_with_pos()
@@ -330,6 +332,11 @@ class Car(GameObject):
             new_car.append((y + self.pos[0], x + self.pos[1]))
         self.obj = new_car
 
+    def move(self, direction):
+        self.frame -= 1
+        if self.frame == 0:
+            self.move_obj(direction=direction)
+            self.frame = 15
     #
     # def move_to(self, pos):
     #     self.pos = pos

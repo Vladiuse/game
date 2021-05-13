@@ -9,6 +9,7 @@ class Game:
 
     def __init__(self, controller, game_mode=None):
         self.controller = controller
+        self.frame = 30
         self.game_condition = []
         self.small_screen_condition = []
         self.game_status = True
