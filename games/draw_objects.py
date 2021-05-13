@@ -42,7 +42,7 @@ class DrawObjects(Game):
         elif key == pygame.K_d:
             self.draw()
         elif key == pygame.K_s:
-            print(self.wall)
+            print(tuple(self.wall))
 
 
 

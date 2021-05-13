@@ -245,10 +245,16 @@ class Wall(GameObject):
             self.__add_line(line_y_pos=0)
 
     def drop_brick(self, brick_pos):
+        """Удаление елемента из массива"""
         self.obj.remove(brick_pos)
 
     def add_brick(self, brick_pos):
+        """Добавление елемента к массиву"""
         self.obj.append(brick_pos)
+
+    def add_array(self, array):
+        for brick in array:
+            self.add_brick(brick)
 
     def _check_line(self):
         self._check_line_new()
@@ -387,3 +393,30 @@ class Cursor(GameObject):
 
     def get_pos(self):
         return self.obj[0]
+
+
+class Brick(GameObject):
+
+    cube = ((0, 0), (1, 0), (1, 1), (0, 1))
+
+    def __init__(self, pos, shape):
+        super().__init__()
+        self.pos = pos
+        self.obj = shape
+        self.out_of_screen = True
+        self.get_obj_with_pos()
+
+    def move_right(self):
+        self.move_obj('right', step=1)
+
+    def move_left(self):
+        self.move_obj('left', step=1)
+
+    def move_down(self):
+        self.move_obj('down', step=1)
+
+    def move_up(self):
+        self.move_obj('up', step=1)
+
+
+

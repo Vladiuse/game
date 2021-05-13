@@ -41,6 +41,12 @@ class GameObject:
             new_obj.append((y + _y, x + _x))
         self.obj = new_obj
 
+    def get_obj_with_pos(self, pos=None):
+        new_obj = []
+        for y, x in self.obj:
+            new_obj.append((y + self.pos[0], x + self.pos[1]))
+        self.obj = new_obj
+
     @staticmethod
     def pos_mirror_effect(pos):
         y, x = pos

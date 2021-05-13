@@ -2,7 +2,8 @@ import time
 from copy import deepcopy
 
 import pygame
-from games import Snake, SnakeCopy, TurretTetris, Race, DrawObjects
+
+from games import Snake, SnakeCopy, TurretTetris, Race, DrawObjects, Tetris
 # from games.snake import SnakeCopy
 # from games.turret_tetris import TurretTetris
 from .default_game_class import Game
@@ -19,8 +20,9 @@ letter_B = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
             [5, 6], [3, 6],
             )
 
-turret_schema_B = [(19, 5), (19, 6), (18, 6), (19, 7), (10, 0), (10, 1), (10, 3), (10, 4), (10, 5), (10, 8), (10, 9), (11, 9), (11, 7), (11, 6), (11, 5), (11, 4), (11, 3), (11, 1), (11, 2), (12, 0), (12, 1), (12, 3), (12, 5), (16, 6), (12, 6), (13, 6), (14, 6), (12, 7), (12, 9)]
-
+turret_schema_B = [(19, 5), (19, 6), (18, 6), (19, 7), (10, 0), (10, 1), (10, 3), (10, 4), (10, 5), (10, 8), (10, 9),
+                   (11, 9), (11, 7), (11, 6), (11, 5), (11, 4), (11, 3), (11, 1), (11, 2), (12, 0), (12, 1), (12, 3),
+                   (12, 5), (16, 6), (12, 6), (13, 6), (14, 6), (12, 7), (12, 9)]
 
 letter_C = ([5, 3], [4, 3], [3, 3],
             [6, 4], [6, 5], [6, 6],
@@ -59,12 +61,16 @@ letter_F = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
             )
 car_schema = [(19, 2), (19, 3), (19, 4), (18, 3), (17, 3), (17, 2), (17, 4), (16, 3)]
 
-test = [(9, 2), (9, 3), (9, 4), (9, 7), (8, 0), (8, 1), (8, 4), (8, 6), (8, 7), (8, 9), (7, 4), (7, 7), (6, 1), (6, 2), (6, 3), (6, 4), (6, 6), (6, 7), (6, 8), (5, 0), (5, 1), (5, 2), (5, 5), (5, 7), (4, 0), (4, 3), (4, 5), (4, 6), (4, 7), (4, 9), (9, 0), (9, 1), (3, 0), (3, 1), (2, 0), (2, 2), (2, 4), (2, 6), (2, 8), (7, 8), (8, 8), (9, 8), (1, 1), (1, 4), (1, 5), (9, 8), (9, 9), (0, 0), (0, 1), (0, 4), (0, 7), (0, 8), (0, 9), (9, 6)]
+test = [(9, 2), (9, 3), (9, 4), (9, 7), (8, 0), (8, 1), (8, 4), (8, 6), (8, 7), (8, 9), (7, 4), (7, 7), (6, 1), (6, 2),
+        (6, 3), (6, 4), (6, 6), (6, 7), (6, 8), (5, 0), (5, 1), (5, 2), (5, 5), (5, 7), (4, 0), (4, 3), (4, 5), (4, 6),
+        (4, 7), (4, 9), (9, 0), (9, 1), (3, 0), (3, 1), (2, 0), (2, 2), (2, 4), (2, 6), (2, 8), (7, 8), (8, 8), (9, 8),
+        (1, 1), (1, 4), (1, 5), (9, 8), (9, 9), (0, 0), (0, 1), (0, 4), (0, 7), (0, 8), (0, 9), (9, 6)]
+
 
 class GamePreview(Game):
     """Превью доступных игр"""
 
-    games = ['snake', 'turret_tetris', 'turret_tetris_2',  'game_d', 'game_e','game_f',]
+    games = ['snake', 'turret_tetris', 'turret_tetris_2', 'game_d', 'game_e', 'game_f', 'game_g']
     games_data = {
         'snake': {
             'preview': 'game_previews/snake_prev_1.txt', 'game': Snake, 'game_mode': 'traffic',
@@ -84,8 +90,8 @@ class GamePreview(Game):
         'game_f': {
             'preview': (*letter_F, *car_schema), 'game': Race, 'game_mode': 'traffic',
         },
-        'game_G': {
-            'preview': tuple(test), 'game': None, 'game_mode': None,
+        'game_g': {
+            'preview': tuple(test), 'game': Tetris, 'game_mode': None,
         },
 
     }

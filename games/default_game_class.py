@@ -101,8 +101,6 @@ class Game:
         # if key == pygame.K_x:
         #     self.game_status = False
 
-
-
     def collisions(self):
         pass
 
@@ -139,3 +137,10 @@ class Game:
 
     def get_small_screen_pic(self):
         return self.small_screen_condition
+
+    @staticmethod
+    def array_collision(obj_1, obj_2):
+        for pos in obj_1.get_obj():
+            if pos in obj_2.get_obj():
+                return True
+        return False

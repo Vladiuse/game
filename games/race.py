@@ -89,7 +89,6 @@ class Race(Game):
                     self.game_objects.extend(self.cars)
                     self.game_objects.append(self.bomb)
 
-
     def run(self):
         if self.game_status:
             if not self.pause:
