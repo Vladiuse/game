@@ -7,6 +7,8 @@ from .default_game_class import Game
 
 
 class Race(Game):
+    FRAME = 5
+    SCORE = 100
     """Letter F"""
 
     def __init__(self, controller, game_mode=None):
@@ -16,7 +18,8 @@ class Race(Game):
         self.road = RoadBorder()
         self.cars = []
         self.game_objects = [self.player_car, self.road]
-        self.road_map = self.get_road_map()
+        self.road_map = None
+        self.get_road_map()
         self.frame = 1
         self.start_game()
 
@@ -31,7 +34,8 @@ class Race(Game):
         self.road = RoadBorder()
         self.cars = []
         self.game_objects = [self.player_car, self.road]
-        self.road_map = self.get_road_map()
+        self.road_map = None
+        self.get_road_map()
         self.frame = 1
         self.start_game()
 
@@ -39,7 +43,7 @@ class Race(Game):
         cars = ['car_l', 'car_r']
         road_map = [r.choice(cars), 0, 0, 0]
         last_car = road_map[0]
-        while len(road_map) < 200:
+        while len(road_map) < 500:
             car = r.choice(cars)
             if last_car != car:
                 between = [0] * r.randint(5, 6)
@@ -48,18 +52,23 @@ class Race(Game):
             last_car = car
             road_map.extend(between)
             road_map.extend([car, 0, 0, 0])
-        return road_map
+        self.road_map = road_map
+
 
     def get_random_cars(self):
         self.frame -= 1
         if self.frame == 0:
-            road_obj = self.road_map[0]
+            try:
+                road_obj = self.road_map[0]
+            except IndexError:
+                self.get_road_map()
+                road_obj = self.road_map[0]
             if road_obj == 'car_r':
                 self.cars.append(Car(pos=(-4, 2), out_of_screen=True))
             elif road_obj == 'car_l':
                 self.cars.append(Car(pos=(-4, 5), out_of_screen=True))
             self.road_map.pop(0)
-            self.frame = 15
+            self.frame = Race.FRAME
 
     def del_out_screen_cars(self):
         cars_in_screen = []
@@ -67,6 +76,8 @@ class Race(Game):
             y,x = car.get_pos()
             if y < 19:
                 cars_in_screen.append(car)
+        if len(self.cars) > len(cars_in_screen):
+            self.add_score()
         self.cars = cars_in_screen
 
     def collisions(self):
@@ -98,5 +109,8 @@ class Race(Game):
             self.player_car.move_left()
         elif key == pygame.K_RIGHT:
             self.player_car.move_right()
+
+    def add_score(self):
+        self.score += Race.SCORE
 
 

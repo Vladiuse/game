@@ -6,9 +6,23 @@ import pygame
 from .default_game_class import Game
 from game_objects import SnakeObj, SnakeFood
 
+def render_counter_param(n):
+    counter = 0
 
+    def render_counter(func):
+        def surrogate(*args, **kwargs):
+            nonlocal counter
+            counter += 1
+            if counter == n:
+                counter = 0
+                return func(*args, **kwargs)
+
+        return surrogate
+
+    return render_counter
 
 class GameOver:
+    blink = 10
 
     def __init__(self, game):
         self.game = game
@@ -35,6 +49,11 @@ class GameOver:
         self.pause = 15
         self.flag = 1
         self.blink = 4
+
+    @render_counter_param(blink)
+    def some_func(self):
+        self.game_over_param_to_default()
+
 
 
 class Snake(Game):

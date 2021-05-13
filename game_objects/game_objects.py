@@ -251,6 +251,7 @@ class Wall(GameObject):
         self.obj.append(brick_pos)
 
     def _check_line(self):
+        self._check_line_new()
         """Проверяет нет ли заполненных строк"""
         lines = set([y for y, x in self.obj])
         for line in lines:
@@ -259,18 +260,18 @@ class Wall(GameObject):
                 if y == line:
                     line_counter += 1
             if line_counter == 10:
-                # self._check_line_new(f'start - {line}')
                 self._del_line_and_down_rest(line)
-                # self._check_line_new('end')
 
-    def _check_line_new(self, info):
+
+    def _check_line_new(self):
         dic = {}
         for y, x in self.obj:
             if y not in dic:
                 dic.update({y: 1})
             else:
                 dic[y] += 1
-        print(dic, info)
+        if 10 in dic.values():
+            print('Find 10 - test')
 
     def _del_line_and_down_rest(self, line_y_pos):
         self.obj = list(filter(lambda pos: pos[0] != line_y_pos, self.obj))
@@ -314,6 +315,7 @@ class Bullet(GameObject):
 
 
 class Car(GameObject):
+    FRAME = 5
     schema = (0, 1), (1, 0), (1, 1), (1, 2), (2, 1), (3, 0), (3, 1), (3, 2),
     left = (16, 2)
     right = (16, 5)
@@ -336,7 +338,7 @@ class Car(GameObject):
         self.frame -= 1
         if self.frame == 0:
             self.move_obj(direction=direction)
-            self.frame = 15
+            self.frame = Car.FRAME
     #
     # def move_to(self, pos):
     #     self.pos = pos
