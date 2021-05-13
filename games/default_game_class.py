@@ -140,7 +140,7 @@ class Game:
 
     @staticmethod
     def array_collision(obj_1, obj_2):
-        for pos in obj_1.get_obj():
-            if pos in obj_2.get_obj():
+        for pos in obj_1:
+            if pos in obj_2:
                 return True
         return False

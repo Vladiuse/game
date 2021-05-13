@@ -10,6 +10,18 @@ class GameObject:
     def __str__(self):
         return __class__.__name__
 
+    def __iter__(self):
+        self.i = 0
+        return self
+
+    def __next__(self):
+        if self.i >= len(self.obj):
+            raise StopIteration
+        pos = self.obj[self.i]
+        self.i += 1
+        return pos
+
+
     def get_obj(self):
         if self.out_of_screen:
             in_screen_obj = []
