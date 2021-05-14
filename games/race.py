@@ -81,13 +81,12 @@ class Race(Game):
         self.cars = cars_in_screen
 
     def collisions(self):
-        for pos in self.player.get_obj():
-            for car in self.cars:
-                if pos in car.get_obj():
-                    self.game_status = False
-                    self.bomb.activate(player=self.player)
-                    self.game_objects.extend(self.cars)
-                    self.game_objects.append(self.bomb)
+        for car in self.cars:
+            if self.array_collision(self.player, car):
+                self.game_status = False
+                self.bomb.activate(player=self.player)
+                self.game_objects.extend(self.cars)
+                self.game_objects.append(self.bomb)
 
     def run(self):
         if self.game_status:
@@ -112,4 +111,11 @@ class Race(Game):
     def add_score(self):
         self.score += Race.SCORE
 
-
+    # def collisions(self):
+    #     for pos in self.player.get_obj():
+    #         for car in self.cars:
+    #             if pos in car.get_obj():
+    #                 self.game_status = False
+    #                 self.bomb.activate(player=self.player)
+    #                 self.game_objects.extend(self.cars)
+    #                 self.game_objects.append(self.bomb)

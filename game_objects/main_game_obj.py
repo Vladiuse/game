@@ -16,6 +16,7 @@ class GameObject:
 
     def __next__(self):
         if self.i >= len(self.obj):
+            # self.i = 0
             raise StopIteration
         pos = self.obj[self.i]
         self.i += 1

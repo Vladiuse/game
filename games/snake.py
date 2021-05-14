@@ -63,6 +63,7 @@ class Snake(Game):
 
     def __init__(self, controller, game_mode='traffic'):
         super().__init__(controller=controller, game_mode=game_mode)
+        print('__init__ Snake')
         # self.controller = controller
         self.direction = None
         self.last_direction = None

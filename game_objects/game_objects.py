@@ -196,12 +196,13 @@ class Turret(GameObject):
 class Wall(GameObject):
     counter_for_new_line = 30 * 5
 
-    def __init__(self, start_line_count=3, auto_line_add=True):
-        super().__init__()
+    def __init__(self, start_line_count=3, auto_line_add=True, direction=None, out_of_screen=False):
+        super().__init__(out_of_screen=out_of_screen)
         self.obj = []
-        self.__init_wall(start_line_count)
         self.counter_for_new_line = Wall.counter_for_new_line
         self.auto_line_add = auto_line_add
+        self.direction = direction
+        self.__init_wall(start_line_count)
 
     def __str__(self):
         return str(self.obj)
@@ -209,6 +210,12 @@ class Wall(GameObject):
     def __init_wall(self, start_line_count):
         for y in range(start_line_count):
             self.__add_line(y)
+        if self.direction == 'down':
+            self.obj.extend((20,x) for x in range(10))
+        elif self.direction == 'up':
+            self.obj.extend((-1,x) for x in range(10))
+        # self.add_brick((0,1))
+
 
     def __add_line(self, line_y_pos):
         y = line_y_pos
@@ -231,17 +238,18 @@ class Wall(GameObject):
                 top = y
         return top
 
-    def get_obj(self):
-        if self.auto_line_add:
-            self.auto_line_adder()
-            self._check_line()
-        return self.obj
+    # def get_obj(self):
+    # need to turel
+    #     if self.auto_line_add:
+    #         self.auto_line_adder()
+    #         self._check_line()
+    #     return self.obj
 
     def auto_line_adder(self):
         self.counter_for_new_line -= 1
         if self.counter_for_new_line == 0:
             self.counter_for_new_line = Wall.counter_for_new_line
-            self.__move_lines(line_y_pos=-1, direction=1)
+            self.__move_lines(line_y_pos=-1, direction='down')
             self.__add_line(line_y_pos=0)
 
     def drop_brick(self, brick_pos):
@@ -268,6 +276,8 @@ class Wall(GameObject):
             if line_counter == 10:
                 self._del_line_and_down_rest(line)
 
+    def test_wall_check_lines(self):
+        self._check_line_new()
 
     def _check_line_new(self):
         dic = {}
@@ -277,13 +287,25 @@ class Wall(GameObject):
             else:
                 dic[y] += 1
         if 10 in dic.values():
-            print('Find 10 - test')
+            for y, x in dic.items():
+                if x == 10:
+                    self.del_line(y)
+
+    def del_line(self, y_line):
+        if y_line in range(0,20):
+            self.obj = list((y, x) for y, x in self.obj if y != y_line)
+
 
     def _del_line_and_down_rest(self, line_y_pos):
         self.obj = list(filter(lambda pos: pos[0] != line_y_pos, self.obj))
-        self.__move_lines(line_y_pos, direction=-1)
+        # self.__move_lines(line_y_pos, direction=-1)
+        self.__move_lines(line_y_pos, direction='up')
 
-    def __move_lines(self, line_y_pos, direction=1):
+    def __move_lines(self, line_y_pos, direction):
+        if direction == 'up':
+            direction = -1
+        elif direction == 'down':
+            direction = 1
         """смещает блоки ниже указаной"""
         new_obj = []
         for y, x in self.obj:
@@ -326,7 +348,7 @@ class Car(GameObject):
     left = (16, 2)
     right = (16, 5)
 
-    def __init__(self, out_of_screen=False, pos=(16, 3),):
+    def __init__(self, out_of_screen=False, pos=(16, 3), ):
         super().__init__(out_of_screen=out_of_screen)
         self.frame = 1
         self.pos = pos
@@ -345,6 +367,7 @@ class Car(GameObject):
         if self.frame == 0:
             self.move_obj(direction=direction)
             self.frame = Car.FRAME
+
     #
     # def move_to(self, pos):
     #     self.pos = pos
@@ -396,8 +419,8 @@ class Cursor(GameObject):
 
 
 class Brick(GameObject):
-
     cube = ((0, 0), (1, 0), (1, 1), (0, 1))
+    line = ((0, 0), (0, 1),)
 
     def __init__(self, pos, shape):
         super().__init__()
@@ -417,6 +440,3 @@ class Brick(GameObject):
 
     def move_up(self):
         self.move_obj('up', step=1)
-
-
-
