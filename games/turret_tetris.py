@@ -62,7 +62,7 @@ class TurretTetris(Game):
                     self.bullets.pop(bullet_id)
 
     def collision(self):
-        if self.wall._get_top() == self.turret.get_position()[0]:
+        if self.wall._get_down() == self.turret.get_position()[0]:
             self.game_status = False
             self.bomb.activate(player=self.player)
             self.game_objects.append(self.bomb)

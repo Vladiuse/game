@@ -130,9 +130,18 @@ class Game:
             4: [[3, 0], [2, 0], [1, 0], [0, 0], ],
         }
         if self.lives:
-            # print(dic_lives[self.lives])
-            for y, x in dic_lives[self.lives]:
-                small_screen[y][x] = 1
+            if isinstance(self.lives, int):
+                # print(dic_lives[self.lives])
+                for y, x in dic_lives[self.lives]:
+                    small_screen[y][x] = 1
+            else:
+                print('Tetris')
+                print(self.lives)
+                shape = self.lives['shape']
+                rotation = self.lives['rotation']
+                print(shape, rotation, 'xxxxx')
+                for y, x in shape[rotation]:
+                    small_screen[y][x] = 1
         self.small_screen_condition = small_screen
 
     def get_small_screen_pic(self):

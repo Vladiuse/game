@@ -236,12 +236,20 @@ class Wall(GameObject):
         else:
             self.__add_line(line_y_pos)
 
-    def _get_top(self):
+    def _get_down(self):
         top = 0
         for y, x in self.obj:
             if y > top:
                 top = y
         return top
+
+    def get_top(self):
+        top = 1000
+        for y, x in self.obj:
+            if y < top:
+                top = y
+        return top
+
 
     # def get_obj(self):
     # need to turel
@@ -466,6 +474,8 @@ class Cursor(GameObject):
 
 
 class Brick(GameObject):
+
+    FRAME = 12
     Turret = {
         0: ((2, 0), (2, 1), (1, 1), (2, 2)),
         1: ((0, 0), (1, 0), (2, 0), (1, 1)),
@@ -499,13 +509,16 @@ class Brick(GameObject):
     # turret_4 = ((1, 1), (0, 2), (1, 2), (2, 2))
     # shapes = [turret_1,turret_2, turret_3, turret_4]
 
-    def __init__(self, pos, shape=r.choice(shapes)):
+    def __init__(self, pos, shape=r.choice(shapes), rotation=0):
         super().__init__()
+        self.direction = 'down'
+        self.last_direction = 'down'
         self.shape = shape
+        self.shape_number = rotation
         self.pos = pos
-        self.obj = shape[0]
-        self.shape_number = 0
+        self.obj = shape[rotation]
         self.out_of_screen = True
+        self.frame = Brick.FRAME
         self.get_obj_with_pos()
 
     def rotate(self):
@@ -534,6 +547,13 @@ class Brick(GameObject):
         }
         direction = direction_inversion[self.last_direction]
         self.move_obj_n_pos(direction, step=1)
+
+    def auto_move(self):
+        self.frame -= 1
+        if self.frame == 0:
+            self.move_down()
+            self.frame = Brick.FRAME
+
 
     def move_right(self):
         self.move_obj_n_pos('right', step=1)
