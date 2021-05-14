@@ -222,6 +222,9 @@ class Wall(GameObject):
             self.obj.extend((-1, x) for x in range(10))
         # self.add_brick((0,1))
 
+    def clean_wall(self):
+        self.obj = []
+
     def __add_line(self, line_y_pos):
         y = line_y_pos
         line = []
@@ -249,7 +252,6 @@ class Wall(GameObject):
             if y < top:
                 top = y
         return top
-
 
     # def get_obj(self):
     # need to turel
@@ -474,8 +476,7 @@ class Cursor(GameObject):
 
 
 class Brick(GameObject):
-
-    FRAME = 12
+    FRAME = 30
     Turret = {
         0: ((2, 0), (2, 1), (1, 1), (2, 2)),
         1: ((0, 0), (1, 0), (2, 0), (1, 1)),
@@ -489,10 +490,7 @@ class Brick(GameObject):
     Cube = {
         0: ((0, 0), (1, 0), (1, 1), (0, 1)),
     }
-    Small_line = {
-        0: ((1, 0), (1, 1),),
-        1: ((0, 0), (1, 0),),
-    }
+
     S_right = {
         0: ((1, 1), (1, 2), (2, 1), (2, 0)),
         1: ((0, 0), (1, 0), (1, 1), (2, 1)),
@@ -501,16 +499,36 @@ class Brick(GameObject):
         0: ((1, 0), (1, 1), (2, 1), (2, 2)),
         1: ((0, 1), (1, 1), (1, 0), (2, 0)),
     }
-    shapes = [Turret, Big_line, Cube, Small_line, S_right, S_left]
+    L_left = {
+        0: ((0, 0), (1, 0), (2, 0), (2, 1)),
+        1: ((1, 0), (0, 0), (0, 1), (0, 2)),
+        2: ((0, 1), (0, 2), (1, 2), (2, 2)),
+        3: ((1, 2), (2, 2), (2, 1), (2, 0)),
+    }
 
+    L_incorect = {
+        0: ((2, 0), (1, 0), (0, 0), (0, 1)),
+        1: ((0, 0), (0, 1), (0, 2), (1, 2)),
+        2: ((0, 2), (1, 2), (2, 2), (2, 1)),
+        3: ((2, 2), (2, 1), (2, 0), (1, 0)),
+    }
+
+    # Small_line = {
+    #     0: ((1, 0), (1, 1),),
+    #     1: ((0, 0), (1, 0),),
+    # }
     # turret_1 = ((2, 0), (2, 1), (1, 1), (2, 2))
     # turret_2 = ((0, 0), (1, 0), (2, 0), (1, 1))
     # turret_3 = ((0, 0), (0, 1), (1, 1), (0, 2))
     # turret_4 = ((1, 1), (0, 2), (1, 2), (2, 2))
     # shapes = [turret_1,turret_2, turret_3, turret_4]
 
-    def __init__(self, pos, shape=r.choice(shapes), rotation=0):
+    shapes = [Turret, Big_line, Cube, S_right, S_left, L_left, L_incorect]
+
+    def __init__(self, pos, shape=None, rotation=0):
         super().__init__()
+        # if shape is None:
+        #     shape = r.choice(shapes)
         self.direction = 'down'
         self.last_direction = 'down'
         self.shape = shape
@@ -523,6 +541,7 @@ class Brick(GameObject):
 
     def rotate(self):
         self.shape_number += 1
+        print(self.shape_number)
         if self.shape_number == len(self.shape):
             self.shape_number = 0
         self.obj = self.shape[self.shape_number]
@@ -553,7 +572,6 @@ class Brick(GameObject):
         if self.frame == 0:
             self.move_down()
             self.frame = Brick.FRAME
-
 
     def move_right(self):
         self.move_obj_n_pos('right', step=1)

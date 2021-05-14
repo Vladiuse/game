@@ -1,8 +1,9 @@
 import time
+
 import pygame
+
 from game_objects import Bomb, Curtain
 from settings import GameSettings
-
 
 
 class Game:
@@ -26,7 +27,6 @@ class Game:
         self.bomb = Bomb()
         self.curtain = Curtain()
 
-
     def start_game(self):
         """Иницилизация стартового состояния игры"""
         self.get_null_screen()
@@ -42,6 +42,13 @@ class Game:
         line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         while len(self.game_condition) != 20:
             self.game_condition.append(line.copy())
+
+    def get_null_small_screen(self):
+        self.small_screen_condition.clear()
+        line = [0, 0, 0, 0]
+        while len(self.small_screen_condition) != 4:
+            self.small_screen_condition.append(line.copy())
+
 
     def get_screen_pic(self):
         """get frame of game"""
@@ -116,13 +123,9 @@ class Game:
                 if self.blink_count == 0:
                     self.blink_count = 6
 
+
     def get_small_screen_condition(self):
-        small_screen = [
-            [[0, 0], [0, 0], [0, 0], [0, 0]],
-            [[0, 0], [0, 0], [0, 0], [0, 0]],
-            [[0, 0], [0, 0], [0, 0], [0, 0]],
-            [[0, 0], [0, 0], [0, 0], [0, 0]],
-        ]
+        self.get_null_small_screen()
         dic_lives = {
             1: [[3, 0], ],
             2: [[3, 0], [2, 0], ],
@@ -131,18 +134,29 @@ class Game:
         }
         if self.lives:
             if isinstance(self.lives, int):
-                # print(dic_lives[self.lives])
                 for y, x in dic_lives[self.lives]:
-                    small_screen[y][x] = 1
+                    self.small_screen_condition[y][x] = 1
             else:
-                print('Tetris')
-                print(self.lives)
                 shape = self.lives['shape']
                 rotation = self.lives['rotation']
-                print(shape, rotation, 'xxxxx')
                 for y, x in shape[rotation]:
-                    small_screen[y][x] = 1
-        self.small_screen_condition = small_screen
+                    self.small_screen_condition[y][x] = 1
+                self.correct_small_screen_pic()
+
+    def correct_small_screen_pic(self):
+        # while sum(self.small_screen_condition[-1]) == 0:
+        #     last = self.small_screen_condition.pop()
+        #     self.small_screen_condition.insert(0, last)
+        if sum(self.small_screen_condition[-1]) == 0:
+            last = self.small_screen_condition.pop()
+            self.small_screen_condition.insert(0, last)
+        if sum(self.small_screen_condition[-1]) == 0:
+            last = self.small_screen_condition.pop()
+            self.small_screen_condition.insert(0, last)
+        if sum(line[0] for line in self.small_screen_condition) == 0:
+            for line in self.small_screen_condition:
+                last = line.pop(0)
+                line.insert(5, last)
 
     def get_small_screen_pic(self):
         return self.small_screen_condition
@@ -153,3 +167,28 @@ class Game:
             if pos in obj_2:
                 return True
         return False
+
+    # def get_small_screen_condition(self):
+    #     small_screen = [
+    #         [[0, 0], [0, 0], [0, 0], [0, 0]],
+    #         [[0, 0], [0, 0], [0, 0], [0, 0]],
+    #         [[0, 0], [0, 0], [0, 0], [0, 0]],
+    #         [[0, 0], [0, 0], [0, 0], [0, 0]],
+    #     ]
+    #     dic_lives = {
+    #         1: [[3, 0], ],
+    #         2: [[3, 0], [2, 0], ],
+    #         3: [[3, 0], [2, 0], [1, 0], ],
+    #         4: [[3, 0], [2, 0], [1, 0], [0, 0], ],
+    #     }
+    #     if self.lives:
+    #         if isinstance(self.lives, int):
+    #             # print(dic_lives[self.lives])
+    #             for y, x in dic_lives[self.lives]:
+    #                 small_screen[y][x] = 1
+    #         else:
+    #             shape = self.lives['shape']
+    #             rotation = self.lives['rotation']
+    #             for y, x in shape[rotation]:
+    #                 small_screen[y][x] = 1
+    #     self.small_screen_condition = small_screen

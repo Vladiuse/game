@@ -7,6 +7,9 @@ from .default_game_class import Game
 
 
 class TurretTetris(Game):
+    """modes :
+    build, destroy
+    """
     max_bullet_count = 3
 
     def __init__(self, controller, game_mode='build'):
@@ -66,18 +69,21 @@ class TurretTetris(Game):
             self.game_status = False
             self.bomb.activate(player=self.player)
             self.game_objects.append(self.bomb)
-
+        """Bullet - Wall collision"""
         for bullet_id, bullet in enumerate(self.bullets):
             if self.array_collision(self.wall, bullet):
                 # print(id(bullet), bullet.get_obj(), bullet.number)
                 y,x = bullet.get_pos()
-                self.wall.add_brick((y + 1, x))
+                if self.game_mode == 'build':
+                    self.wall.add_brick((y + 1, x))
+                else:
+                    self.wall.drop_brick((y,x))
                 self.bullets.pop(bullet_id)
                 # break
 
 
 
-        """Bullet - Wall collision"""
+
         # if self.bullets:
         #     for bullet_id, bullet in enumerate(self.bullets):
         #         y, x = bullet.get_pos()

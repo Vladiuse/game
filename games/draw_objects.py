@@ -43,6 +43,7 @@ class DrawObjects(Game):
             self.draw()
         elif key == pygame.K_s:
             print(tuple(self.wall))
-
+        elif key == pygame.K_c:
+            self.wall.clean_wall()
 
 

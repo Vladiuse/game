@@ -110,12 +110,10 @@ class Tetris(Game):
                 self.brick.rotate_back()
             is_out = self.player.out_screen_pos_x_in_obj()
             if is_out:
-                print('Push OUT')
                 if is_out > 0:
                     self.player.move_left()
                 else:
                     self.player.move_right()
-                print(self.player.last_direction)
                 if self.array_collision(self.brick, self.wall):
 
                     self.brick.move_back()
