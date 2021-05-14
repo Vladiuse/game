@@ -26,8 +26,17 @@ class Tetris(Game):
     def start_game(self):
         super().start_game()
 
+
     def restart_game(self):
-        pass
+        self.game_status = True
+        self.lives -= 1
+        self.brick = Brick(pos=(12, 0))
+        self.wall = Wall(start_line_count=0, auto_line_add=False, direction='down', out_of_screen=True)
+        self.game_objects = [self.brick, self.wall]
+        # self.invisible_line = [(19,x) for x in range(10)]
+        self.player = self.brick
+        self.start_game()
+
 
     def run(self):
         if self.game_status:
@@ -51,6 +60,10 @@ class Tetris(Game):
         self.brick = Brick(pos=(5, 5), shape=shape)
         self.player = self.brick
         self.game_objects = [self.brick, self.wall]
+        if self.array_collision(self.player, self.wall):
+            self.game_status = False
+            self.bomb.activate(player=self.player)
+            self.game_objects.append(self.bomb)
 
     def game_key_controller(self, key):
         super().game_key_controller(key=key)
@@ -71,6 +84,22 @@ class Tetris(Game):
             self.player.move_up()
         elif key == pygame.K_DOWN:
             self.player.move_down()
+
         elif key == pygame.K_r:
-            print('Rotate key')
-            self.brick.rotare()
+            # print('Rotate key')
+            self.brick.rotate()
+            if self.array_collision(self.brick, self.wall):
+                self.brick.rotate_back()
+            is_out = self.player.out_screen_pos_x_in_obj()
+            if is_out:
+                print('Push OUT')
+                if is_out > 0:
+                    self.player.move_left()
+                else:
+                    self.player.move_right()
+                print(self.player.last_direction)
+                if self.array_collision(self.brick, self.wall):
+
+                    self.brick.move_back()
+                    self.brick.rotate_back()
+

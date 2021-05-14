@@ -466,9 +466,6 @@ class Cursor(GameObject):
 
 
 class Brick(GameObject):
-
-
-
     Turret = {
         0: ((2, 0), (2, 1), (1, 1), (2, 2)),
         1: ((0, 0), (1, 0), (2, 0), (1, 1)),
@@ -476,25 +473,26 @@ class Brick(GameObject):
         3: ((1, 1), (0, 2), (1, 2), (2, 2)),
     }
     Big_line = {
-        0: ((0, 0), (1, 0), (2, 0), (3, 0)),
+        0: ((0, 1), (1, 1), (2, 1), (3, 1)),
         1: ((3, 0), (3, 1), (3, 2), (3, 3))
     }
     Cube = {
         0: ((0, 0), (1, 0), (1, 1), (0, 1)),
     }
     Small_line = {
-        0:((0, 0), (0, 1),),
+        0: ((1, 0), (1, 1),),
         1: ((0, 0), (1, 0),),
     }
     S_right = {
-        0:((0, 1), (0, 2), (1, 1), (1, 0)),
+        0: ((1, 1), (1, 2), (2, 1), (2, 0)),
         1: ((0, 0), (1, 0), (1, 1), (2, 1)),
     }
     S_left = {
-        0:((0, 0), (0, 1), (1, 1), (1, 2)),
+        0: ((1, 0), (1, 1), (2, 1), (2, 2)),
         1: ((0, 1), (1, 1), (1, 0), (2, 0)),
     }
     shapes = [Turret, Big_line, Cube, Small_line, S_right, S_left]
+
     # turret_1 = ((2, 0), (2, 1), (1, 1), (2, 2))
     # turret_2 = ((0, 0), (1, 0), (2, 0), (1, 1))
     # turret_3 = ((0, 0), (0, 1), (1, 1), (0, 2))
@@ -510,13 +508,32 @@ class Brick(GameObject):
         self.out_of_screen = True
         self.get_obj_with_pos()
 
-    def rotare(self):
+    def rotate(self):
         self.shape_number += 1
         if self.shape_number == len(self.shape):
             self.shape_number = 0
         self.obj = self.shape[self.shape_number]
 
         self.get_obj_with_pos()
+
+    def rotate_back(self):
+        self.shape_number -= 1
+        if self.shape_number == -1:
+            self.shape_number = len(self.shape) - 1
+        self.obj = self.shape[self.shape_number]
+
+        self.get_obj_with_pos()
+
+    def move_back(self):
+        print('move back')
+        direction_inversion = {
+            'right': 'left',
+            'left': 'right',
+            'down': 'up',
+            'up': 'down',
+        }
+        direction = direction_inversion[self.last_direction]
+        self.move_obj_n_pos(direction, step=1)
 
     def move_right(self):
         self.move_obj_n_pos('right', step=1)

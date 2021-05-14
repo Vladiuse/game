@@ -5,6 +5,8 @@ class GameObject:
         self.obj = [self.pos]
         self.clean_hit_box = None
         self.frame = frame
+        self.direction = None
+        self.last_direction = None
         self.out_of_screen = out_of_screen
 
     def __str__(self):
@@ -57,6 +59,7 @@ class GameObject:
         # коректировка self.pos
         y,x = self.pos
         self.pos = y + _y, x + _x
+        self.direction = self.last_direction = direction
 
     def get_obj_with_pos(self, pos=None):
         new_obj = []
@@ -90,7 +93,8 @@ class GameObject:
         return y in range(0, 20) and x in range(0, 10)
 
     def out_screen_pos_x_in_obj(self):
+        """Выходит ли обьект за границу по оси х"""
         for y,x in self:
             if x not in range(10):
-                return True
+                return x
 
