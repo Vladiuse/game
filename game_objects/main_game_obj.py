@@ -36,9 +36,10 @@ class GameObject:
         return self.clean_hit_box
 
     def get_pos(self):
-        return list(self.obj[0])
+        return self.pos
+        # return list(self.obj[0])
 
-    def move_obj(self, direction, step=1):
+    def move_obj_n_pos(self, direction, step=1):
         _y = 0
         _x = 0
         if direction == 'up':
@@ -53,6 +54,9 @@ class GameObject:
         for y, x in self.obj:
             new_obj.append((y + _y, x + _x))
         self.obj = new_obj
+        # коректировка self.pos
+        y,x = self.pos
+        self.pos = y + _y, x + _x
 
     def get_obj_with_pos(self, pos=None):
         new_obj = []
@@ -84,3 +88,9 @@ class GameObject:
     def is_pos_in_screen(pos):
         y, x = pos
         return y in range(0, 20) and x in range(0, 10)
+
+    def out_screen_pos_x_in_obj(self):
+        for y,x in self:
+            if x not in range(10):
+                return True
+

@@ -15,7 +15,7 @@ class TurretTetris(Game):
         self.turret = Turret((5, 18))
         self.player = self.turret
         self.bullets = []
-        self.wall = Wall(direction='up')
+        self.wall = Wall(direction='up',out_of_screen=True)
         self.game_status = True
         self.game_objects = [self.turret, self.wall]
         self.start_game()
@@ -37,10 +37,12 @@ class TurretTetris(Game):
 
     def run(self):
         if self.game_status:
+            self.check_bullet_in_screen()
             for bullet in self.bullets:
                 bullet.move()
             self.collision()
-            self.check_bullet_in_screen()
+            # self.wall.test_wall_check_lines()
+            self.wall.act()
             self.render(*self.game_objects, *self.bullets)
         else:
             self.end_game()
@@ -65,20 +67,30 @@ class TurretTetris(Game):
             self.bomb.activate(player=self.player)
             self.game_objects.append(self.bomb)
 
+        for bullet_id, bullet in enumerate(self.bullets):
+            if self.array_collision(self.wall, bullet):
+                # print(id(bullet), bullet.get_obj(), bullet.number)
+                y,x = bullet.get_pos()
+                self.wall.add_brick((y + 1, x))
+                self.bullets.pop(bullet_id)
+                # break
+
+
+
         """Bullet - Wall collision"""
-        if self.bullets:
-            for bullet_id, bullet in enumerate(self.bullets):
-                y, x = bullet.get_pos()
-                if (y, x) in self.wall.get_obj():
-                    if self.game_mode == 'build':
-                        self.wall.add_brick((y + 1, x))
-                    else:
-                        self.wall.drop_brick((y, x))
-                    self.bullets.pop(bullet_id)
-                    self.score += 1
-                if y == - 1:
-                    if self.game_mode == 'build':
-                        self.wall.add_brick((y + 1, x))
+        # if self.bullets:
+        #     for bullet_id, bullet in enumerate(self.bullets):
+        #         y, x = bullet.get_pos()
+        #         if (y, x) in self.wall.get_obj():
+        #             if self.game_mode == 'build':
+        #                 self.wall.add_brick((y + 1, x))
+        #             else:
+        #                 self.wall.drop_brick((y, x))
+        #             self.bullets.pop(bullet_id)
+        #             self.score += 1
+        #         if y == - 1:
+        #             if self.game_mode == 'build':
+        #                 self.wall.add_brick((y + 1, x))
 
     def game_key_controller(self, key):
         super().game_key_controller(key=key)

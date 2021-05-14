@@ -40,6 +40,9 @@ class SnakeObj(GameObject):
     def get_name(self):
         return 'SnakeObj'
 
+    def get_pos(self):
+        return list(self.obj[0])
+
 
 class SnakeFood(GameObject):
 
@@ -55,6 +58,9 @@ class SnakeFood(GameObject):
             y = r.randint(0, 19)
         self.obj = [[y, x]]
         return self.obj
+
+    def get_pos(self):
+        return list(self.obj[0])
 
 
 class Bomb(GameObject):
@@ -211,11 +217,10 @@ class Wall(GameObject):
         for y in range(start_line_count):
             self.__add_line(y)
         if self.direction == 'down':
-            self.obj.extend((20,x) for x in range(10))
+            self.obj.extend((20, x) for x in range(10))
         elif self.direction == 'up':
-            self.obj.extend((-1,x) for x in range(10))
+            self.obj.extend((-1, x) for x in range(10))
         # self.add_brick((0,1))
-
 
     def __add_line(self, line_y_pos):
         y = line_y_pos
@@ -245,6 +250,11 @@ class Wall(GameObject):
     #         self._check_line()
     #     return self.obj
 
+    def act(self):
+        self.test_wall_check_lines()
+        if self.auto_line_add:
+            self.auto_line_adder()
+
     def auto_line_adder(self):
         self.counter_for_new_line -= 1
         if self.counter_for_new_line == 0:
@@ -258,26 +268,19 @@ class Wall(GameObject):
 
     def add_brick(self, brick_pos):
         """Добавление елемента к массиву"""
+        if brick_pos in self.obj:
+            print('IN!!!')
         self.obj.append(brick_pos)
 
     def add_array(self, array):
         for brick in array:
             self.add_brick(brick)
 
-    def _check_line(self):
-        self._check_line_new()
-        """Проверяет нет ли заполненных строк"""
-        lines = set([y for y, x in self.obj])
-        for line in lines:
-            line_counter = 0
-            for y, x in self.obj:
-                if y == line:
-                    line_counter += 1
-            if line_counter == 10:
-                self._del_line_and_down_rest(line)
-
     def test_wall_check_lines(self):
-        self._check_line_new()
+        lines_to_del = self._check_line_new()
+        if lines_to_del:
+            self.del_lines(lines_to_del)
+            self.correct_array(lines_to_del)
 
     def _check_line_new(self):
         dic = {}
@@ -287,26 +290,45 @@ class Wall(GameObject):
             else:
                 dic[y] += 1
         if 10 in dic.values():
+            lines_to_del = []
             for y, x in dic.items():
-                if x == 10:
-                    self.del_line(y)
+                if x == 10 and y in range(20):
+                    lines_to_del.append(y)
+            return lines_to_del
 
-    def del_line(self, y_line):
-        if y_line in range(0,20):
+    def del_lines(self, lines: list):
+        if len(self.obj) != len(set(self.obj)):
+            print('SET TO == ARRAY')
+        for y_line in lines:
             self.obj = list((y, x) for y, x in self.obj if y != y_line)
 
-
-    def _del_line_and_down_rest(self, line_y_pos):
-        self.obj = list(filter(lambda pos: pos[0] != line_y_pos, self.obj))
-        # self.__move_lines(line_y_pos, direction=-1)
-        self.__move_lines(line_y_pos, direction='up')
+    def correct_array(self, y_line_del):
+        if self.direction == 'down':
+            coof = 1
+        else:
+            # self.direction == 'up'
+            coof = -1
+        y_line_del.sort()
+        for y_line_to_del in y_line_del:
+            new_obj = []
+            for y, x in self.obj:
+                if self.direction == 'down':
+                    if y < y_line_to_del:
+                        # y, x = y + 1, x
+                        y, x = y + coof, x
+                else:
+                    if y > y_line_to_del:
+                        # y, x = y + 1, x
+                        y, x = y + coof, x
+                new_obj.append((y, x))
+            self.obj = new_obj
 
     def __move_lines(self, line_y_pos, direction):
+        """смещает блоки ниже указаной - ЗАМЕНИТЬ!!!"""
         if direction == 'up':
             direction = -1
         elif direction == 'down':
             direction = 1
-        """смещает блоки ниже указаной"""
         new_obj = []
         for y, x in self.obj:
             if y > line_y_pos:
@@ -316,8 +338,27 @@ class Wall(GameObject):
                 new_obj.append((y, x))
         self.obj = new_obj
 
+    # def _check_line(self):
+    #     self._check_line_new()
+    #     """Проверяет нет ли заполненных строк"""
+    #     lines = set([y for y, x in self.obj])
+    #     for line in lines:
+    #         line_counter = 0
+    #         for y, x in self.obj:
+    #             if y == line:
+    #                 line_counter += 1
+    #         if line_counter == 10:
+    #             self._del_line_and_down_rest(line)
+
+    # def _del_line_and_down_rest(self, line_y_pos):
+    #     self.obj = list(filter(lambda pos: pos[0] != line_y_pos, self.obj))
+    #     # self.__move_lines(line_y_pos, direction=-1)
+    #     self.__move_lines(line_y_pos, direction='up')
+    #
+
 
 class Bullet(GameObject):
+    number = 0
 
     def __init__(self, start_point, direction=None):
         super().__init__()
@@ -326,7 +367,9 @@ class Bullet(GameObject):
         self.direction = 'UP' if direction is None else direction
         self.counter = 0
         self.counter = 15
-        self.obj = [[self.y, self.x]]
+        self.obj = ((self.y, self.x),)
+        self.number = Bullet.number
+        Bullet.number += 1
 
     def __str__(self):
         return 'Bullet'
@@ -334,12 +377,13 @@ class Bullet(GameObject):
     def move(self):
         if self.direction == 'UP':
             self.y -= 1
+        self.obj = ((self.y, self.x),)
 
     def get_pos(self):
         return self.y, self.x
 
     def get_obj(self):
-        return [[self.y, self.x]]
+        return ((self.y, self.x),)
 
 
 class Car(GameObject):
@@ -365,7 +409,7 @@ class Car(GameObject):
     def move(self, direction):
         self.frame -= 1
         if self.frame == 0:
-            self.move_obj(direction=direction)
+            self.move_obj_n_pos(direction=direction)
             self.frame = Car.FRAME
 
     #
@@ -375,13 +419,16 @@ class Car(GameObject):
 
     def move_right(self):
         if self.side_position != 'right':
-            self.move_obj('right', step=3)
+            self.move_obj_n_pos('right', step=3)
             self.side_position = 'right'
 
     def move_left(self):
         if self.side_position != 'left':
-            self.move_obj('left', step=3)
+            self.move_obj_n_pos('left', step=3)
         self.side_position = 'left'
+
+    def get_pos(self):
+        return list(self.obj[0])
 
 
 class RoadBorder(GameObject):
@@ -398,7 +445,7 @@ class RoadBorder(GameObject):
     def move(self):
         self.frame -= 1
         if self.frame == 0:
-            self.move_obj(direction='down')
+            self.move_obj_n_pos(direction='down')
             self.frame = 10
             self.pos_mirror_effect_obj()
 
@@ -411,7 +458,7 @@ class Cursor(GameObject):
         self.pos = self.obj[0]
 
     def move(self, direction):
-        self.move_obj(direction=direction, )
+        self.move_obj_n_pos(direction=direction, )
         self.obj = [self.pos_mirror_effect(self.obj[0])]
 
     def get_pos(self):
@@ -419,24 +466,66 @@ class Cursor(GameObject):
 
 
 class Brick(GameObject):
-    cube = ((0, 0), (1, 0), (1, 1), (0, 1))
-    line = ((0, 0), (0, 1),)
 
-    def __init__(self, pos, shape):
+
+
+    Turret = {
+        0: ((2, 0), (2, 1), (1, 1), (2, 2)),
+        1: ((0, 0), (1, 0), (2, 0), (1, 1)),
+        2: ((0, 0), (0, 1), (1, 1), (0, 2)),
+        3: ((1, 1), (0, 2), (1, 2), (2, 2)),
+    }
+    Big_line = {
+        0: ((0, 0), (1, 0), (2, 0), (3, 0)),
+        1: ((3, 0), (3, 1), (3, 2), (3, 3))
+    }
+    Cube = {
+        0: ((0, 0), (1, 0), (1, 1), (0, 1)),
+    }
+    Small_line = {
+        0:((0, 0), (0, 1),),
+        1: ((0, 0), (1, 0),),
+    }
+    S_right = {
+        0:((0, 1), (0, 2), (1, 1), (1, 0)),
+        1: ((0, 0), (1, 0), (1, 1), (2, 1)),
+    }
+    S_left = {
+        0:((0, 0), (0, 1), (1, 1), (1, 2)),
+        1: ((0, 1), (1, 1), (1, 0), (2, 0)),
+    }
+    shapes = [Turret, Big_line, Cube, Small_line, S_right, S_left]
+    # turret_1 = ((2, 0), (2, 1), (1, 1), (2, 2))
+    # turret_2 = ((0, 0), (1, 0), (2, 0), (1, 1))
+    # turret_3 = ((0, 0), (0, 1), (1, 1), (0, 2))
+    # turret_4 = ((1, 1), (0, 2), (1, 2), (2, 2))
+    # shapes = [turret_1,turret_2, turret_3, turret_4]
+
+    def __init__(self, pos, shape=r.choice(shapes)):
         super().__init__()
+        self.shape = shape
         self.pos = pos
-        self.obj = shape
+        self.obj = shape[0]
+        self.shape_number = 0
         self.out_of_screen = True
         self.get_obj_with_pos()
 
+    def rotare(self):
+        self.shape_number += 1
+        if self.shape_number == len(self.shape):
+            self.shape_number = 0
+        self.obj = self.shape[self.shape_number]
+
+        self.get_obj_with_pos()
+
     def move_right(self):
-        self.move_obj('right', step=1)
+        self.move_obj_n_pos('right', step=1)
 
     def move_left(self):
-        self.move_obj('left', step=1)
+        self.move_obj_n_pos('left', step=1)
 
     def move_down(self):
-        self.move_obj('down', step=1)
+        self.move_obj_n_pos('down', step=1)
 
     def move_up(self):
-        self.move_obj('up', step=1)
+        self.move_obj_n_pos('up', step=1)

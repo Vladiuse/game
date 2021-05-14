@@ -40,10 +40,12 @@ class GameController:
             # check for closing window
             if event.type == pygame.QUIT:
                 GameSettings.running = False
+
+            # # for Recorder
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_r:
-                    print('Record')
-                    self.recorder.show_record()
+            #     if event.key == pygame.K_r:
+            #         print('Record')
+            #         self.recorder.show_record()
                 self.game.game_key_controller(event.key)
         self.game.run()
         self.main_screen.draw()
@@ -62,7 +64,7 @@ class GameController:
 
 class Recorder:
 
-    def __init__(self, controller):
+    def __init__(self, controller, on=False):
         self.controller = controller
         self.record = []
         self.snake_frames = []
