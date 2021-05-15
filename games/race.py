@@ -52,8 +52,8 @@ class Race(Game):
             last_car = car
             road_map.extend(between)
             road_map.extend([car, 0, 0, 0])
+        road_map.extend([0]* 5)
         self.road_map = road_map
-
 
     def get_random_cars(self):
         self.frame -= 1

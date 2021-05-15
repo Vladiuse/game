@@ -2,6 +2,7 @@ from .default_game_class import Game
 
 
 class SomeGame(Game):
+    """Clean work game"""
 
     def __init__(self, controller, game_mode):
         super().__init__(controller, game_mode=game_mode)

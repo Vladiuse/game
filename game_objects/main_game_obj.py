@@ -24,7 +24,6 @@ class GameObject:
         self.i += 1
         return pos
 
-
     def get_obj(self):
         if self.out_of_screen:
             in_screen_obj = []
@@ -90,7 +89,7 @@ class GameObject:
     @staticmethod
     def is_pos_in_screen(pos):
         y, x = pos
-        return y in range(0, 20) and x in range(0, 10)
+        return y in range(20) and x in range(10)
 
     def out_screen_pos_x_in_obj(self):
         """Выходит ли обьект за границу по оси х"""
