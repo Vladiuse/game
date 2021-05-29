@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pygame
 
-from games import Snake, SnakeCopy, TurretTetris, Race, DrawObjects, Tetris
+from games import Snake, TurretTetris, Race, DrawObjects, Tetris
 # from games.snake import SnakeCopy
 # from games.turret_tetris import TurretTetris
 from .default_game_class import Game
@@ -76,7 +76,7 @@ tetris = ((19, 0), (19, 1), (19, 2), (19, 3), (18, 3), (18, 2), (18, 1),
 class GamePreview(Game):
     """Превью доступных игр"""
 
-    games = ['snake', 'turret_tetris', 'turret_tetris_2', 'game_d', 'game_e', 'game_f', 'game_g', ]
+    games = ['snake', 'turret_tetris', 'turret_tetris_2', 'game_e', 'game_f', 'game_g', ]
     games_data = {
         'snake': {
             'preview': 'game_previews/snake_prev_1.txt', 'game': Snake, 'game_mode': 'traffic',
@@ -87,9 +87,9 @@ class GamePreview(Game):
         'turret_tetris_2': {
             'preview': (*letter_C, *turret_schema_C), 'game': TurretTetris, 'game_mode': 'destroy',
         },
-        'game_d': {
-            'preview': (*letter_D, *snake_schema), 'game': SnakeCopy, 'game_mode': 'step',
-        },
+        # 'game_d': {
+        #     'preview': (*letter_D, *snake_schema), 'game': SnakeCopy, 'game_mode': 'step',
+        # },
         'game_e': {
             'preview': (*letter_E, *draw_schema), 'game': DrawObjects, 'game_mode': None,
         },

@@ -1,4 +1,4 @@
-from .snake import Snake, SnakeCopy
+from .snake import Snake
 from .race import Race
 from .turret_tetris import TurretTetris
 from .draw_objects import DrawObjects
