@@ -48,3 +48,9 @@ class Recorder:
                         frame_line.clear()
                 frames.append(deepcopy(frame))
         return frames
+
+# if __name__ == '__main__':
+# rec = Recorder(controller='1')
+# snake_frames = rec.read_prew()
+# rec.write_record(mock_frames=snake_frames)
+# rec.read_prew()

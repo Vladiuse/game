@@ -1,9 +1,8 @@
-import time
 from copy import deepcopy
 
 import pygame
 
-from games import Snake, SnakeCopy, TurretTetris, Race, DrawObjects, Tetris, SomeGame
+from games import Snake, SnakeCopy, TurretTetris, Race, DrawObjects, Tetris
 # from games.snake import SnakeCopy
 # from games.turret_tetris import TurretTetris
 from .default_game_class import Game
@@ -71,13 +70,13 @@ tetris = ((19, 0), (19, 1), (19, 2), (19, 3), (18, 3), (18, 2), (18, 1),
           (18, 7), (19, 7), (19, 8), (15, 3), (15, 4), (16, 4), (14, 3),
           (19, 9), (18, 9), (17, 9), (2, 5), (2, 4), (2, 3), (2, 6), (2, 7),
           (2, 2), (3, 4), (3, 5), (4, 5), (4, 4), (5, 4), (5, 5), (6, 5),
-          (6, 4),(3, 3), (3, 2), (3, 7), (3, 6), (7, 5), (7, 4))
+          (6, 4), (3, 3), (3, 2), (3, 7), (3, 6), (7, 5), (7, 4))
 
 
 class GamePreview(Game):
     """Превью доступных игр"""
 
-    games = ['snake', 'turret_tetris', 'turret_tetris_2', 'game_d', 'game_e', 'game_f', 'game_g',]
+    games = ['snake', 'turret_tetris', 'turret_tetris_2', 'game_d', 'game_e', 'game_f', 'game_g', ]
     games_data = {
         'snake': {
             'preview': 'game_previews/snake_prev_1.txt', 'game': Snake, 'game_mode': 'traffic',
@@ -109,30 +108,8 @@ class GamePreview(Game):
         self.score = 0
         self.frames = None
         self.frame_count = 0
+        self.lives = 0
         self.start_game()
-
-    # def start_game(self):
-    #     """Иницилизация стартового состояния игры"""
-    #     super().start_game()
-        # line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        # while len(self.game_condition) != 20:
-        #     self.game_condition.append(line.copy())
-        # self.draw_game()
-
-    # def get_screen_pic(self):
-    #     """Передает экрану (он запрашивает эту функцию)
-    #     состояние игры"""
-    #     return self.game_condition
-    #
-    # def get_null_screen(self):
-    #     self.game_condition.clear()
-    #     line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    #     while len(self.game_condition) != 20:
-    #         self.game_condition.append(line.copy())
-
-    # def render(self):
-    #     self.get_null_screen()
-    #     self.draw_game()
 
     def draw_game(self):
         game_name = GamePreview.games[self.game_number]
@@ -154,6 +131,7 @@ class GamePreview(Game):
         self.draw_game()
 
     def game_key_controller(self, key):
+        # chose game
         if key == pygame.K_LEFT:
             self.game_number -= 1
         elif key == pygame.K_RIGHT:
@@ -161,6 +139,7 @@ class GamePreview(Game):
         elif self.game_number == -1:
             self.game_number = len(GamePreview.games) - 1
         self.game_number %= len(GamePreview.games)
+        #  start game
         if key == pygame.K_SPACE:
             game = GamePreview.games[self.game_number]
             if GamePreview.games_data[game]['game'] is not None:
@@ -168,6 +147,8 @@ class GamePreview(Game):
                 self.controller.chose_game(game)
             else:
                 print('Выбранная игра пока не доступна!!!')
+        if key == pygame.K_UP:
+            self.controller.up_speed()
 
     def read_prev_from_file(self, file_name):
         with open(file_name) as snake_file:
@@ -183,3 +164,26 @@ class GamePreview(Game):
                         frame_line.clear()
                 frames.append(deepcopy(frame))
         return frames
+
+    # def start_game(self):
+    #     """Иницилизация стартового состояния игры"""
+    #     super().start_game()
+    # line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # while len(self.game_condition) != 20:
+    #     self.game_condition.append(line.copy())
+    # self.draw_game()
+
+    # def get_screen_pic(self):
+    #     """Передает экрану (он запрашивает эту функцию)
+    #     состояние игры"""
+    #     return self.game_condition
+    #
+    # def get_null_screen(self):
+    #     self.game_condition.clear()
+    #     line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    #     while len(self.game_condition) != 20:
+    #         self.game_condition.append(line.copy())
+
+    # def render(self):
+    #     self.get_null_screen()
+    #     self.draw_game()

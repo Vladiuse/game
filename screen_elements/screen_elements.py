@@ -153,8 +153,6 @@ class SmallScreen:
                 pixel.draw()
 
 
-
-
 class Score:
 
     def __init__(self, start_point, width):
@@ -176,4 +174,30 @@ class Score:
         while len(score) != self.count_numbers:
             score.insert(0, 'null')
         self.show(score)
+
+
+class SpeedLevel:
+
+    def __init__(self, start_point, width):
+        self.start_point = start_point
+        self.width = width
+        self.number_count = 2
+        self.speed_level = 1
+
+    def up_speed_level(self):
+        self.speed_level += 1
+        if self.speed_level == 11:
+            self.speed_level = 1
+
+    def show(self):
+        x = self.start_point[0]
+        y = self.start_point[1]
+        score = f'null-{self.speed_level}' if self.speed_level < 10 else '1-0'
+        for symbol in score.split('-'):
+            elem = NumberBlock(screen=screen, start_point=(x, y), width=self.width, work=0)
+            x += self.width * 1.3
+            elem.draw_number_block(symbol)
+
+
+
 

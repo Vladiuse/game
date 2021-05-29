@@ -5,7 +5,7 @@ import pygame
 
 from games.game_preview import GamePreview
 from games.snake import Snake
-from screen_elements import Clock, Score, PixelScreen, SmallScreen
+from screen_elements import Clock, Score, PixelScreen, SmallScreen, SpeedLevel
 from settings import GameSettings
 from .recorder import Recorder
 
@@ -22,6 +22,7 @@ class GameController:
         self.game_clock = Clock(start_time=time.time(), mili_secs=False)
         self.main_screen = PixelScreen(controller=self)
         self.small_screen = SmallScreen(controller=self)
+        self.speed_level = SpeedLevel((700, 500), width=20)
         # game modules
         self.game = GamePreview(controller=self)
         self.recorder = Recorder(controller=self)
@@ -39,6 +40,13 @@ class GameController:
     def run(self):
         self.game_clock.show(self.game.start_time)
         self.score_controller.show_score(self.game.score)
+        self.key_controller()
+        self.game.run()
+        self.main_screen.draw()
+        self.small_screen.draw()
+        self.speed_level.show()
+
+    def key_controller(self):
         for event in pygame.event.get():
             # check for closing window
             if event.type == pygame.QUIT:
@@ -49,9 +57,6 @@ class GameController:
                 #         print('Record')
                 #         self.recorder.show_record()
                 self.game.game_key_controller(event.key)
-        self.game.run()
-        self.main_screen.draw()
-        self.small_screen.draw()
 
     def get_screen_pic(self):
         """For Recorder"""
@@ -60,6 +65,9 @@ class GameController:
             screen = deepcopy(screen)
             self.recorder.add_screen_to_data(screen)
         return self.game.get_screen_pic()
+
+    def up_speed(self):
+        self.speed_level.up_speed_level()
 
     def get_small_screen_pic(self):
         return self.game.get_small_screen_pic()
@@ -115,8 +123,4 @@ class GameController:
         # print(frames)
         # print(len(frames))
 
-# if __name__ == '__main__':
-# rec = Recorder(controller='1')
-# snake_frames = rec.read_prew()
-# rec.write_record(mock_frames=snake_frames)
-# rec.read_prew()
+

@@ -476,7 +476,7 @@ class Cursor(GameObject):
 
 
 class Brick(GameObject):
-    FRAME = 30
+
     Turret = {
         0: ((2, 0), (2, 1), (1, 1), (2, 2)),
         1: ((0, 0), (1, 0), (2, 0), (1, 1)),
@@ -524,6 +524,7 @@ class Brick(GameObject):
     # shapes = [turret_1,turret_2, turret_3, turret_4]
 
     shapes = [Turret, Big_line, Cube, S_right, S_left, L_left, L_incorect]
+    FRAME = 12
 
     def __init__(self, pos, shape=None, rotation=0):
         super().__init__()

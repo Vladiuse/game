@@ -1,6 +1,5 @@
 # Lets have some fun ;)
 import pygame
-
 from controller import GameController
 from settings import GameSettings
 
