@@ -3,8 +3,6 @@ from copy import deepcopy
 import pygame
 
 from games import Snake, TurretTetris, Race, DrawObjects, Tetris
-# from games.snake import SnakeCopy
-# from games.turret_tetris import TurretTetris
 from .default_game_class import Game
 
 letter_A = [[6, 3], [5, 3], [4, 3], [3, 3],
@@ -76,27 +74,28 @@ tetris = ((19, 0), (19, 1), (19, 2), (19, 3), (18, 3), (18, 2), (18, 1),
 class GamePreview(Game):
     """Превью доступных игр"""
 
-    games = ['snake', 'turret_tetris', 'turret_tetris_2', 'game_e', 'game_f', 'game_g', ]
+    games = ['snake', 'turret_tetris', 'turret_tetris_2', 'draw', 'race', 'tetris', ]
     games_data = {
         'snake': {
             'preview': 'game_previews/snake_prev_1.txt', 'game': Snake, 'game_mode': 'traffic',
         },
+        # 'turret_tetris': {
+        #     'preview': (*letter_B, *turret_schema_B), 'game': TurretTetris, 'game_mode': 'build',
+        # },
         'turret_tetris': {
-            'preview': (*letter_B, *turret_schema_B), 'game': TurretTetris, 'game_mode': 'build',
+            'preview': 'game_previews/turret_prev.txt', 'game': TurretTetris, 'game_mode': 'build',
         },
         'turret_tetris_2': {
             'preview': (*letter_C, *turret_schema_C), 'game': TurretTetris, 'game_mode': 'destroy',
         },
-        # 'game_d': {
-        #     'preview': (*letter_D, *snake_schema), 'game': SnakeCopy, 'game_mode': 'step',
-        # },
-        'game_e': {
-            'preview': (*letter_E, *draw_schema), 'game': DrawObjects, 'game_mode': None,
+
+        'draw': {
+            'preview': (*letter_D, *draw_schema), 'game': DrawObjects, 'game_mode': None,
         },
-        'game_f': {
-            'preview': (*letter_F, *car_schema), 'game': Race, 'game_mode': 'traffic',
+        'race': {
+            'preview': (*letter_E, *car_schema), 'game': Race, 'game_mode': 'traffic',
         },
-        'game_g': {
+        'tetris': {
             'preview': tetris, 'game': Tetris, 'game_mode': None,
         },
 
@@ -139,6 +138,11 @@ class GamePreview(Game):
         elif self.game_number == -1:
             self.game_number = len(GamePreview.games) - 1
         self.game_number %= len(GamePreview.games)
+        # level and speed
+        if key == pygame.K_UP:
+            self.controller.up_speed()
+        if key == pygame.K_DOWN:
+            self.controller.up_game_level()
         #  start game
         if key == pygame.K_SPACE:
             game = GamePreview.games[self.game_number]
@@ -147,10 +151,7 @@ class GamePreview(Game):
                 self.controller.chose_game(game)
             else:
                 print('Выбранная игра пока не доступна!!!')
-        if key == pygame.K_UP:
-            self.controller.up_speed()
-        if key == pygame.K_DOWN:
-            self.controller.up_game_level()
+
 
     def read_prev_from_file(self, file_name):
         with open(file_name) as snake_file:

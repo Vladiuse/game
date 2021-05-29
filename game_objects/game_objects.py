@@ -215,11 +215,14 @@ class Wall(GameObject):
 
     def __init_wall(self, start_line_count):
         for y in range(start_line_count):
+            #  for recorder
+            # y += 10
             self.__add_line(y)
         if self.direction == 'down':
             self.obj.extend((20, x) for x in range(10))
         elif self.direction == 'up':
             self.obj.extend((-1, x) for x in range(10))
+            # self.obj.extend((9, x) for x in range(10))
         # self.add_brick((0,1))
 
     def clean_wall(self):

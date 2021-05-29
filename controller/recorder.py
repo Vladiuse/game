@@ -3,29 +3,33 @@ from copy import deepcopy
 
 class Recorder:
 
-    def __init__(self, controller, on=False):
+    def __init__(self, controller, work=False):
         self.controller = controller
-        self.record = []
-        self.snake_frames = []
+        self.frames = []
+        self.work = work
+        self.record = False
 
-    def add_screen_to_data(self, screen):
-        sc = screen
-        self.record.append(sc)
+    def start_end_record(self):
+        self.record = True if self.record is False else False
 
-    def show_record(self):
-        print(len(self.record))
-        self.write_record()
+    def add_frame(self, frame):
+        if self.record:
+            frame = tuple(frame)
+            self.frames.append(frame)
 
-    def write_record(self, mock_frames=None):
-
-        if mock_frames:
-            self.record = mock_frames
-        # отрисовка буквы на каждый frame
-        # for frame in self.record:
-        #     for y,x in letter_A:
-        #         frame[y][x] = 1
-        with open('snake_prev_1.txt', 'w') as file:
-            for frame in self.record:
+    def write_record(self):
+        letter_B = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
+                    [6, 4], [2, 4], [4, 4],
+                    [6, 5], [2, 5], [4, 5],
+                    [5, 6], [3, 6],
+                    )
+        letter = letter_B
+        with open('prev.txt', 'w') as file:
+            for frame in self.frames:
+                frame = list(frame)
+                # add letter on frame
+                for y,x in letter:
+                    frame[y][x] = 1
                 frame_to_write = ''
                 for line in frame:
                     line = list(map(lambda x: str(x), line))
@@ -34,20 +38,20 @@ class Recorder:
                 file.write(frame_to_write)
             print('Write!!!')
 
-    def read_prew(self):
-        with open('snake_prev.txt') as snake_file:
-            frames = []
-            for file_line in snake_file:
-                file_line = file_line[:-1]
-                frame = []
-                frame_line = []
-                for char in file_line:
-                    frame_line.append(int(char))
-                    if len(frame_line) == 10:
-                        frame.append(deepcopy(frame_line))
-                        frame_line.clear()
-                frames.append(deepcopy(frame))
-        return frames
+    # def read_prew(self):
+    #     with open('snake_prev.txt') as snake_file:
+    #         frames = []
+    #         for file_line in snake_file:
+    #             file_line = file_line[:-1]
+    #             frame = []
+    #             frame_line = []
+    #             for char in file_line:
+    #                 frame_line.append(int(char))
+    #                 if len(frame_line) == 10:
+    #                     frame.append(deepcopy(frame_line))
+    #                     frame_line.clear()
+    #             frames.append(deepcopy(frame))
+    #     return frames
 
 # if __name__ == '__main__':
 # rec = Recorder(controller='1')

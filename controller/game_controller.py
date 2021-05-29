@@ -26,7 +26,7 @@ class GameController:
         self.game_level = GameLevel(start_point=(700, 600), width=20)
         # game modules
         self.game = GamePreview(controller=self)
-        self.recorder = Recorder(controller=self)
+        self.recorder = Recorder(controller=self, work=True)
 
         self.last_game = 0
 
@@ -53,20 +53,22 @@ class GameController:
             # check for closing window
             if event.type == pygame.QUIT:
                 GameSettings.running = False
-            # # for Recorder
             elif event.type == pygame.KEYDOWN:
-                #     if event.key == pygame.K_r:
-                #         print('Record')
-                #         self.recorder.show_record()
-                self.game.game_key_controller(event.key)
+                # for Recorder
+                if event.key == pygame.K_r:
+                    print('Record')
+                    self.recorder.start_end_record()
+                elif event.key == pygame.K_w:
+                    self.recorder.write_record()
+                else:
+                    self.game.game_key_controller(event.key)
 
     def get_screen_pic(self):
-        """For Recorder"""
-        if isinstance(self.game, Snake):
-            screen = self.game.get_screen_pic()
-            screen = deepcopy(screen)
-            self.recorder.add_screen_to_data(screen)
-        return self.game.get_screen_pic()
+        screen = self.game.get_screen_pic()
+        #  for Recorder
+        if self.recorder.work:
+            self.recorder.add_frame(screen)
+        return screen
 
     def up_speed(self):
         self.speed_level.up_speed_level()
