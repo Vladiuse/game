@@ -177,3 +177,26 @@ class Score:
             score.insert(0, 'null')
         self.show(score)
 
+
+class GameLevel:
+
+    def __init__(self, start_point, width):
+        self.start_point = start_point
+        self.width = width
+        self.game_level = 1
+        self.count_numbers = 2
+
+    def show(self):
+        x = self.start_point[0]
+        y = self.start_point[1]
+        game_level = f'null-{self.game_level}' if self.game_level != 10 else '1-0'
+        for symbol in game_level.split('-'):
+            elem = NumberBlock(screen=screen, start_point=(x, y), width=self.width, work=0)
+            x += self.width * 1.3
+            elem.draw_number_block(symbol)
+
+    def up_game_level(self):
+        self.game_level += 1
+        if self.game_level == 11:
+            self.game_level = 1
+

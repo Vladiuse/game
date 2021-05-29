@@ -5,7 +5,7 @@ import pygame
 
 from games.game_preview import GamePreview
 from games.snake import Snake
-from screen_elements import Clock, Score, PixelScreen, SmallScreen
+from screen_elements import Clock, Score, PixelScreen, SmallScreen, GameLevel
 from settings import GameSettings
 from .recorder import Recorder
 
@@ -22,6 +22,7 @@ class GameController:
         self.game_clock = Clock(start_time=time.time(), mili_secs=False)
         self.main_screen = PixelScreen(controller=self)
         self.small_screen = SmallScreen(controller=self)
+        self.game_level = GameLevel(start_point=(700, 600), width=20)
         # game modules
         self.game = GamePreview(controller=self)
         self.recorder = Recorder(controller=self)
@@ -50,6 +51,7 @@ class GameController:
                 #         self.recorder.show_record()
                 self.game.game_key_controller(event.key)
         self.game.run()
+        self.game_level.show()
         self.main_screen.draw()
         self.small_screen.draw()
 
@@ -60,6 +62,9 @@ class GameController:
             screen = deepcopy(screen)
             self.recorder.add_screen_to_data(screen)
         return self.game.get_screen_pic()
+
+    def up_game_level(self):
+        self.game_level.up_game_level()
 
     def get_small_screen_pic(self):
         return self.game.get_small_screen_pic()
