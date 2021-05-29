@@ -149,6 +149,8 @@ class GamePreview(Game):
                 print('Выбранная игра пока не доступна!!!')
         if key == pygame.K_UP:
             self.controller.up_speed()
+        if key == pygame.K_DOWN:
+            self.controller.up_game_level()
 
     def read_prev_from_file(self, file_name):
         with open(file_name) as snake_file:
