@@ -3,6 +3,7 @@ import random as r
 import pygame
 
 from .main_game_obj import GameObject
+from settings import GameSettings
 
 
 class SnakeObj(GameObject):
@@ -200,12 +201,15 @@ class Turret(GameObject):
 
 
 class Wall(GameObject):
-    counter_for_new_line = 30 * 5
+    LINE_TIME_ADD = 1
 
-    def __init__(self, start_line_count=3, auto_line_add=True, direction=None, out_of_screen=False):
+    def __init__(self, start_line_count=3, auto_line_add=True, direction=None, out_of_screen=False,
+                 line_add_speed=1):
         super().__init__(out_of_screen=out_of_screen)
-        self.obj = []
-        self.counter_for_new_line = Wall.counter_for_new_line
+        # 1 speed_level - 1 line in 8 sec/ 10 - 3.5 sec
+        self.__class__.LINE_TIME_ADD = (GameSettings.FPS / 2 * (17 - line_add_speed))
+        print(self.__class__.LINE_TIME_ADD)
+        self.counter_for_new_line = self.__class__.LINE_TIME_ADD
         self.auto_line_add = auto_line_add
         self.direction = direction
         self.__init_wall(start_line_count)
@@ -214,10 +218,17 @@ class Wall(GameObject):
         return str(self.obj)
 
     def __init_wall(self, start_line_count):
-        for y in range(start_line_count):
-            #  for recorder
-            # y += 10
-            self.__add_line(y)
+        self.obj.clear()
+        if start_line_count:
+            if self.direction == 'up':
+                for y in range(start_line_count):
+                    #  for recorder
+                    # y += 10
+                    self.__add_line(y)
+            else:
+                # if down
+                for y in range(19, 19 - start_line_count, -1):
+                    self.__add_line(y)
         if self.direction == 'down':
             self.obj.extend((20, x) for x in range(10))
         elif self.direction == 'up':
@@ -270,8 +281,8 @@ class Wall(GameObject):
 
     def auto_line_adder(self):
         self.counter_for_new_line -= 1
-        if self.counter_for_new_line == 0:
-            self.counter_for_new_line = Wall.counter_for_new_line
+        if self.counter_for_new_line <= 0:
+            self.counter_for_new_line = self.__class__.LINE_TIME_ADD
             self.__move_lines(line_y_pos=-1, direction='down')
             self.__add_line(line_y_pos=0)
 
@@ -371,18 +382,13 @@ class Wall(GameObject):
 
 
 class Bullet(GameObject):
-    number = 0
 
     def __init__(self, start_point, direction=None):
         super().__init__()
         self.x = start_point[1]
         self.y = start_point[0]
         self.direction = 'UP' if direction is None else direction
-        self.counter = 0
-        self.counter = 15
         self.obj = ((self.y, self.x),)
-        self.number = Bullet.number
-        Bullet.number += 1
 
     def __str__(self):
         return 'Bullet'
@@ -400,17 +406,19 @@ class Bullet(GameObject):
 
 
 class Car(GameObject):
-    FRAME = 5
+    START_FRAME = 14
+    FRAME = 1
     schema = (0, 1), (1, 0), (1, 1), (1, 2), (2, 1), (3, 0), (3, 1), (3, 2),
     left = (16, 2)
     right = (16, 5)
 
-    def __init__(self, out_of_screen=False, pos=(16, 3), ):
+    def __init__(self, out_of_screen=False, pos=(16, 3), game_speed=1):
         super().__init__(out_of_screen=out_of_screen)
         self.frame = 1
         self.pos = pos
         self.obj = None
         self.get_car_with_pos()
+        self.__class__.FRAME = Car.START_FRAME - game_speed
         self.side_position = 'left'
 
     def get_car_with_pos(self):
@@ -421,9 +429,9 @@ class Car(GameObject):
 
     def move(self, direction):
         self.frame -= 1
-        if self.frame == 0:
+        if self.frame <= 0:
             self.move_obj_n_pos(direction=direction)
-            self.frame = Car.FRAME
+            self.frame = self.__class__.FRAME
 
     #
     # def move_to(self, pos):
@@ -445,6 +453,9 @@ class Car(GameObject):
 
 
 class RoadBorder(GameObject):
+
+    FRAME = 18
+
     schema = [(18, 0), (17, 0), (13, 0), (12, 0),
               (8, 0), (7, 0), (3, 0), (3, 9), (7, 9),
               (8, 9), (12, 9), (13, 9), (17, 9), (18, 9),
@@ -459,7 +470,7 @@ class RoadBorder(GameObject):
         self.frame -= 1
         if self.frame == 0:
             self.move_obj_n_pos(direction='down')
-            self.frame = 10
+            self.frame = self.__class__.FRAME
             self.pos_mirror_effect_obj()
 
 
@@ -516,23 +527,15 @@ class Brick(GameObject):
         3: ((2, 2), (2, 1), (2, 0), (1, 0)),
     }
 
-    # Small_line = {
-    #     0: ((1, 0), (1, 1),),
-    #     1: ((0, 0), (1, 0),),
-    # }
-    # turret_1 = ((2, 0), (2, 1), (1, 1), (2, 2))
-    # turret_2 = ((0, 0), (1, 0), (2, 0), (1, 1))
-    # turret_3 = ((0, 0), (0, 1), (1, 1), (0, 2))
-    # turret_4 = ((1, 1), (0, 2), (1, 2), (2, 2))
-    # shapes = [turret_1,turret_2, turret_3, turret_4]
-
     shapes = [Turret, Big_line, Cube, S_right, S_left, L_left, L_incorect]
-    FRAME = 12
+    START_FRAME = 58
+    FRAME = 1
 
-    def __init__(self, pos, shape=None, rotation=0):
+    def __init__(self, pos, shape=None, rotation=0, game_speed=1):
         super().__init__()
         # if shape is None:
         #     shape = r.choice(shapes)
+        self.__class__.FRAME = Brick.START_FRAME - game_speed * 5
         self.direction = 'down'
         self.last_direction = 'down'
         self.shape = shape
@@ -541,6 +544,7 @@ class Brick(GameObject):
         self.obj = shape[rotation]
         self.out_of_screen = True
         self.frame = Brick.FRAME
+        print(self.__class__.FRAME, 'BRICK FRAME')
         self.get_obj_with_pos()
 
     def rotate(self):
@@ -575,7 +579,7 @@ class Brick(GameObject):
         self.frame -= 1
         if self.frame == 0:
             self.move_down()
-            self.frame = Brick.FRAME
+            self.frame = self.__class__.FRAME
 
     def move_right(self):
         self.move_obj_n_pos('right', step=1)

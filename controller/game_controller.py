@@ -36,7 +36,11 @@ class GameController:
         else:
             game = GamePreview.games_data[game_to_run]['game']
             game_mode = GamePreview.games_data[game_to_run]['game_mode']
-            self.game = game(controller=self, game_mode=game_mode)
+            game_speed = self.speed_level.speed_level
+            game_level = self.game_level.game_level
+            print(game_speed, game_level)
+            self.game = game(controller=self, game_mode=game_mode,
+                             game_speed=game_speed, game_level=game_level)
 
     def run(self):
         self.game_clock.show(self.game.start_time)

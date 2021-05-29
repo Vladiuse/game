@@ -8,17 +8,19 @@ from settings import GameSettings
 
 class Game:
     """Main game object"""
+    FRAME = 30
+    # START_FRAME = 30
 
-    def __init__(self, controller, game_mode=None):
+    def __init__(self, controller, game_mode=None, game_speed=1):
         self.controller = controller
-        self.frame = 30
+        self.frame = self.__class__.FRAME
         self.game_condition = []
         self.small_screen_condition = []
         self.game_status = True
         self.game_objects = []
         self.start_time = time.time()
         self.score = 0
-        self.game_speed = 5
+        self.game_speed = game_speed
         self.lives = 3
         self.fps = GameSettings.FPS
         self.game_mode = game_mode
@@ -32,6 +34,7 @@ class Game:
         """Иницилизация стартового состояния игры"""
         self.get_null_screen()
         self.get_small_screen_condition()
+        self.frame = self.__class__.FRAME
 
     def restart_game(self):
         pass

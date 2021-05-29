@@ -12,13 +12,13 @@ class TurretTetris(Game):
     """
     max_bullet_count = 3
 
-    def __init__(self, controller, game_mode='build'):
+    def __init__(self, controller, game_mode='build', game_speed=1, game_level=1):
         super().__init__(controller=controller, game_mode=game_mode,)
         self.start_time = time.time()
         self.turret = Turret((5, 18))
         self.player = self.turret
         self.bullets = []
-        self.wall = Wall(direction='up',out_of_screen=True)
+        self.wall = Wall(direction='up',out_of_screen=True, line_add_speed=game_speed, start_line_count=2 + game_level)
         self.game_status = True
         self.game_objects = [self.turret, self.wall]
         self.start_game()
@@ -44,7 +44,6 @@ class TurretTetris(Game):
             for bullet in self.bullets:
                 bullet.move()
             self.collision()
-            # self.wall.test_wall_check_lines()
             self.wall.act()
             self.render(*self.game_objects, *self.bullets)
         else:

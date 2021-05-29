@@ -4,15 +4,18 @@ from game_objects import Cursor, Wall
 
 class DrawObjects(Game):
 
-    def __init__(self, controller, game_mode=None):
+    def __init__(self, controller, game_mode=None, game_speed=1, game_level=1):
         super().__init__(controller=controller, game_mode=game_mode)
         self.cursor = Cursor(pos=(0,0))
         self.wall = Wall(start_line_count=0, auto_line_add=False)
         self.game_objects = [self.cursor, self.wall]
+        self.lives = 0
+        self.start_game()
 
 
-    def start_game(self):
-        super().start_game()
+    # def start_game(self):
+    #     super().start_game()
+
 
     def run(self):
         if self.game_status:

@@ -133,8 +133,10 @@ class GamePreview(Game):
         # chose game
         if key == pygame.K_LEFT:
             self.game_number -= 1
+            self.frame_count = 0
         elif key == pygame.K_RIGHT:
             self.game_number += 1
+            self.frame_count = 0
         elif self.game_number == -1:
             self.game_number = len(GamePreview.games) - 1
         self.game_number %= len(GamePreview.games)

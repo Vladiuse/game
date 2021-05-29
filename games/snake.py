@@ -10,16 +10,16 @@ from game_objects import SnakeObj, SnakeFood
 class Snake(Game):
     """game_modes: traffic, step"""
 
-    def __init__(self, controller, game_mode='traffic'):
+    FRAME = 30
+
+    def __init__(self, controller, game_mode='traffic', game_level=1, game_speed=1):
         super().__init__(controller=controller, game_mode=game_mode)
         self.snake = SnakeObj()
         self.player = self.snake
-        self.speed_counter = self.fps / self.game_speed
+        self.__class__.FRAME = self.fps / game_speed
+        print(self.__class__.FRAME)
         self.snake_food = SnakeFood(self.snake)
         self.game_objects = [self.snake, self.snake_food]
-        # self.game_over = GameOver(self)
-        self.food_render = 20
-        self.frame_counter = 0
         self.start_game()
 
     def start_game(self):
@@ -44,10 +44,10 @@ class Snake(Game):
             if not self.pause:
                 self.collision()
                 if self.game_mode == 'traffic':
-                    self.frame_counter += 1
-                    if self.frame_counter > self.speed_counter:
+                    self.frame -= 1
+                    if self.frame <= 0:
                         self.snake.move()
-                        self.frame_counter = 0
+                        self.frame = self.__class__.FRAME
                 if self.game_mode == 'step':
                     self.snake.move()
                     self.snake.direction = None
@@ -68,18 +68,10 @@ class Snake(Game):
             self.snake.eat()
             self.score += 1
 
-
     def game_key_controller(self, key):
         """Меняет флаг направление движения -
         изменение на противоположное не проходит"""
         super().game_key_controller(key=key)
-        # if key == pygame.K_ESCAPE:
-        #     self.controller.chose_game('default')
-        # if key == pygame.K_p:
-        #     self.pause_game()
-        # # if key == pygame.K_x:
-        # #     self.game_status = False
-
         if key == pygame.K_LEFT:
             if self.snake.last_direction != 'RIGHT':
                 self.snake.direction = 'LEFT'

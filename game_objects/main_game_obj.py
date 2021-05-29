@@ -1,10 +1,13 @@
 class GameObject:
 
+    FRAME = 1
+
     def __init__(self, pos=None, frame=10, out_of_screen=False):
+        # self.pos = [0, 0] if pos is None else pos
         self.pos = [0, 0] if pos is None else pos
         self.obj = [self.pos]
         self.clean_hit_box = None
-        self.frame = frame
+        self.frame = GameObject.FRAME
         self.direction = None
         self.last_direction = None
         self.out_of_screen = out_of_screen

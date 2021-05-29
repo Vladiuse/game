@@ -20,7 +20,7 @@ class GameSettings:
     PIXEL_OFF = Colors.T_OFF
     SCREEN_WIDTH = 1200
     SCREEN_HEIGHT = 800
-    FPS = 30
+    FPS = 60
     GAME_CAPTION = 'Tetris'
     my_screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     running = True

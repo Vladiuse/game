@@ -7,12 +7,14 @@ from .default_game_class import Game
 
 
 class Race(Game):
-    FRAME = 5
+    START_FRAME = 14
+    FRAME = 1
     SCORE = 100
     """Letter F"""
 
-    def __init__(self, controller, game_mode=None):
+    def __init__(self, controller, game_mode=None, game_speed=1, game_level=1):
         super().__init__(controller=controller, game_mode=game_mode)
+        self.game_speed = game_speed
         self.player_car = Car(pos=(16, 2))
         self.player = self.player_car
         self.road = RoadBorder()
@@ -20,6 +22,8 @@ class Race(Game):
         self.game_objects = [self.player_car, self.road]
         self.road_map = None
         self.get_road_map()
+        self.__class__.FRAME = Race.START_FRAME - self.game_speed
+        print(self.__class__.FRAME, 'frame')
         self.frame = 1
         self.start_game()
 
@@ -52,23 +56,23 @@ class Race(Game):
             last_car = car
             road_map.extend(between)
             road_map.extend([car, 0, 0, 0])
-        road_map.extend([0]* 5)
+        road_map.extend([0] * 5)
         self.road_map = road_map
 
     def get_random_cars(self):
         self.frame -= 1
-        if self.frame == 0:
+        if self.frame <= 0:
             try:
                 road_obj = self.road_map[0]
             except IndexError:
                 self.get_road_map()
                 road_obj = self.road_map[0]
             if road_obj == 'car_r':
-                self.cars.append(Car(pos=(-4, 2), out_of_screen=True))
+                self.cars.append(Car(pos=(-4, 2), out_of_screen=True, game_speed=self.game_speed))
             elif road_obj == 'car_l':
-                self.cars.append(Car(pos=(-4, 5), out_of_screen=True))
+                self.cars.append(Car(pos=(-4, 5), out_of_screen=True, game_speed=self.game_speed))
             self.road_map.pop(0)
-            self.frame = Race.FRAME
+            self.frame = self.__class__.FRAME
 
     def del_out_screen_cars(self):
         cars_in_screen = []
@@ -103,10 +107,11 @@ class Race(Game):
 
     def game_key_controller(self, key):
         super().game_key_controller(key=key)
-        if key == pygame.K_LEFT:
-            self.player_car.move_left()
-        elif key == pygame.K_RIGHT:
-            self.player_car.move_right()
+        if self.game_status:
+            if key == pygame.K_LEFT:
+                self.player_car.move_left()
+            elif key == pygame.K_RIGHT:
+                self.player_car.move_right()
 
     def add_score(self):
         self.score += Race.SCORE
