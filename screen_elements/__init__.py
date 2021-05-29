@@ -1,1 +1,1 @@
-from .screen_elements import Clock, PixelScreen, Score, SmallScreen, SpeedLevel
+from .screen_elements import Clock, PixelScreen, Score, SmallScreen, GameLevel, SpeedLevel

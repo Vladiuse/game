@@ -3,6 +3,7 @@ from copy import deepcopy
 
 import pygame
 
+from settings import GameSettings
 from games.game_preview import GamePreview
 from games.snake import Snake
 from screen_elements import Clock, Score, PixelScreen, SmallScreen, SpeedLevel, GameLevel
@@ -45,6 +46,7 @@ class GameController:
         self.main_screen.draw()
         self.small_screen.draw()
         self.speed_level.show()
+        self.game_level.show()
 
     def key_controller(self):
         for event in pygame.event.get():
