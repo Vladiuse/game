@@ -10,7 +10,7 @@ class SnakeObj(GameObject):
 
     def __init__(self):
         super().__init__()
-        self.obj = [[9, 3], [10, 3], [11, 3], [12, 3], [13, 3], [14, 3], ]
+        self.obj = [(9, 3), (10, 3), (11, 3), ]
         # self.pos = self.obj[0].copy()
         self.direction = None
         self.last_direction = None
@@ -30,7 +30,7 @@ class SnakeObj(GameObject):
             elif self.direction == 'RIGHT':
                 x += 1
             y, x = self.pos_mirror_effect((y, x))
-            self.obj.insert(0, [y, x])
+            self.obj.insert(0, (y, x))
             if not eat:
                 self.tail = self.obj.pop()
             self.last_direction = self.direction
@@ -42,7 +42,7 @@ class SnakeObj(GameObject):
         return 'SnakeObj'
 
     def get_pos(self):
-        return list(self.obj[0])
+        return tuple(self.obj[0])
 
 
 class SnakeFood(GameObject):
@@ -54,14 +54,14 @@ class SnakeFood(GameObject):
 
     def new_food(self, snake):
         y, x = snake.get_pos()
-        while [y, x] in snake.get_obj():
+        while (y, x) in snake.get_obj():
             x = r.randint(0, 9)
             y = r.randint(0, 19)
-        self.obj = [[y, x]]
+        self.obj = [(y, x)]
         return self.obj
 
     def get_pos(self):
-        return list(self.obj[0])
+        return tuple(self.obj[0])
 
 
 class Bomb(GameObject):
@@ -204,7 +204,7 @@ class Wall(GameObject):
     LINE_TIME_ADD = 1
 
     def __init__(self, start_line_count=3, auto_line_add=True, direction=None, out_of_screen=False,
-                 line_add_speed=1):
+                 line_add_speed=1, wall_scheme=None):
         super().__init__(out_of_screen=out_of_screen)
         # 1 speed_level - 1 line in 8 sec/ 10 - 3.5 sec
         self.__class__.LINE_TIME_ADD = (GameSettings.FPS / 2 * (17 - line_add_speed))
@@ -213,6 +213,7 @@ class Wall(GameObject):
         self.auto_line_add = auto_line_add
         self.direction = direction
         self.del_lines_counter = 0
+        self.wall_scheme = wall_scheme
         self.__init_wall(start_line_count)
 
     def __str__(self):
@@ -234,8 +235,14 @@ class Wall(GameObject):
             self.obj.extend((20, x) for x in range(10))
         elif self.direction == 'up':
             self.obj.extend((-1, x) for x in range(10))
+        else:
+            pass
+        if self.wall_scheme:
+            for brick in self.wall_scheme:
+                self.add_brick(brick)
             # self.obj.extend((9, x) for x in range(10))
         # self.add_brick((0,1))
+
 
     def clean_wall(self):
         self.obj = []

@@ -8,7 +8,7 @@ from .default_game_class import Game
 
 class Tetris(Game):
     FRAME = 1
-    SCORE = 1
+    SCORE = 10
 
     def __init__(self, controller, game_mode, game_speed=1, game_level=2):
         super().__init__(controller, game_mode=game_mode)
@@ -47,6 +47,7 @@ class Tetris(Game):
                 self.player.auto_move()
                 self.collisions()
                 self.wall.test_wall_check_lines()
+                self.score = self.wall.del_lines_counter * self.SCORE
                 self.render(*self.game_objects)
         else:
             self.end_game()
