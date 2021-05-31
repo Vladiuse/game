@@ -74,7 +74,7 @@ tetris = ((19, 0), (19, 1), (19, 2), (19, 3), (18, 3), (18, 2), (18, 1),
 class GamePreview(Game):
     """Превью доступных игр"""
 
-    games = ['snake', 'turret_tetris', 'turret_tetris_2', 'draw', 'race', 'tetris', ]
+    games = ['snake', 'turret_tetris', 'race',  'tetris','turret_tetris_2', 'draw', ]
     games_data = {
         'snake': {
             'preview': 'game_previews/snake_prev_1.txt', 'game': Snake, 'game_mode': 'traffic',
@@ -92,11 +92,14 @@ class GamePreview(Game):
         'draw': {
             'preview': (*letter_D, *draw_schema), 'game': DrawObjects, 'game_mode': None,
         },
+        # 'race': {
+        #     'preview': (*letter_E, *car_schema), 'game': Race, 'game_mode': 'traffic',
+        # },
         'race': {
-            'preview': (*letter_E, *car_schema), 'game': Race, 'game_mode': 'traffic',
+            'preview': 'game_previews/prev_car.txt', 'game': Race, 'game_mode': 'traffic',
         },
         'tetris': {
-            'preview': tetris, 'game': Tetris, 'game_mode': None,
+            'preview': 'game_previews/prev_tetris.txt', 'game': Tetris, 'game_mode': None,
         },
 
     }
@@ -105,7 +108,7 @@ class GamePreview(Game):
         super().__init__(controller=controller)
         self.game_number = start_game_number
         self.score = 0
-        self.frames = None
+        self.frames = {}
         self.frame_count = 0
         self.lives = 0
         self.start_game()
@@ -117,10 +120,11 @@ class GamePreview(Game):
             for y, x in game_data:
                 self.game_condition[y][x] = 1
         else:
-            self.frames = self.read_prev_from_file(game_data)
-            frame = self.frames[self.frame_count]
+            if game_name not in self.frames.keys():
+                self.frames[game_name] = self.read_prev_from_file(game_data)
+            frame = self.frames[game_name][self.frame_count].copy()
             self.frame_count += 1
-            if self.frame_count > len(self.frames) - 1:
+            if self.frame_count > len(self.frames[game_name]) - 1:
                 self.frame_count = 0
             self.game_condition = frame
             # return frame
@@ -154,8 +158,8 @@ class GamePreview(Game):
             else:
                 print('Выбранная игра пока не доступна!!!')
 
-
     def read_prev_from_file(self, file_name):
+        print('Read file')
         with open(file_name) as snake_file:
             frames = []
             for file_line in snake_file:

@@ -190,6 +190,7 @@ class SpeedLevel:
             self.speed_level = 1
 
     def show(self):
+        self.draw_letters_on_screen()
         x = self.start_point[0]
         y = self.start_point[1]
         score = f'null-{self.speed_level}' if self.speed_level < 10 else '1-0'
@@ -197,6 +198,16 @@ class SpeedLevel:
             elem = NumberBlock(screen=screen, start_point=(x, y), width=self.width, work=0)
             x += self.width * 1.3
             elem.draw_number_block(symbol)
+
+    def draw_letters_on_screen(self):
+        x = self.start_point[0]
+        y = self.start_point[1] - 50
+        word = 'speed'
+        for symbol in word:
+            elem = NumberBlock(screen=screen, start_point=(x, y), width=self.width, work=0)
+            x += self.width * 1.3
+            elem.draw_number_block(symbol)
+
 
 
 class GameLevel:
@@ -208,10 +219,20 @@ class GameLevel:
         self.count_numbers = 2
 
     def show(self):
+        self.draw_letters_on_screen()
         x = self.start_point[0]
         y = self.start_point[1]
         game_level = f'null-{self.game_level}' if self.game_level != 10 else '1-0'
         for symbol in game_level.split('-'):
+            elem = NumberBlock(screen=screen, start_point=(x, y), width=self.width, work=0)
+            x += self.width * 1.3
+            elem.draw_number_block(symbol)
+
+    def draw_letters_on_screen(self):
+        word = 'level'
+        x = self.start_point[0]
+        y = self.start_point[1] - 50
+        for symbol in word:
             elem = NumberBlock(screen=screen, start_point=(x, y), width=self.width, work=0)
             x += self.width * 1.3
             elem.draw_number_block(symbol)

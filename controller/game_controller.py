@@ -22,8 +22,8 @@ class GameController:
         self.game_clock = Clock(start_time=time.time(), mili_secs=False)
         self.main_screen = PixelScreen(controller=self)
         self.small_screen = SmallScreen(controller=self)
-        self.speed_level = SpeedLevel((700, 500), width=20)
-        self.game_level = GameLevel(start_point=(700, 600), width=20)
+        self.speed_level = SpeedLevel((700, 550), width=20)
+        self.game_level = GameLevel(start_point=(700, 700), width=20)
         # game modules
         self.game = GamePreview(controller=self)
         self.recorder = Recorder(controller=self, work=True)

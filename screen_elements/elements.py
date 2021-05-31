@@ -71,6 +71,12 @@ class NumberBlock(NumberElement):
                    '7': [1, 0, 1, 0, 0, 1, 0],
                    '8': [1, 1, 1, 1, 1, 1, 1],
                    '9': [1, 1, 1, 1, 0, 1, 1],
+                   's': [1, 1, 0, 1, 0, 1, 1],
+                   'p': [1, 1, 1, 1, 1, 0, 0],
+                   'e': [1, 1, 0, 1, 1, 0, 1],
+                   'd': [0, 0, 0, 0, 0, 0, 0],
+                   'l': [0, 1, 0, 0, 1, 0, 1],
+                   'v': [0, 0, 0, 0, 0, 0, 0],
                    }
     is_horizontals = (True, False, False, True, False, False, True)
 
@@ -89,7 +95,7 @@ class NumberBlock(NumberElement):
         return coord_coofs
 
     def draw_number_block(self, number: str):
-        """принимает число на вход - отриловывает блок из 7 елеметнов с этим числом"""
+        """принимает число на вход - отрисовывает блок из 7 елеметнов с этим числом"""
         coord_coofs = self.get_coofs_for_block_7()
         works = [bool(work) for work in NumberBlock.number_code[number]]
         for start_point, horizontal, work in zip(coord_coofs, NumberBlock.is_horizontals, works):
