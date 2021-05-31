@@ -212,6 +212,7 @@ class Wall(GameObject):
         self.counter_for_new_line = self.__class__.LINE_TIME_ADD
         self.auto_line_add = auto_line_add
         self.direction = direction
+        self.del_lines_counter = 0
         self.__init_wall(start_line_count)
 
     def __str__(self):
@@ -223,7 +224,7 @@ class Wall(GameObject):
             if self.direction == 'up':
                 for y in range(start_line_count):
                     #  for recorder
-                    # y += 10
+                    y += 10
                     self.__add_line(y)
             else:
                 # if down
@@ -303,6 +304,7 @@ class Wall(GameObject):
     def test_wall_check_lines(self):
         lines_to_del = self._check_line_new()
         if lines_to_del:
+            self.del_lines_counter += 1
             self.del_lines(lines_to_del)
             self.correct_array(lines_to_del)
 

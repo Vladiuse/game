@@ -8,6 +8,7 @@ from .default_game_class import Game
 
 class Tetris(Game):
     FRAME = 1
+    SCORE = 1
 
     def __init__(self, controller, game_mode, game_speed=1, game_level=2):
         super().__init__(controller, game_mode=game_mode)

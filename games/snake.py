@@ -11,6 +11,7 @@ class Snake(Game):
     """game_modes: traffic, step"""
 
     FRAME = 30
+    SCORE = 1
 
     def __init__(self, controller, game_mode='traffic', game_level=1, game_speed=1):
         super().__init__(controller=controller, game_mode=game_mode)

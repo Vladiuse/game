@@ -11,6 +11,7 @@ class TurretTetris(Game):
     build, destroy
     """
     max_bullet_count = 3
+    SCORE = 1
 
     def __init__(self, controller, game_mode='build', game_speed=1, game_level=1):
         super().__init__(controller=controller, game_mode=game_mode,)
@@ -21,6 +22,7 @@ class TurretTetris(Game):
         self.wall = Wall(direction='up',out_of_screen=True, line_add_speed=game_speed, start_line_count=2 + game_level)
         self.game_status = True
         self.game_objects = [self.turret, self.wall]
+        self.score = 0
         self.start_game()
 
     def start_game(self):
@@ -29,7 +31,6 @@ class TurretTetris(Game):
 
     def restart_game(self):
         self.lives -= 1
-        self.score = 0
         self.start_time = time.time()
         self.turret = Turret((5, 18))
         self.bullets = []
@@ -45,6 +46,8 @@ class TurretTetris(Game):
                 bullet.move()
             self.collision()
             self.wall.act()
+            if self.game_mode == 'build':
+                self.score = self.wall.del_lines_counter
             self.render(*self.game_objects, *self.bullets)
         else:
             self.end_game()
@@ -75,8 +78,10 @@ class TurretTetris(Game):
                 y,x = bullet.get_pos()
                 if self.game_mode == 'build':
                     self.wall.add_brick((y + 1, x))
+                    self.score = self.wall.del_lines_counter
                 else:
                     self.wall.drop_brick((y,x))
+                    self.score += 1
                 self.bullets.pop(bullet_id)
                 # break
 

@@ -183,6 +183,7 @@ class SpeedLevel:
         self.width = width
         self.number_count = 2
         self.speed_level = 1
+        self.letter_width = 20
 
     def up_speed_level(self):
         self.speed_level += 1
@@ -191,8 +192,8 @@ class SpeedLevel:
 
     def show(self):
         self.draw_letters_on_screen()
-        x = self.start_point[0]
-        y = self.start_point[1]
+        x = self.start_point[0] + 30
+        y = self.start_point[1] + 50
         score = f'null-{self.speed_level}' if self.speed_level < 10 else '1-0'
         for symbol in score.split('-'):
             elem = NumberBlock(screen=screen, start_point=(x, y), width=self.width, work=0)
@@ -201,11 +202,11 @@ class SpeedLevel:
 
     def draw_letters_on_screen(self):
         x = self.start_point[0]
-        y = self.start_point[1] - 50
+        y = self.start_point[1]
         word = 'speed'
         for symbol in word:
-            elem = NumberBlock(screen=screen, start_point=(x, y), width=self.width, work=0)
-            x += self.width * 1.3
+            elem = NumberBlock(screen=screen, start_point=(x, y), width=self.letter_width, work=0)
+            x += self.letter_width * 1.3
             elem.draw_number_block(symbol)
 
 
@@ -215,13 +216,14 @@ class GameLevel:
     def __init__(self, start_point, width):
         self.start_point = start_point
         self.width = width
+        self.letter_width = 20
         self.game_level = 1
         self.count_numbers = 2
 
     def show(self):
         self.draw_letters_on_screen()
-        x = self.start_point[0]
-        y = self.start_point[1]
+        x = self.start_point[0] + 30
+        y = self.start_point[1] + 50
         game_level = f'null-{self.game_level}' if self.game_level != 10 else '1-0'
         for symbol in game_level.split('-'):
             elem = NumberBlock(screen=screen, start_point=(x, y), width=self.width, work=0)
@@ -231,10 +233,10 @@ class GameLevel:
     def draw_letters_on_screen(self):
         word = 'level'
         x = self.start_point[0]
-        y = self.start_point[1] - 50
+        y = self.start_point[1]
         for symbol in word:
-            elem = NumberBlock(screen=screen, start_point=(x, y), width=self.width, work=0)
-            x += self.width * 1.3
+            elem = NumberBlock(screen=screen, start_point=(x, y), width=self.letter_width, work=0)
+            x += self.letter_width * 1.3
             elem.draw_number_block(symbol)
 
     def up_game_level(self):

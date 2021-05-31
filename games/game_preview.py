@@ -58,10 +58,16 @@ letter_F = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
             [2, 5], [4, 5],
             [2, 6],
             )
+
+letter_G = ((2, 6), (2, 5), (2, 4), (3, 3), (4, 3), (5, 3), (6, 4), (6, 5), (6, 6), (5, 6), (4, 6), (4, 5))
+
 car_schema = ((18, 0), (17, 0), (16, 0), (13, 0), (12, 0), (11, 0), (11, 9),
               (12, 9), (13, 9), (16, 9), (17, 9), (18, 9), (19, 2), (19, 3),
               (19, 4), (18, 3), (17, 2), (17, 3), (17, 4), (16, 3), (14, 5),
               (14, 6), (14, 7), (13, 6), (12, 6), (12, 5), (12, 7), (11, 6))
+
+tanks_schema = ((18, 0), (19, 0), (18, 1), (17, 1), (18, 2), (19, 2), (14, 1), (14, 4), (15, 4),
+                (16, 4), (16, 5), (15, 5), (14, 5), (15, 6), (10, 8), (10, 7), (11, 7), (12, 7), (12, 8), (11, 6))
 
 tetris = ((19, 0), (19, 1), (19, 2), (19, 3), (18, 3), (18, 2), (18, 1),
           (17, 1), (17, 2), (19, 4), (18, 5), (19, 5), (19, 6), (18, 6),
@@ -74,27 +80,25 @@ tetris = ((19, 0), (19, 1), (19, 2), (19, 3), (18, 3), (18, 2), (18, 1),
 class GamePreview(Game):
     """Превью доступных игр"""
 
-    games = ['snake', 'turret_tetris', 'race',  'tetris','turret_tetris_2', 'draw', ]
+    games = ['snake', 'turret_tetris', 'race',  'tetris', 'tanks','turret_tetris_2','draw', ]
     games_data = {
         'snake': {
             'preview': 'game_previews/snake_prev_1.txt', 'game': Snake, 'game_mode': 'traffic',
         },
-        # 'turret_tetris': {
-        #     'preview': (*letter_B, *turret_schema_B), 'game': TurretTetris, 'game_mode': 'build',
-        # },
         'turret_tetris': {
             'preview': 'game_previews/turret_prev.txt', 'game': TurretTetris, 'game_mode': 'build',
         },
         'turret_tetris_2': {
-            'preview': (*letter_C, *turret_schema_C), 'game': TurretTetris, 'game_mode': 'destroy',
+            'preview': 'game_previews/prev_turret_destroy.txt', 'game': TurretTetris, 'game_mode': 'destroy',
+        },
+
+        'tanks': {
+            'preview': (*letter_E, *tanks_schema), 'game': None, 'game_mode': None,
         },
 
         'draw': {
-            'preview': (*letter_D, *draw_schema), 'game': DrawObjects, 'game_mode': None,
+            'preview': 'game_previews/prev_draw.txt', 'game': DrawObjects, 'game_mode': None,
         },
-        # 'race': {
-        #     'preview': (*letter_E, *car_schema), 'game': Race, 'game_mode': 'traffic',
-        # },
         'race': {
             'preview': 'game_previews/prev_car.txt', 'game': Race, 'game_mode': 'traffic',
         },
@@ -156,7 +160,7 @@ class GamePreview(Game):
                 self.controller.last_game = self.game_number
                 self.controller.chose_game(game)
             else:
-                print('Выбранная игра пока не доступна!!!')
+                print('!!!Выбранная игра пока не доступна!!!')
 
     def read_prev_from_file(self, file_name):
         print('Read file')

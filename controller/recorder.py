@@ -18,13 +18,9 @@ class Recorder:
             self.frames.append(frame)
 
     def write_record(self):
-        letter_D = ([6, 3], [5, 3], [4, 3], [3, 3], [2, 3],
-                    [6, 4], [2, 4],
-                    [6, 5], [2, 5],
-                    [5, 6], [4, 6], [3, 6],
-                    )
-        letter = letter_D
-        with open('prev_tetris.txt', 'w') as file:
+        letter_G = ((2, 6), (2, 5), (2, 4), (3, 3), (4, 3), (5, 3), (6, 4), (6, 5), (6, 6), (5, 6), (4, 6), (4, 5))
+        letter = letter_G
+        with open('prev_draw.txt', 'w') as file:
             for frame in self.frames:
                 frame = list(frame)
                 # clean half
