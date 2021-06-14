@@ -43,7 +43,8 @@ class Game:
         """Get clean screen"""
         self.game_condition.clear()
         line = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        while len(self.game_condition) != 20:
+        for _ in range(20):
+        # while len(self.game_condition) != 20:
             self.game_condition.append(line.copy())
 
     def get_null_small_screen(self):
@@ -141,17 +142,17 @@ class Game:
                 else:
                     self.restart_game()
 
-    def curtain_clean_effect(self, in_end_func=None):
-        if self.y_clean_pic != -21:
-            if self.y_clean_pic >= 0:
-                self.game_condition[self.y_clean_pic] = [1] * 10
-            else:
-                self.game_condition[abs(self.y_clean_pic + 1)] = [0] * 10
-            self.y_clean_pic -= 1
-        else:
-            self.y_clean_pic = 19
-            if in_end_func:
-                in_end_func()
+    # def curtain_clean_effect(self, in_end_func=None):
+    #     if self.y_clean_pic != -21:
+    #         if self.y_clean_pic >= 0:
+    #             self.game_condition[self.y_clean_pic] = [1] * 10
+    #         else:
+    #             self.game_condition[abs(self.y_clean_pic + 1)] = [0] * 10
+    #         self.y_clean_pic -= 1
+    #     else:
+    #         self.y_clean_pic = 19
+    #         if in_end_func:
+    #             in_end_func()
 
     def blink_effect(self, *args):
         """Add blink effect on elements or objects"""

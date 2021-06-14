@@ -225,7 +225,7 @@ class Wall(GameObject):
             if self.direction == 'up':
                 for y in range(start_line_count):
                     #  for recorder
-                    y += 10
+                    # y += 10
                     self.__add_line(y)
             else:
                 # if down

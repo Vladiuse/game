@@ -11,6 +11,7 @@ class Colors:
     T_BACKGROUND = (149,159,125)
     T_OFF = (133,144,122)
     T_ON = (17,17,18)
+    # T_ON = (128,0,128) # purple
 
 
 class GameSettings:
