@@ -69,6 +69,33 @@ class GameObject:
             new_obj.append((y + self.pos[0], x + self.pos[1]))
         self.obj = new_obj
 
+    def move_right(self):
+        self.move_obj_n_pos('right', step=1)
+        self.direction = self.last_direction = 'right'
+
+    def move_left(self):
+        self.move_obj_n_pos('left', step=1)
+        self.direction = self.last_direction = 'left'
+
+    def move_down(self):
+        self.move_obj_n_pos('down', step=1)
+        self.direction = self.last_direction = 'down'
+
+    def move_up(self):
+        self.move_obj_n_pos('up', step=1)
+        self.direction = self.last_direction = 'up'
+
+    def move_back(self):
+        print('move back')
+        direction_inversion = {
+            'right': 'left',
+            'left': 'right',
+            'down': 'up',
+            'up': 'down',
+        }
+        direction = direction_inversion[self.last_direction]
+        self.move_obj_n_pos(direction, step=1)
+
     @staticmethod
     def pos_mirror_effect(pos):
         y, x = pos
@@ -100,3 +127,8 @@ class GameObject:
             if x not in range(10):
                 return x
 
+    def is_obj_in_screen(self):
+        for pos in self.obj:
+            if not self.is_pos_in_screen(pos):
+                return False
+        return True

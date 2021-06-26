@@ -1,11 +1,9 @@
 import time
-from copy import deepcopy
 
 import pygame
 
 from settings import GameSettings
 from games.game_preview import GamePreview
-from games.snake import Snake
 from screen_elements import Clock, Score, PixelScreen, SmallScreen, SpeedLevel, GameLevel
 from .recorder import Recorder
 
@@ -38,7 +36,6 @@ class GameController:
             game_mode = GamePreview.games_data[game_to_run]['game_mode']
             game_speed = self.speed_level.speed_level
             game_level = self.game_level.game_level
-            print(game_speed, game_level)
             self.game = game(controller=self, game_mode=game_mode,
                              game_speed=game_speed, game_level=game_level)
 

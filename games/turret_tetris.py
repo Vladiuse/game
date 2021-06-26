@@ -15,6 +15,8 @@ class TurretTetris(Game):
 
     def __init__(self, controller, game_mode='build', game_speed=1, game_level=1):
         super().__init__(controller=controller, game_mode=game_mode,)
+        self.game_speed = game_speed
+        self.game_level = game_level
         self.start_time = time.time()
         self.turret = Turret((5, 18))
         self.player = self.turret
@@ -34,7 +36,7 @@ class TurretTetris(Game):
         self.start_time = time.time()
         self.turret = Turret((5, 18))
         self.bullets = []
-        self.wall = Wall()
+        self.wall = Wall(direction='up',out_of_screen=True, line_add_speed=self.game_speed, start_line_count=2 + self.game_level)
         self.game_status = True
         self.game_objects = [self.turret, self.wall]
         self.start_game()

@@ -2,8 +2,8 @@ import random as r
 
 import pygame
 
-from .main_game_obj import GameObject
 from settings import GameSettings
+from .main_game_obj import GameObject
 
 
 class SnakeObj(GameObject):
@@ -225,7 +225,7 @@ class Wall(GameObject):
             if self.direction == 'up':
                 for y in range(start_line_count):
                     #  for recorder
-                    y += 10
+                    # y += 10
                     self.__add_line(y)
             else:
                 # if down
@@ -242,7 +242,6 @@ class Wall(GameObject):
                 self.add_brick(brick)
             # self.obj.extend((9, x) for x in range(10))
         # self.add_brick((0,1))
-
 
     def clean_wall(self):
         self.obj = []
@@ -296,6 +295,7 @@ class Wall(GameObject):
 
     def drop_brick(self, brick_pos):
         """Удаление елемента из массива"""
+        print(self.obj, brick_pos)
         self.obj.remove(brick_pos)
 
     def add_brick(self, brick_pos):
@@ -396,22 +396,20 @@ class Bullet(GameObject):
         super().__init__()
         self.x = start_point[1]
         self.y = start_point[0]
-        self.direction = 'UP' if direction is None else direction
+        self.direction = 'up' if direction is None else direction
         self.obj = ((self.y, self.x),)
 
     def __str__(self):
-        return 'Bullet'
+        return f'{self.pos} - {self.direction} {self.obj} {self.get_obj()}'
 
     def move(self):
-        if self.direction == 'UP':
-            self.y -= 1
-        self.obj = ((self.y, self.x),)
+        self.move_obj_n_pos(direction=self.direction, step=1)
 
     def get_pos(self):
-        return self.y, self.x
+        return self.obj[0]
 
     def get_obj(self):
-        return ((self.y, self.x),)
+        return self.obj
 
 
 class Car(GameObject):
@@ -462,7 +460,6 @@ class Car(GameObject):
 
 
 class RoadBorder(GameObject):
-
     FRAME = 18
 
     schema = [(18, 0), (17, 0), (13, 0), (12, 0),
@@ -499,7 +496,6 @@ class Cursor(GameObject):
 
 
 class Brick(GameObject):
-
     Turret = {
         0: ((2, 0), (2, 1), (1, 1), (2, 2)),
         1: ((0, 0), (1, 0), (2, 0), (1, 1)),
@@ -601,3 +597,34 @@ class Brick(GameObject):
 
     def move_up(self):
         self.move_obj_n_pos('up', step=1)
+
+
+class Tank(GameObject):
+    schema_player = {'up': ((0, 1), (1, 1), (1, 0), (2, 0), (2, 1), (1, 2), (2, 2)),
+                     'down': ((1, 1), (2, 1), (1, 0), (0, 0), (0, 1), (0, 2), (1, 2)),
+                     'right': ((1, 2), (1, 1), (0, 1), (0, 0), (1, 0), (2, 0), (2, 1)),
+                     'left': ((1, 0), (1, 1), (0, 1), (2, 1), (1, 2), (0, 2), (2, 2)),
+                     }
+    schema_enemy = None
+
+    def __init__(self, start_pos, *, model='enemy', direction):
+        super().__init__()
+        self.direction = direction
+        self.model = model
+        self.pos = start_pos
+        self.obj = Tank.schema_enemy[direction] if self.model == 'enemy' else Tank.schema_player[direction]
+        self.get_obj_with_pos()
+
+    def rotate(self, direction):
+        self.obj = Tank.schema_enemy[direction] if self.model == 'enemy' else Tank.schema_player[direction]
+        self.get_obj_with_pos()
+        self.direction = self.last_direction = direction
+
+    def shot(self):
+        y,x = self.pos
+        bullet = Bullet((y + 1, x + 1), direction=self.direction)
+        bullet.move_obj_n_pos(direction=self.direction, step=2)
+        return bullet
+
+
+

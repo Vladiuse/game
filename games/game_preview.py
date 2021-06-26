@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pygame
 
-from games import Snake, TurretTetris, Race, DrawObjects, Tetris
+from games import Snake, TurretTetris, Race, DrawObjects, Tetris, Tanks
 from .default_game_class import Game
 
 letter_A = [[6, 3], [5, 3], [4, 3], [3, 3],
@@ -67,7 +67,7 @@ class GamePreview(Game):
         },
         'tanks': {
             'preview': (*letter_E, *tanks_schema),
-            'game': None,
+            'game': Tanks,
             'game_mode': None,
         },
         'draw': {
