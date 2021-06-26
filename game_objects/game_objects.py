@@ -47,14 +47,14 @@ class SnakeObj(GameObject):
 
 class SnakeFood(GameObject):
 
-    def __init__(self, snake):
+    def __init__(self, snake, wall):
         super().__init__()
         self.obj = None
-        self.pos = self.new_food(snake)
+        self.pos = self.new_food(snake, wall)
 
-    def new_food(self, snake):
+    def new_food(self, snake, wall):
         y, x = snake.get_pos()
-        while (y, x) in snake.get_obj():
+        while (y, x) in snake.get_obj() or (y, x) in wall.get_obj():
             x = r.randint(0, 9)
             y = r.randint(0, 19)
         self.obj = [(y, x)]

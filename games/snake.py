@@ -45,13 +45,10 @@ class Snake(Game):
         self.snake = SnakeObj()
         self.player = self.snake
         self.__class__.FRAME = self.fps / game_speed
-        print(self.__class__.FRAME)
-        self.snake_food = SnakeFood(self.snake)
         self.wall = Wall(start_line_count=0, auto_line_add=False,
                          direction='down', out_of_screen=True, wall_scheme=self.LEVELS[str(game_level)])
+        self.snake_food = SnakeFood(self.snake, self.wall)
         self.game_objects = [self.snake, self.snake_food, self.wall]
-        print(self.snake.obj)
-        print(self.wall.get_obj())
         self.start_game()
 
     def start_game(self):
@@ -64,7 +61,7 @@ class Snake(Game):
     def restart_game(self):
         self.lives -= 1
         self.snake = SnakeObj()
-        self.snake_food = SnakeFood(self.snake)
+        self.snake_food = SnakeFood(self.snake, self.wall)
         self.player = self.snake
         self.game_status = True
         self.game_objects = [self.snake, self.snake_food, self.wall]
@@ -98,7 +95,7 @@ class Snake(Game):
             self.game_objects.append(self.bomb)
         # eat food
         if self.snake.get_pos() == self.snake_food.get_pos():
-            self.snake_food.new_food(self.snake)
+            self.snake_food.new_food(self.snake, self.wall)
             self.snake.eat()
             self.score += 1
         # wall
