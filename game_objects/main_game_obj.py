@@ -11,6 +11,7 @@ class GameObject:
         self.direction = None
         self.last_direction = None
         self.out_of_screen = out_of_screen
+        self.live = True
 
     def __str__(self):
         return __class__.__name__
@@ -132,3 +133,4 @@ class GameObject:
             if not self.is_pos_in_screen(pos):
                 return False
         return True
+

@@ -208,7 +208,6 @@ class Wall(GameObject):
         super().__init__(out_of_screen=out_of_screen)
         # 1 speed_level - 1 line in 8 sec/ 10 - 3.5 sec
         self.__class__.LINE_TIME_ADD = (GameSettings.FPS / 2 * (17 - line_add_speed))
-        print(self.__class__.LINE_TIME_ADD)
         self.counter_for_new_line = self.__class__.LINE_TIME_ADD
         self.auto_line_add = auto_line_add
         self.direction = direction
@@ -274,13 +273,6 @@ class Wall(GameObject):
                 top = y
         return top
 
-    # def get_obj(self):
-    # need to turel
-    #     if self.auto_line_add:
-    #         self.auto_line_adder()
-    #         self._check_line()
-    #     return self.obj
-
     def act(self):
         self.test_wall_check_lines()
         if self.auto_line_add:
@@ -295,7 +287,6 @@ class Wall(GameObject):
 
     def drop_brick(self, brick_pos):
         """Удаление елемента из массива"""
-        print(self.obj, brick_pos)
         self.obj.remove(brick_pos)
 
     def add_brick(self, brick_pos):
@@ -392,18 +383,30 @@ class Wall(GameObject):
 
 class Bullet(GameObject):
 
-    def __init__(self, start_point, direction=None):
+    START_FRAME = 1
+    FRAME = 1
+
+    def __init__(self, start_point, direction=None, frames=0, type=None):
         super().__init__()
         self.x = start_point[1]
         self.y = start_point[0]
         self.direction = 'up' if direction is None else direction
         self.obj = ((self.y, self.x),)
+        self.type = type
+        self.add_start_frame(frames)
+
+    def add_start_frame(self, frames):
+        if frames:
+            self.START_FRAME = self.FRAME = frames
 
     def __str__(self):
         return f'{self.pos} - {self.direction} {self.obj} {self.get_obj()}'
 
     def move(self):
-        self.move_obj_n_pos(direction=self.direction, step=1)
+        self.FRAME -= 1
+        if self.FRAME <= 0:
+            self.move_obj_n_pos(direction=self.direction, step=1)
+            self.FRAME = self.START_FRAME
 
     def get_pos(self):
         return self.obj[0]
@@ -605,7 +608,12 @@ class Tank(GameObject):
                      'right': ((1, 2), (1, 1), (0, 1), (0, 0), (1, 0), (2, 0), (2, 1)),
                      'left': ((1, 0), (1, 1), (0, 1), (2, 1), (1, 2), (0, 2), (2, 2)),
                      }
-    schema_enemy = None
+    schema_enemy = {'up': ((1, 0), (1, 1), (1, 2), (0, 1), (2, 0), (2, 2)),
+                     'down': ((1, 1), (1, 0), (2, 1), (0, 0), (0, 2), (1, 2)),
+                     'right': ((0, 1), (0, 0), (1, 1), (2, 1), (2, 0), (1, 2)),
+                     'left': ((1, 1), (0, 1), (2, 1), (2, 2), (0, 2), (1, 0)),
+                     }
+    SHOOT_TIMER = 60 * 4
 
     def __init__(self, start_pos, *, model='enemy', direction):
         super().__init__()
@@ -613,7 +621,11 @@ class Tank(GameObject):
         self.model = model
         self.pos = start_pos
         self.obj = Tank.schema_enemy[direction] if self.model == 'enemy' else Tank.schema_player[direction]
+        self.shoot_timer = self.SHOOT_TIMER
         self.get_obj_with_pos()
+
+    def __str__(self):
+        return f'type:{self.model} pos: {self.pos}'
 
     def rotate(self, direction):
         self.obj = Tank.schema_enemy[direction] if self.model == 'enemy' else Tank.schema_player[direction]
@@ -621,10 +633,16 @@ class Tank(GameObject):
         self.direction = self.last_direction = direction
 
     def shot(self):
-        y,x = self.pos
-        bullet = Bullet((y + 1, x + 1), direction=self.direction)
+        y, x = self.pos
+        bullet = Bullet((y + 1, x + 1), direction=self.direction, frames=3, type=self.model)
         bullet.move_obj_n_pos(direction=self.direction, step=2)
         return bullet
 
-
-
+    def auto_shot(self):
+        bullet = None
+        if self.live:
+            self.shoot_timer -= 1
+            if self.shoot_timer <= 0:
+                self.shoot_timer = self.SHOOT_TIMER
+                bullet = self.shot()
+        return bullet
